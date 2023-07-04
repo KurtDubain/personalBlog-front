@@ -1,24 +1,9 @@
-# project1.1
+# 个人博客
 
-## Project setup
-```
-npm install
-```
+## 简介
+使用vue3开发的个人博客（前端页面），尚处于开发阶段
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## 功能介绍
+目前主要应用到了v-router、axios、事件总线等技术，使用element-UI来协助开发样式
 
-### Compiles and minifies for production
-```
-npm run build
-```
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
