@@ -1,3 +1,4 @@
+<!-- 文章前后切换按钮组件 -->
 <template>
     <div class="ctrl_button_all">
       <div class="pre_btn"  v-if="articleId !=='1'">
@@ -46,8 +47,8 @@
           
           
       },
-      setup(props){
-          console.log(props.lastId)
+      setup(){
+        //  之前使用了很多方法实现一些特定的功能，但是都失败了，目前先保留，后期实现优化
           // let filterArray = ref([])
           // onMounted(() => {
           //     EventBus.on('filterArray', (value) => {

@@ -1,4 +1,6 @@
+<!-- 导航栏的组件 -->
 <template>
+  <!-- 主要应用了element Plus提供的组件，不过后期会优化修改设计 -->
   <el-menu
     :default-active="activeIndex"
     class="el-menu-demo"

@@ -1,6 +1,8 @@
+<!-- 留言板小组件 -->
 <template>
   <div class="chatlittle-container">
     <el-timeline>
+      <!-- 类似文章栏组件的输出 -->
       <el-timeline-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
         <el-card class="chat-card">
           <div class="header-chat">

@@ -1,3 +1,4 @@
+<!-- 留言界面 -->
 <template>
     <div class="common-layout">
       <el-container>
@@ -31,6 +32,7 @@
         let chats = reactive({})
         onMounted(async()=>{
           try{
+            // 获取留言全部内容
             let res = await axios('http://localhost:3000/chats')
             chats.value = res.data
           }catch(error){
@@ -41,6 +43,7 @@
     //       const chatsArray = Object.values(chats)
     //       return chatsArray.slice()
     //     })
+        //通过使用计算属性，确保trueChats是最新的数据，并且传递给子组件 
         let trueChats = computed(()=>{
           const chatsArray = chats.value?Object.values(chats.value):[]
           return chatsArray.slice()

@@ -1,3 +1,4 @@
+<!-- 文章内容显示页面 -->
 <template>
   <div class="common-layout">
       <el-container>
@@ -50,6 +51,7 @@ export default {
 
   },
   setup(props){
+    // 根据不同类型定义不同的响应式类型
     let articles = reactive({})
     let comments = ref([])
     let ctrltitle = reactive({})
@@ -60,12 +62,14 @@ export default {
     // console.log(filterArticle)
     onMounted(async()=>{
       try{
+        // 在onMounted周期执行多种数据加载内容
         await loadCtrlTitle(props.articleId)
         await loadArticle(props.articleId)
         await loadArticlecontent(props.articleId)
         
         await loadLastId()
         await loadComment(props.articleId)
+        // 数据总线时间，用于发表评论之后刷新评论信息
         EventBus.on('NeedRefresh',()=>{
           loadComment(props.articleId)
         })
@@ -75,6 +79,7 @@ export default {
       }
       
     })
+    // 加载对应id文章的除内容之外的信息
     const loadArticle = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}`)
@@ -90,6 +95,7 @@ export default {
         console.error('文章信息获取失败');
       }
     }
+    // 加载文章内容md文件数据
     const loadArticlecontent = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}/content`)
@@ -99,6 +105,7 @@ export default {
         console.error('未能正常获取文章内容或者未能正确解析');
       }
     }
+    // 加载文章评论数据
     const loadComment = async(articleId)=>{
       try{
         let res = await axios.get(`http://localhost:3000/comments/${articleId}`)
@@ -124,10 +131,12 @@ export default {
         console.error('文章评论信息获取失败');
       }
     }
+    // 加载当前文章前后题目数据
     const loadCtrlTitle = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
         console.log(res.data)
+        // 通过判断当前文章是否是第一个文章，来决定数据类型
         if(res.data[0].title === '我是帅哥' && !res.data[1]){
           ctrltitle.Tnext = res.data[0].title
         }else{
@@ -143,6 +152,7 @@ export default {
         console.error('前后标题获取失败');
       }
     }
+    // 加载最后一个文章的id数据
     const loadLastId = async()=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
@@ -152,6 +162,7 @@ export default {
         console.error('未能获取最后一个文章的id');
       }
     }
+    // 监听文章id变化，实时改变文章对应数据（主要是解决点击切换按钮没有响应的情况）
     watch(
       () => props.articleId,
       async (newArticleId) => {

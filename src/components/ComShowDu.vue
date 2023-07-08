@@ -1,3 +1,4 @@
+<!-- 文章评论发表表单的组件 -->
 <template>
   <div class="midForm">
     <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
@@ -35,19 +36,20 @@ export default {
     }
   },
   setup(props) {
+    // 定义表单内容
     const formInline = reactive({
       name: '',
       contact: '',
       content: ''
     })
-
+    // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
     const isFormInvalid = computed(() => {
       return (
         formInline.content.trim() === '' ||
         !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(formInline.contact)
       )
     })
-
+    // 表单提交功能
     const onSubmit = async () => {
       try {
         const formData = {
@@ -56,11 +58,14 @@ export default {
           name: formInline.name,
           contact: formInline.contact
         }
+        // 将表单内数据由axios发送提交，并由后端补充id、日期等信息
         const res = await axios.post('http://localhost:3000/comments/form', formData)
         console.log('表单数据成功提交', res.data)
+        // 表单内容清空
         formInline.content = ''
         formInline.name = ''
         formInline.contact = ''
+        // 使用总线，实现发送一个表单，重新刷新评论表单列表，展示最新数据
         EventBus.emit('NeedRefresh')
       } catch (err) {
         console.error('表单数据提交失败', err)

@@ -1,6 +1,8 @@
+<!-- 文章评论展示组件 -->
 <template>
   <div class="list-container">
     <el-timeline>
+      <!-- 同样是利用键值对逐一显示 -->
       <el-timeline-item v-for="comment in Object.values(comments)" :key="comment.id" center :timestamp="comment.created_Date" placement="top">
         <el-card class="comment-card">
           <div class="header-chat">

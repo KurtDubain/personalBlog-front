@@ -1,3 +1,4 @@
+<!-- 路由首页 -->
 <!-- <template>
   
   <div>
@@ -54,6 +55,7 @@ export default {
       let articles = reactive({})
       onMounted(async()=>{
         try{
+          // 分别获取全部文章和全部留言信息
           let resArticles = await axios.get('http://localhost:3000/articles')
           articles.value = resArticles.data
 
@@ -63,11 +65,14 @@ export default {
           console.log('未能获取文章内容')
         }
       })
+      // 通过latestArticle计算属性，计算出最新的四个文章，且倒序展示
       const latestArticle = computed(()=>{
+        // 需要先进行一个判断和赋值，若直接赋值，会出现null的现象
         const articlesArray = articles.value? Object.values(articles.value):[]
         return articlesArray.slice()
         .sort((a,b)=>new Date(b.date)-new Date(a.date))
         .slice(0,4)
+        // 之前尝试在前端处理日期格式，但是由于效率太低，后来转为来服务端发送时，在服务端提前处理
         // .map((article)=>{
         //   const date = new Date(article.date)
         //   const changeDate = date.toLocaleDateString('en-US',{
@@ -84,6 +89,7 @@ export default {
         //   }
         // })
       })
+      // 同理，计算出最新的五个留言并且倒序排列
       const latestChat = computed(()=>{
         const chatsArray = chats.value? Object.values(chats.value):[]
         return chatsArray.slice()

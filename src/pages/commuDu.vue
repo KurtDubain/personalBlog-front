@@ -1,3 +1,4 @@
+<!-- 生活分类页面 -->
 <template>
     <div class="common-layout">
       <el-container>
@@ -33,6 +34,7 @@
         let articles = reactive({})
         onMounted(async()=>{
           try{
+            // 通过axios获取全部文章
             let res = await axios.get('http://localhost:3000/articles')
             articles.value = res.data
           }
@@ -54,6 +56,7 @@
            
         
         // })
+        // 利用计算属性，来讲文章中含有“生活”标签的文章过滤并返回
         let filterArticle = computed(() => {
           const articlesArray = articles.value ? Object.values(articles.value) : [];
           return articlesArray.filter((article) => {

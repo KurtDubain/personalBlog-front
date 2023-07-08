@@ -1,6 +1,8 @@
+<!-- 文章栏组件 -->
 <template>
     <div class="article-container">
       <el-timeline>
+        <!-- 根据articles的类型，需要使用键值对来实现逐一显示 -->
         <el-timeline-item v-for="article in Object.keys(articles)" :key="articles[article].id"
           center :timestamp="articles[article].date" placement="top" size="large" @click="goToArticle(articles[article].id)">
           <router-link :to="`/reader/${articles[article].id}`" class="article-link">
@@ -31,7 +33,7 @@
     },
     setup() {
       const router = useRouter();
-  
+      // 传递路由参数
       const goToArticle = (articleId) => {
         router.push({
           name: 'read',

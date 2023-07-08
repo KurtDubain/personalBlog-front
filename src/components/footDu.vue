@@ -1,3 +1,4 @@
+<!-- 设计的底部栏的组件 -->
 <template>
     <footer class="footer-container">
       <div class="footer-content">

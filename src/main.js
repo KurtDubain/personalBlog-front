@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 
+// 页面注册
 import Home from './pages/homeDu.vue'
 import About from './pages/aboutDu.vue'
 import technology from './pages/tecDu.vue'
@@ -16,6 +17,7 @@ import read from './pages/readerDu.vue'
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
+// 路由配置
 const routes =[
     {
         path:'/',
@@ -66,7 +68,7 @@ const router = createRouter({
 const app = createApp(App)
 
 app.use(router)
-app.use(ElementPlus, { size: 'small' });
+// app.use(ElementPlus, { size: 'small' });
 
 for(const[key,component] of Object.entries(ElementPlusIconsVue)){
     app.component(key,component)

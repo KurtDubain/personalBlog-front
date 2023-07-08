@@ -1,12 +1,15 @@
+<!-- 文章内容组件 -->
 <template>
   <div class="article-content">
     <h1>{{ article.title }}</h1>
     <div class="metadata">
+      <!-- 文章直接可用的数据 -->
       <span class="date">{{ article.date }}</span>
       <span class="views">{{ article.views }}</span>
       <span class="likes">{{ article.likes }}</span>
       <span class="comments">{{ article.commentsNum }}</span>
     </div>
+    <!-- 解析的内容 -->
     <div class="markdown-content" v-html="parsedContent"></div>
   </div>
 </template>
@@ -24,7 +27,9 @@ export default {
     }
   },
   setup(props) {
+    // 解析文章md格式的文件
     const parsedContent = computed(() => {
+      // 判断是否存在，没有该语句会出现无法刷新内容的情况
       if (props.article && props.article.content) {
         return marked(props.article.content);
       }

@@ -1,5 +1,7 @@
+<!-- 大背景色组件的应用 -->
 <template>
   <div class="background-maker">
+    <!-- 插槽的使用，方便插入不同内容 -->
     <slot></slot>
   </div>
 </template>
