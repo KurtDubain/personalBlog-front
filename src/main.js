@@ -66,6 +66,7 @@ const router = createRouter({
 const app = createApp(App)
 
 app.use(router)
+app.use(ElementPlus, { size: 'small' });
 
 for(const[key,component] of Object.entries(ElementPlusIconsVue)){
     app.component(key,component)

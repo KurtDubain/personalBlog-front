@@ -8,7 +8,9 @@
           <el-main>
             <router-view></router-view>
           </el-main>
-          <el-footer>Footer</el-footer>
+          <el-footer>
+            <footDu></footDu>
+          </el-footer>
         </el-container>
         <!-- <el-aside width="20%">Aside</el-aside> -->
       </el-container>
@@ -19,6 +21,7 @@
 </template>
 
 <script>
+import footDu from './components/footDu.vue';
 // import homeDu from './pages/homeDu.vue'
 import navDu from './components/navDu.vue';
 
@@ -26,7 +29,8 @@ export default {
   name: 'App',
   components: {
     // homeDu,
-    navDu
+    navDu,
+    footDu
   }
 }
 </script>

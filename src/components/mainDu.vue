@@ -1,25 +1,24 @@
 <template>
-  <div class="background_maker">
+  <div class="background-maker">
     <slot></slot>
   </div>
 </template>
 
 <script>
 export default {
-    name:"mainDu"
-}
+  name: "MainDu",
+};
 </script>
 
 <style scoped>
-.background_maker{
-  /* display: flex; */
+.background-maker {
   position: relative;
   width: 100%;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;  
-  background-color: antiquewhite;
-    /* border-radius: 5%; */
-    /* background: linear-gradient(to right, transparent, transparent calc(50% - 50px), rgb(212, 209, 132) calc(50% - 50px), rgb(101, 161, 10) calc(50% + 50px), transparent calc(50% + 50px), transparent); */
+  min-height: 100vh;
+  background: linear-gradient(
+    to right,
+    rgba(238, 223, 204, 0.8),
+    rgba(222, 222, 222, 0.8)
+  );
 }
 </style>

@@ -1,14 +1,13 @@
 <template>
-  <div class="list_container">
+  <div class="list-container">
     <el-timeline>
-      <el-timeline-item v-for="comment in Object.values(comments)" :key="comment.id" center 
-        :timestamp="comment.created_Date" placement="top">
-        <el-card>
-          <div class="headerChat">
-            <h2>{{ comment.name }}</h2>
-            <h3>{{ comment.contact }}</h3>
+      <el-timeline-item v-for="comment in Object.values(comments)" :key="comment.id" center :timestamp="comment.created_Date" placement="top">
+        <el-card class="comment-card">
+          <div class="header-chat">
+            <h2 class="comment-name">{{ comment.name }}</h2>
+            <h3 class="comment-contact">{{ comment.contact }}</h3>
           </div>
-          <p>{{ comment.content }}</p>
+          <p class="comment-content">{{ comment.content }}</p>
         </el-card>
       </el-timeline-item>
     </el-timeline>
@@ -25,14 +24,11 @@ export default {
       require:true
     }
   },
-  setup(){
-
-  }
-}
+};
 </script>
 
 <style scoped>
-.list_container {
+.list-container {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -40,9 +36,35 @@ export default {
   width: 80%;
   padding-top: 5%;
 }
-.headerChat {
+
+.comment-card {
+  margin: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  padding: 15px;
+}
+
+.header-chat {
   display: flex;
-  align-items: baseline;
-  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.comment-name {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.comment-contact {
+  font-size: 14px;
+  color: #999;
+}
+
+.comment-content {
+  font-size: 16px;
+  line-height: 1.6;
+  margin-top: 10px;
 }
 </style>

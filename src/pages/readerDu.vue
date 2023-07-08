@@ -1,7 +1,7 @@
 <template>
   <div class="common-layout">
       <el-container>
-        <el-aside width="20%">
+        <el-aside width="30%">
           <ComListDu :comments="comments"></ComListDu>
         </el-aside>
         <el-main>
@@ -10,9 +10,11 @@
               <ContentDu :article="articles"></ContentDu>
           </mainDu>
         </el-main>
-        <el-aside width="20%">
-          <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId"> </ctrlBtnDu>                     
-          <ComShowDu :articleId="articleId" :loadComment="loadComment"></ComShowDu>
+        <el-aside width="10%">
+                             
+            <ComShowDu :articleId="articleId" :loadComment="loadComment"></ComShowDu>
+            <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId"> 
+          </ctrlBtnDu>  
         </el-aside>
       </el-container>
     </div>
@@ -51,18 +53,19 @@ export default {
     let articles = reactive({})
     let comments = ref([])
     let ctrltitle = reactive({})
-    let lastId = ref()
+    let lastId = reactive({})
     // let filterArray = ref(null)
     // const parseMarkDown = reactive('')
     // const filterArticle = inject('filterArticle')
     // console.log(filterArticle)
     onMounted(async()=>{
       try{
+        await loadCtrlTitle(props.articleId)
         await loadArticle(props.articleId)
         await loadArticlecontent(props.articleId)
-        await loadComment(props.articleId)
-        await loadCtrlTitle(props.articleId)
+        
         await loadLastId()
+        await loadComment(props.articleId)
         EventBus.on('NeedRefresh',()=>{
           loadComment(props.articleId)
         })
@@ -124,8 +127,15 @@ export default {
     const loadCtrlTitle = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
-        ctrltitle.Tpre = res.data[0].title
-        ctrltitle.Tnext = res.data[1].title
+        console.log(res.data)
+        if(res.data[0].title === '我是帅哥' && !res.data[1]){
+          ctrltitle.Tnext = res.data[0].title
+        }else{
+          ctrltitle.Tpre = res.data[0].title
+          ctrltitle.Tnext = res.data[1].title
+        }
+        
+        
       
         // ctrltitle.Ipre = res.data[0].Ipre
         // ctrltitle.Inext = res.data[0].Inext
@@ -135,8 +145,9 @@ export default {
     }
     const loadLastId = async()=>{
       try{
-        const res = await axios.get('http://localhost:3000/articles/last')
-        lastId = res.data
+        const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
+        lastId.id = res.data
+        console.log('成功获取最后一个id',lastId)
       }catch(error){
         console.error('未能获取最后一个文章的id');
       }
@@ -146,9 +157,9 @@ export default {
       async (newArticleId) => {
         await loadArticle(newArticleId)
         await loadArticlecontent(newArticleId)
-        await loadComment(newArticleId)
+        
         await loadCtrlTitle(newArticleId)
-        await loadLastId()
+        await loadComment(newArticleId)
         EventBus.on('NeedRefresh', () => {
           loadComment(newArticleId)
         })
