@@ -12,7 +12,7 @@ import pyhcials from './pages/pyhDu.vue'
 import community from './pages/commuDu.vue'
 import chatMaker from './pages/chatDu.vue'
 import read from './pages/readerDu.vue'
-
+import writer from './pages/writeDu.vue'
 
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
@@ -57,6 +57,10 @@ const routes =[
         component:read,
         props:true,
         
+    },{
+        path:'/write',
+        name:'write',
+        component:writer
     }
 ]
 

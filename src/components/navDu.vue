@@ -48,7 +48,10 @@
     <el-menu-item index="3">留言板</el-menu-item>
   </router-link>
     <div class="flex-grow" />
-    <el-menu-item index="4">更多</el-menu-item>
+    <router-link to="/write" style="text-decoration:none">
+      <el-menu-item index="4">更多</el-menu-item>
+    </router-link>
+    
   </el-menu>
 
 </template>
