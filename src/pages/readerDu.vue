@@ -168,7 +168,6 @@ export default {
       async (newArticleId) => {
         await loadArticle(newArticleId)
         await loadArticlecontent(newArticleId)
-        
         await loadCtrlTitle(newArticleId)
         await loadComment(newArticleId)
         EventBus.on('NeedRefresh', () => {
