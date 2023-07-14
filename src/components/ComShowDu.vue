@@ -113,16 +113,17 @@ export default {
         // 表单内容清空
         if(remBtn.value){
           isLog.value = true
-          const resUser = await axios.get(`http://localhost:3000/users/${formInline.name}`)
+          const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
           console.log('用户数据成功处理',resUser.data)
-          const user = resUser.data;
+          const user = resUser.data[0];
           userInfo.username = user.username;
           userInfo.account = user.account;
-          userInfo.likes = user.likes;
-          userInfo.comments = user.comments;
+          userInfo.likes = user.like_count;
+          userInfo.comments = user.comment_count;
           userInfo.level = user.level;
+          userInfo.created_at = user.created_at
           localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
+          formInline.content = ''
         }else{
           formInline.content = ''
           formInline.username = ''

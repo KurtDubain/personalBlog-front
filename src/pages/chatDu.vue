@@ -11,7 +11,7 @@
           </mainDu>
         </el-main>
         <el-aside width="20%">
-  
+          <chatOutDu></chatOutDu>
         </el-aside>
       </el-container>
     </div>
@@ -22,11 +22,13 @@
   import chatlittleDu from '@/components/chatlittleDu.vue'
   import {reactive,onMounted, computed} from 'vue'
   import axios from 'axios'
+  import chatOutDu from '@/components/chatOutDu.vue'
   export default {
       name:"chatDu",
       components:{
           mainDu,
-          chatlittleDu
+          chatlittleDu,
+          chatOutDu
       },
       setup(){
         let chats = reactive({})
