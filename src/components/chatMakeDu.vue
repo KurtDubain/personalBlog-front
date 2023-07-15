@@ -7,7 +7,7 @@
       <el-form-item label="图片">
         <el-upload
           class="upload-demo"
-          action="http://localhost:3000/comments/upload"
+          action="http://localhost:3000/chats/imageUpload"
           :show-file-list="false"
           :on-success="handleUploadSuccess"
           :before-upload="beforeUpload"
@@ -31,8 +31,8 @@ import { ElMessage } from 'element-plus';
 export default {
   name: 'CommentFormDialog',
   props: {
-    userid: {
-      type: String,
+    userInfo: {
+      type: Object,
       required: true
     },
     // chatFormVisible:{
@@ -69,7 +69,7 @@ export default {
             content: form.value.content,
             image: form.value.image
           };
-          const res = await axios.post('http://localhost:3000/comments/form', formData);
+          const res = await axios.post('http://localhost:3000/chats/formUpload', formData);
           console.log('表单数据成功提交', res.data);
           // props.chatFormVisible.value=false
           emit('closeForm');
