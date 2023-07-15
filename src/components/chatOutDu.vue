@@ -39,7 +39,7 @@
               <el-button @click="showUserInfoCard">查看个人信息</el-button>
               <el-form-item class="button_row">         
                 <el-button type="primary" @click="submitChat">留个言</el-button>
-                <chatMakeDu v-if="chatFormVisible" :userid="userInfo.id"></chatMakeDu>
+                <chatMakeDu v-if="chatFormVisible" :chatFormVisible="chatFormVisible" @closeForm="closeChatForm" :userid="userInfo.id"></chatMakeDu>
               </el-form-item>
               
           </el-card>
@@ -203,6 +203,9 @@
           console.error('表单数据提交失败', err)
         }
       }
+      const closeChatForm = ()=>{
+        chatFormVisible.value = false
+      }
   
       return {
         onSubmit,
@@ -214,7 +217,8 @@
         showUserInfoCard,
         logout,
         submitChat,
-        chatFormVisible
+        chatFormVisible,
+        closeChatForm
       }
     }
   }
