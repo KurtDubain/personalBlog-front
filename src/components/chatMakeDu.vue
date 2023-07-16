@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="dialogVisible" title="发表留言" :close-on-click-modal="false">
-    <el-form :model="form" :ref="commentForm" label-position="top">
+    <el-form :model="form" ref="commentForm" label-position="top">
       <el-form-item label="内容">
         <el-input v-model="form.content" type="textarea" rows="4" placeholder="请输入留言内容"></el-input>
       </el-form-item>
@@ -41,13 +41,13 @@ export default {
     // }
   },
   emits: ['closeForm'],
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const dialogVisible = ref(true);
     const form = ref({
       content: '',
-      image: null
+      image: null,
     });
-    const commentForm = ref(null);
+    const commentForm = ref({});
 
     const beforeUpload = (file) => {
       const isImage = file.type.startsWith('image/');
@@ -58,16 +58,20 @@ export default {
     };
 
     const handleUploadSuccess = (response) => {
-      form.value.image = response.data.imageUrl;
+      form.value.image = response.imageUrl;
     };
 
     const submitForm = async () => {
-      const valid = await commentForm.value.validate();
+      const valid = await commentForm.value?.validate();
       if (valid) {
         try {
           const formData = {
             content: form.value.content,
-            image: form.value.image
+            image: form.value.image,
+            username:props.userInfo.username,
+            account:props.userInfo.account,
+            uid:props.userInfo.id,
+
           };
           const res = await axios.post('http://localhost:3000/chats/formUpload', formData);
           console.log('表单数据成功提交', res.data);

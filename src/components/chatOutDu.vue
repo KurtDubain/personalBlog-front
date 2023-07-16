@@ -81,7 +81,8 @@
         account:'',
         likes:0,
         comments:0,
-        level:1
+        level:1,
+        id :0
       })
       // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
       const isFormInvalid = computed(() => {
@@ -137,7 +138,7 @@
       }
       // 展示个人信息卡片
       const showUserInfoCard = () => {
-        ElMessageBox.alert(`用户名: ${userInfo.username}\n账号: ${userInfo.account}\n被喜欢数:${userInfo.likes}\n回复数:${userInfo.comments}`, '个人信息', {
+        ElMessageBox.alert(`用户id:${userInfo.id}\n用户名: ${userInfo.username}\n账号: ${userInfo.account}\n被喜欢数:${userInfo.likes}\n回复数:${userInfo.comments}`, '个人信息', {
           confirmButtonText: '确定'
         })
       }
@@ -150,6 +151,7 @@
         userInfo.likes = 0
         userInfo.comments =0
         userInfo.level = 0
+        userInfo.id =0
         // 切换回未登录状态
         isLog.value = false
       }
@@ -163,6 +165,7 @@
           // 获取用户信息
           const storedUserInfo = localStorage.getItem('userInfo')
           if (storedUserInfo) {
+            userInfo.id = JSON.parse(storedUserInfo).id
             userInfo.username = JSON.parse(storedUserInfo).username
             userInfo.account = JSON.parse(storedUserInfo).account
             userInfo.comments = JSON.parse(storedUserInfo).comments
@@ -181,7 +184,8 @@
             account: userInfo.account,
             likes:userInfo.likes,
             comments:userInfo.comments,
-            level:userInfo.level
+            level:userInfo.level,
+            id:userInfo.id
           })
           localStorage.setItem('userInfo', storedUserInfo)
           localStorage.setItem('rememberedLogin', remBtn.value.toString())
