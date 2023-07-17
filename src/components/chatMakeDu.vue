@@ -12,10 +12,16 @@
           :on-success="handleUploadSuccess"
           :before-upload="beforeUpload"
         >
+          
           <el-button size="small" type="primary">点击上传图片</el-button>
           <div class="upload-help">(支持上传图片文件)</div>
         </el-upload>
       </el-form-item>
+      <div v-if="form.image">
+        <img :src="form.image" alt="已上传图片" style="max-width:200px;max-height:200px">
+        (最多上传一张照片)
+      </div>
+
     </el-form>
     <template #footer>
       <el-button @click="ChatFormClose">取消</el-button>
@@ -28,6 +34,7 @@
 import { ref } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
+import EventBus from '@/utils/eventBus';
 export default {
   name: 'CommentFormDialog',
   props: {
@@ -50,6 +57,11 @@ export default {
     const commentForm = ref({});
 
     const beforeUpload = (file) => {
+      if(form.value.image){
+        ElMessage.error('最多只能上传一张图片')
+        return false
+      }
+
       const isImage = file.type.startsWith('image/');
       if (!isImage) {
         ElMessage.error('只能上传图片文件');
@@ -59,6 +71,7 @@ export default {
 
     const handleUploadSuccess = (response) => {
       form.value.image = response.imageUrl;
+      // console.log(form.value.image)
     };
 
     const submitForm = async () => {
@@ -74,8 +87,9 @@ export default {
 
           };
           const res = await axios.post('http://localhost:3000/chats/formUpload', formData);
-          console.log('表单数据成功提交', res.data);
+          console.log('表单数据成功提交', res.data,formData);
           // props.chatFormVisible.value=false
+          EventBus.emit('NeedRefreshChats')
           emit('closeForm');
           // dialogVisible.value = false; // 提交成功后关闭弹窗
         } catch (err) {

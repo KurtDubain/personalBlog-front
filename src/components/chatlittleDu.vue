@@ -1,15 +1,22 @@
-<!-- 留言板小组件 -->
 <template>
   <div class="chatlittle-container">
     <el-timeline>
-      <!-- 类似文章栏组件的输出 -->
       <el-timeline-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
         <el-card class="chat-card">
           <div class="header-chat">
-            <h2 class="chat-name">{{ chats[chat].name }}</h2>
-            <h3 class="chat-contact">{{ chats[chat].contact }}</h3>
+            <h2 class="chat-username">{{ chats[chat].username }}</h2>
+            
+            <!-- <h3 class="chat-account">{{ chats[chat].account }}</h3> -->
           </div>
-          <p class="chat-content">{{ chats[chat].content }}</p>
+          <div class="chat-content">
+            <p>{{ chats[chat].content }}</p>
+            <img v-if="chats[chat].imgUrl" :src="chats[chat].imgUrl" alt="留言图片" class="chat-image" />
+          </div>
+          <div class="chat-details">
+              <span class="chat-likes">Likes: {{ chats[chat].likes }}</span>
+              <span class="chat-views">Views: {{ chats[chat].views }}</span>
+              <span class="chat-reply">Reply: {{ chats[chat].reply }}</span>
+            </div>
         </el-card>
       </el-timeline-item>
     </el-timeline>
@@ -52,13 +59,13 @@ export default {
   margin-bottom: 10px;
 }
 
-.chat-name {
+.chat-username {
   font-size: 18px;
   font-weight: bold;
   margin-right: 10px;
 }
 
-.chat-contact {
+.chat-account {
   font-size: 14px;
   color: #999;
 }
@@ -67,5 +74,22 @@ export default {
   font-size: 16px;
   line-height: 1.6;
   margin-top: 10px;
+}
+
+.chat-image {
+  max-width: 100%;
+  margin-top: 10px;
+}
+
+.chat-details {
+  margin-top: 10px;
+}
+
+.chat-likes,
+.chat-views,
+.chat-reply {
+  margin-right: 10px;
+  font-size: 14px;
+  color: #999;
 }
 </style>
