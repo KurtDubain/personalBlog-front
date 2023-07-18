@@ -1,3 +1,4 @@
+<!-- 留言卡片组件 -->
 <template>
   <div class="chatlittle-container">
     <el-timeline>
@@ -8,10 +9,12 @@
             
             <!-- <h3 class="chat-account">{{ chats[chat].account }}</h3> -->
           </div>
-          <div class="chat-content">
-            <p>{{ chats[chat].content }}</p>
-            <img v-if="chats[chat].imgUrl" :src="chats[chat].imgUrl" alt="留言图片" class="chat-image" />
-          </div>
+          <router-link :to="`/chatComment/${chats[chat].id}`" class="chat-link">
+            <div class="chat-content">
+              <p>{{ chats[chat].content }}</p>
+              <img v-if="chats[chat].imgUrl" :src="chats[chat].imgUrl" alt="留言图片" class="chat-image" />
+            </div>
+          </router-link>
           <div class="chat-details">
               <span class="chat-likes">Likes: {{ chats[chat].likes }}</span>
               <span class="chat-views">Views: {{ chats[chat].views }}</span>
@@ -24,6 +27,8 @@
 </template>
 
 <script>
+  import { useRouter } from 'vue-router'
+
 export default {
   name: "ChatLittleDu",
   props: {
@@ -32,6 +37,22 @@ export default {
       default: () => ({}),
     },
   },
+  setup() {
+      const router = useRouter();
+      // 传递路由参数
+      const goToChat = (chatId) => {
+        router.push({
+          name: 'chatComment',
+          params: {
+            chatId: chatId
+          }
+        });
+      };
+  
+      return {
+        goToChat
+      };
+    }
 };
 </script>
 
@@ -64,7 +85,9 @@ export default {
   font-weight: bold;
   margin-right: 10px;
 }
-
+.chat-link{
+  text-decoration: none;
+}
 .chat-account {
   font-size: 14px;
   color: #999;
@@ -74,6 +97,7 @@ export default {
   font-size: 16px;
   line-height: 1.6;
   margin-top: 10px;
+  color: rgb(14, 13, 13);
 }
 
 .chat-image {
@@ -92,4 +116,6 @@ export default {
   font-size: 14px;
   color: #999;
 }
+
+
 </style>

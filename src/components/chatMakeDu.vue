@@ -1,3 +1,4 @@
+<!-- 留言发表表单，包含文字发表和图片上传 -->
 <template>
   <el-dialog v-model="dialogVisible" title="发表留言" :close-on-click-modal="false">
     <el-form :model="form" ref="commentForm" label-position="top">
