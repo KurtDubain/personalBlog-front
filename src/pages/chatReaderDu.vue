@@ -49,7 +49,7 @@ export default {
                 await loadChatInfo(props.chatId)
                 await loadChatCommentsInfo(props.chatId)
                 EventBus.on('NeedRefreshChatComment',()=>{
-                    loadChatCommentsInfo(props.articleId)
+                    loadChatCommentsInfo(props.chatId)
                 })
             }catch(error){
                 console.error('评论初始化失败');
@@ -73,7 +73,7 @@ export default {
                 // console.log(articles)
                 // console.log('文章信息获取成功')
             }catch(error){
-                console.error('文章信息获取失败');
+                console.error('留言获取失败');
             }
         }
         const loadChatCommentsInfo = async(chatId)=>{
@@ -84,7 +84,7 @@ export default {
                 // console.log(articles)
                 // console.log('文章信息获取成功')
             }catch(error){
-                console.error('文章信息获取失败');
+                console.error('评论获取失败');
             }
         }
         return{

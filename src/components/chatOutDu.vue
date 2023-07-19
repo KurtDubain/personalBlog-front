@@ -40,7 +40,7 @@
               <el-button @click="showUserInfoCard">查看个人信息</el-button>
               <el-form-item class="button_row">         
                 <el-button type="primary" @click="submitChat">留个言</el-button>
-                <chatMakeDu v-if="chatFormVisible" :chatFormVisible="chatFormVisible" @closeForm="closeChatForm" :userInfo="userInfo"></chatMakeDu>
+                <chatMakeDu v-if="chatFormVisible" :chatFormVisible="chatFormVisible" @closeForm="closeChatForm" :userInfo="userInfo" ></chatMakeDu>
               </el-form-item>
               
           </el-card>
@@ -91,6 +91,7 @@
           !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(formInline.account)
         )
       })
+      
       // 表单提交功能
       const onSubmit = async () => {
         try {
@@ -223,7 +224,7 @@
         logout,
         submitChat,
         chatFormVisible,
-        closeChatForm
+        closeChatForm,
       }
     }
   }

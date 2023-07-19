@@ -24,8 +24,8 @@ export default {
       required: true
     }
   },
-  setup(){
-    // console.log(props.chatCommentInfo.value)
+  setup(props){
+    console.log(props.chatCommentInfo)
   }
 };
 </script>

@@ -46,7 +46,7 @@
               <el-input v-model="formInline.content" type="textarea" placeholder="想说点什么呢" clearable />
             </el-form-item>
             <el-form-item class="button_row">         
-              <el-button type="primary" @click="submitWithLogin" :disabled="isFormInvalid">发布</el-button>
+              <el-button type="primary" @click="submitWithLogin" :disabled="isFormInvalidSecond">发布</el-button>
             </el-form-item>
             
         </el-card>
@@ -97,6 +97,10 @@ export default {
         formInline.content.trim() === '' ||
         !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(formInline.account)
       )
+    })
+    const isFormInvalidSecond = computed(() => {
+      return (
+        formInline.content.trim() === ''       )
     })
     // 表单提交功能
     const onSubmit = async () => {
@@ -228,7 +232,8 @@ export default {
       userInfo,
       showUserInfoCard,
       logout,
-      submitWithLogin
+      submitWithLogin,
+      isFormInvalidSecond
     }
   }
 }
