@@ -66,11 +66,11 @@ export default {
                 chatInfo.likes = res.data[0].likes
                 chatInfo.views = res.data[0].views
                 chatInfo.reply = res.data[0].reply
-                chatInfo.user_id = res.data[0].user_id
+                chatInfo.uid = res.data[0].uid
                 chatInfo.imgUrl = res.data[0].imgUrl
 
-
-                // console.log(articles)
+                
+                // console.log(chatInfo,res.data[0])
                 // console.log('文章信息获取成功')
             }catch(error){
                 console.error('留言获取失败');

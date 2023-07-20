@@ -20,6 +20,19 @@
     <input v-model="MDFile.name" type="text" placeholder="输入文件序号">
     <button @click="upMarkDown">上传文章</button>
   </div>
+  <div class="tags">
+  <label>
+    <input type="checkbox" v-model="MDFile.tags" value="生活"> 生活
+  </label>
+  <label>
+    <input type="checkbox" v-model="MDFile.tags" value="技术"> 技术
+  </label>
+  <label>
+    <input type="checkbox" v-model="MDFile.tags" value="体育"> 体育
+  </label>
+</div>
+<button @click="upMarkDown">上传文章</button>
+
 </template>
 
 <script>
@@ -33,7 +46,8 @@ export default {
       content: '',
       name: '',
       imageName: '',
-      imageFile:null
+      imageFile:null,
+      tags:[]
     });
 
     const uploadStatus = ref(null);
@@ -42,6 +56,8 @@ export default {
     const parsedMarkdown = computed(() => {
       return marked(MDFile.content);
     });
+
+    
 
     // 处理输入事件，更新解析后的Markdown内容
     const handleInput = () => {
@@ -70,10 +86,10 @@ export default {
 
     // 上传Markdown文件
     const upMarkDown = () => {
-      if (MDFile.name && MDFile.content) {
+      if (MDFile.name && MDFile.content&&MDFile.tags.length>0) {
         // 模拟上传Markdown文件逻辑
         // 这里可以替换成实际的Markdown文件上传逻辑，例如使用axios等发送POST请求将MDFile.content上传到服务器
-        console.log('上传Markdown文件', MDFile.name, '内容', MDFile.content);
+        console.log('上传Markdown文件', MDFile.name, '内容', MDFile.content,"tags:",MDFile.tags);
       } else {
         console.log('请输入文件序号和Markdown内容');
       }

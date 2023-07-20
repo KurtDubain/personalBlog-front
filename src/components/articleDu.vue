@@ -9,7 +9,7 @@
             <el-card class="article-card">
               <h2 class="article-title">{{ articles[article].title }}</h2>
               <div class="article-tags">
-                <el-tag v-for="tag in articles[article].tags" :key="tag" class="article-tag" type="info">
+                <el-tag v-for="tag in articles[article].tags.tags" :key="tag" class="article-tag" type="info">
                   {{ tag }}
                 </el-tag>
               </div>
