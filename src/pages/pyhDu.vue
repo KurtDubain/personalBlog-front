@@ -45,7 +45,7 @@ export default {
         // 使用过滤计算属性，过滤出含有“体育”的标签的文章并传递给子组件
       let filterArticle = computed(()=>{
         const articlesArray = articles.value? Object.values(articles.value):[]
-        return articlesArray.filter((article)=>article.tags &&article.tags.includes('体育'))
+        return articlesArray.filter((article)=>article.tags &&article.tags.tags.includes('体育'))
       })
    
       return {articles,filterArticle}

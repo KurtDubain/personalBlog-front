@@ -45,7 +45,7 @@ export default {
         // 使用计算属性，过滤出标签中含有“技术”的文章
       let filterArticle = computed(()=>{
         const articlesArray = articles.value? Object.values(articles.value):[]
-        return articlesArray.filter((article)=>article.tags.includes('技术'))
+        return articlesArray.filter((article)=>article.tags &&article.tags.tags.includes('技术'))
       })
       return {articles,filterArticle}
     }

@@ -62,7 +62,25 @@ const routes =[
     {
         path:'/write',
         name:'write',
-        component:writer
+        component:writer,
+        beforeEnter: (to, from, next) => {
+            const Login = localStorage.getItem('rememberedLogin')
+            const storedUserInfo = localStorage.getItem('userInfo')
+            let username
+          if (storedUserInfo) {
+            // userInfo.id = JSON.parse(storedUserInfo).id
+            username = JSON.parse(storedUserInfo).username
+            // userInfo.account = JSON.parse(storedUserInfo).account
+            // userInfo.comments = JSON.parse(storedUserInfo).comments
+            // userInfo.likes = JSON.parse(storedUserInfo).likes
+            // userInfo.level = JSON.parse(storedUserInfo).level
+          }
+          if(Login&&username==='哈哈'){
+            next()
+          }else{
+            next('/')
+          }
+        }
     },
     {
         path:'/chatComment/:chatId',

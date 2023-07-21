@@ -60,8 +60,8 @@
         let filterArticle = computed(() => {
           const articlesArray = articles.value ? Object.values(articles.value) : [];
           return articlesArray.filter((article) => {
-            if (article.tags && Array.isArray(article.tags)) {
-              return article.tags.includes('生活');
+            if (article.tags && Array.isArray(article.tags.tags)) {
+              return article.tags.tags.includes('生活');
             } else {
               return false;
             }

@@ -18,17 +18,18 @@
   </div>
   <div class="upload-section">
     <input v-model="MDFile.name" type="text" placeholder="输入文件序号">
-    <button @click="upMarkDown">上传文章</button>
+    <input v-model="MDFile.title" type="text" placeholder="输入标题">
+
   </div>
   <div class="tags">
   <label>
-    <input type="checkbox" v-model="MDFile.tags" value="生活"> 生活
+    <input type="checkbox" v-model="MDFile.tags.tags" value="生活"> 生活
   </label>
   <label>
-    <input type="checkbox" v-model="MDFile.tags" value="技术"> 技术
+    <input type="checkbox" v-model="MDFile.tags.tags" value="技术"> 技术
   </label>
   <label>
-    <input type="checkbox" v-model="MDFile.tags" value="体育"> 体育
+    <input type="checkbox" v-model="MDFile.tags.tags" value="体育"> 体育
   </label>
 </div>
 <button @click="upMarkDown">上传文章</button>
@@ -38,6 +39,8 @@
 <script>
 import { reactive, computed, ref } from 'vue';
 import { marked } from 'marked';
+import axios from 'axios';
+// import { el } from 'element-plus/es/locale';
 
 export default {
   name: 'MarkdownEditor',
@@ -47,7 +50,8 @@ export default {
       name: '',
       imageName: '',
       imageFile:null,
-      tags:[]
+      tags:{tags:[]},
+      title:''
     });
 
     const uploadStatus = ref(null);
@@ -74,9 +78,24 @@ export default {
 
     const uploadImg = async() => {
       if (MDFile.imageFile && MDFile.imageName) {
-        // 模拟上传图片逻辑
-        // 这里可以替换成实际的图片上传逻辑，例如使用axios等发送POST请求将MDFile.imageFile上传到服务器
-        console.log(MDFile)
+        const formData = new FormData()
+        formData.append('image',MDFile.imageFile,MDFile.imageName)
+        try{
+          const res = await axios.post('http://localhost:3000/write/imgUpload',formData,{
+            headers:{
+              'Content-Type':'multipart/form-data'
+            }
+          })
+          if(res.status===200){
+            uploadStatus.value = 'success'
+          }else{
+            uploadStatus.value = 'fail'
+          }
+          
+        }catch(error){
+          console.error(error);
+          uploadStatus.value = 'fail'
+        }
         
       } else {
         uploadStatus.value = null;
@@ -85,13 +104,30 @@ export default {
     };
 
     // 上传Markdown文件
-    const upMarkDown = () => {
-      if (MDFile.name && MDFile.content&&MDFile.tags.length>0) {
-        // 模拟上传Markdown文件逻辑
-        // 这里可以替换成实际的Markdown文件上传逻辑，例如使用axios等发送POST请求将MDFile.content上传到服务器
-        console.log('上传Markdown文件', MDFile.name, '内容', MDFile.content,"tags:",MDFile.tags);
+    const upMarkDown = async () => {
+      if (MDFile.name && MDFile.content&&MDFile.tags.tags.length>0) {
+       const formData = new FormData()
+       formData.append('name',MDFile.name)
+       formData.append('content',MDFile.content)
+       formData.append('tags',JSON.stringify(MDFile.tags))
+       formData.append('title',MDFile.title)
+       try{
+        const res = await axios.post('http://localhost:3000/write/ContentUpload',formData,{
+          headers:{
+            'Content-Type':'multipart/form-data'
+          }
+        })
+        if(res.status === 200){
+          console.log('上传成功')
+        }else{
+          console.log('上传失败');
+        }
+       }catch(error){
+        console.error(error);
+        console.log('上传过程出问题了');
+       }
       } else {
-        console.log('请输入文件序号和Markdown内容');
+        console.log('请不要置空');
       }
     };
 
@@ -119,7 +155,7 @@ export default {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  height: 300px;
+  height: 600px;
   overflow: auto;
 }
 
