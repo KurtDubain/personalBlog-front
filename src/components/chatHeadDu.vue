@@ -29,6 +29,7 @@
     //   }
     },
     setup(){
+      // 控制是否Like
       const isLiked = ref(false)
       const handleLike = ()=>{
         isLiked.value = !isLiked.value

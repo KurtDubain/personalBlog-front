@@ -1,3 +1,4 @@
+<!-- 指定留言下的评论卡片组件 -->
 <template>
   <div class="comment-list">
     <div v-for="comment in chatCommentInfo" :key="comment.id" class="comment-item">

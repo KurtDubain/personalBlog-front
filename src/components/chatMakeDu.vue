@@ -48,15 +48,17 @@ export default {
     //   required:true
     // }
   },
+  // 添加了一个子传父的组件，用于控制表单的显示与关闭
   emits: ['closeForm'],
   setup(props, { emit }) {
+    // 定义表单是否显示
     const dialogVisible = ref(true);
     const form = ref({
       content: '',
       image: null,
     });
     const commentForm = ref({});
-
+    // 判断是否上传图片，以及限制上传图片的数量
     const beforeUpload = (file) => {
       if(form.value.image){
         ElMessage.error('最多只能上传一张图片')
@@ -69,12 +71,12 @@ export default {
       }
       return isImage;
     };
-
+    // 当成功处理数据的时候，获取返回的图片URL，用于显示
     const handleUploadSuccess = (response) => {
       form.value.image = response.imageUrl;
       // console.log(form.value.image)
     };
-
+    // 提交表单，包含用户信息、评论内容以及图片信息
     const submitForm = async () => {
       const valid = await commentForm.value?.validate();
       if (valid) {
@@ -90,7 +92,9 @@ export default {
           const res = await axios.post('http://localhost:3000/chats/formUpload', formData);
           console.log('表单数据成功提交', res.data,formData);
           // props.chatFormVisible.value=false
+          // 刷新评论区
           EventBus.emit('NeedRefreshChats')
+          // 触发父事件，关闭当前表单栏
           emit('closeForm');
           // dialogVisible.value = false; // 提交成功后关闭弹窗
         } catch (err) {

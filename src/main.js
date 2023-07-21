@@ -60,6 +60,7 @@ const routes =[
         
     },
     {
+        // 添加了前置路由守卫，来防止非博主用户使用文章发表功能
         path:'/write',
         name:'write',
         component:writer,

@@ -46,6 +46,7 @@ export default {
         let chatCommentInfo = ref([])
         onMounted(async()=>{
             try{
+                // 钩子函数挂载加载时间和事件总线事件
                 await loadChatInfo(props.chatId)
                 await loadChatCommentsInfo(props.chatId)
                 EventBus.on('NeedRefreshChatComment',()=>{
@@ -55,6 +56,7 @@ export default {
                 console.error('评论初始化失败');
             }
         })
+        // 加载指定留言的信息
         const loadChatInfo = async(chatId)=>{
             try{
                 const res = await axios.get(`http://localhost:3000/chats/chatInfo/${chatId}`)
@@ -76,6 +78,7 @@ export default {
                 console.error('留言获取失败');
             }
         }
+        // 加载指定留言下的评论信息
         const loadChatCommentsInfo = async(chatId)=>{
             try{
                 const res = await axios.get(`http://localhost:3000/chats/chatCommentInfo/${chatId}`)

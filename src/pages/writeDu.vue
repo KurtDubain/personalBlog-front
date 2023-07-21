@@ -1,3 +1,4 @@
+<!-- 用于博主实现文章发表的页面组件 -->
 <template>
   <div class="markdown-editor">
     <div class="editor">
@@ -45,6 +46,7 @@ import axios from 'axios';
 export default {
   name: 'MarkdownEditor',
   setup() {
+    // 定义文章的全部信息，包含图片和文件信息
     let MDFile = reactive({
       content: '',
       name: '',
@@ -75,7 +77,7 @@ export default {
         MDFile.imageFile = file;
       }
     };
-
+// 以二进制的形式上传图片
     const uploadImg = async() => {
       if (MDFile.imageFile && MDFile.imageName) {
         const formData = new FormData()
@@ -104,6 +106,7 @@ export default {
     };
 
     // 上传Markdown文件
+    // 以Formdata格式上传
     const upMarkDown = async () => {
       if (MDFile.name && MDFile.content&&MDFile.tags.tags.length>0) {
        const formData = new FormData()
