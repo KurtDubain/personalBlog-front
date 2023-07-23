@@ -41,6 +41,8 @@
 import { reactive, computed, ref } from 'vue';
 import { marked } from 'marked';
 import axios from 'axios';
+import { ElMessage } from 'element-plus'
+
 // import { el } from 'element-plus/es/locale';
 
 export default {
@@ -90,13 +92,17 @@ export default {
           })
           if(res.status===200){
             uploadStatus.value = 'success'
+            ElMessage.success(`${MDFile.imageName} 图片上传成功`)
           }else{
             uploadStatus.value = 'fail'
+            ElMessage.error('图片上传失败')
           }
           
         }catch(error){
           console.error(error);
           uploadStatus.value = 'fail'
+          ElMessage.error('图片上传失败')
+
         }
         
       } else {
@@ -122,15 +128,22 @@ export default {
         })
         if(res.status === 200){
           console.log('上传成功')
+          ElMessage.success(`${MDFile.title} 文件上传成功`)
         }else{
           console.log('上传失败');
+          ElMessage.error('文件上传失败')
+
         }
        }catch(error){
         console.error(error);
         console.log('上传过程出问题了');
+        ElMessage.error('文件上传失败')
+
        }
       } else {
         console.log('请不要置空');
+        ElMessage.error('请不要置空')
+
       }
     };
 

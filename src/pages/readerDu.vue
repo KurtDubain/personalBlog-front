@@ -83,12 +83,13 @@ export default {
     const loadArticle = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}`)
-        articles.title = res.data[0].title
-        articles.date =res.data[0].date
-        articles.views = res.data[0].views
-        articles.like = res.data[0].like
-        articles.commentsNum = res.data[0].commentsNum
-        articles.tags = res.data[0].tags
+        
+        articles.title = res.data.title
+        articles.date =res.data.date
+        articles.views = res.data.views
+        articles.like = res.data.like
+        articles.commentsNum = res.data.commentsNum
+        articles.tags = res.data.tags
         // console.log(articles)
         // console.log('文章信息获取成功')
       }catch(error){
@@ -137,11 +138,23 @@ export default {
         const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
         console.log(res.data)
         // 通过判断当前文章是否是第一个文章，来决定数据类型
-        if(res.data[0].title === '我是帅哥' && !res.data[1]){
-          ctrltitle.Tnext = res.data[0].title
-        }else{
-          ctrltitle.Tpre = res.data[0].title
-          ctrltitle.Tnext = res.data[1].title
+        if (res.data.length === 1) {
+          // 只获取到一个标题，说明当前文章可能是第一个或最后一个
+          if (res.data[0].title === '关于“Class private methods are not enabled.”问题') {
+            ctrltitle.Tnext = res.data[0].title;
+            ctrltitle.Tpre = null; // 没有前一个标题，置为null
+          } else {
+            ctrltitle.Tnext = null; // 没有后一个标题，置为null
+            ctrltitle.Tpre = res.data[0].title;
+          }
+        } else if (res.data.length === 2) {
+          // 获取到两个标题，说明不是第一个也不是最后一个
+          ctrltitle.Tpre = res.data[0].title;
+          ctrltitle.Tnext = res.data[1].title;
+        } else {
+          // 没有获取到标题
+          ctrltitle.Tpre = null;
+          ctrltitle.Tnext = null;
         }
         
         
@@ -157,7 +170,7 @@ export default {
       try{
         const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
         lastId.id = res.data
-        console.log('成功获取最后一个id',lastId)
+        console.log('成功获取最后一个id')
       }catch(error){
         console.error('未能获取最后一个文章的id');
       }
