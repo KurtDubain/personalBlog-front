@@ -2,15 +2,19 @@
 <template>
   <div class="article-content">
     <h1>{{ article.title }}</h1>
+    
+    <!-- 解析的内容 -->
+    <div class="markdown-content" v-html="parsedContent"></div>
+
     <div class="metadata">
       <!-- 文章直接可用的数据 -->
       <span class="date">{{ article.date }}</span>
       <span class="views">{{ article.views }}</span>
       <span class="likes">{{ article.likes }}</span>
       <span class="comments">{{ article.commentsNum }}</span>
+      
     </div>
-    <!-- 解析的内容 -->
-    <div class="markdown-content" v-html="parsedContent"></div>
+        <slot></slot>
   </div>
 </template>
 

@@ -8,7 +8,9 @@
         <el-main>
           <mainDu style="display:flex;flex-direction: column;align-items: center;">
             
-              <ContentDu :article="articles"></ContentDu>
+              <ContentDu :article="articles">
+              <likesDu></likesDu>
+              </ContentDu>
           </mainDu>
         </el-main>
         <el-aside width="10%">
@@ -32,7 +34,7 @@ import ComShowDu from '../components/ComShowDu.vue'
 import ContentDu from '../components/ContentDu.vue'
 import EventBus from '../utils/eventBus'
 import ctrlBtnDu from '../components/ctrlBtnDu.vue'
-
+import likesDu from '@/components/likesDu.vue'
 
 export default {
   name:"readerDu",
@@ -47,7 +49,8 @@ export default {
     ContentDu,
     ComListDu,
     ComShowDu,
-    ctrlBtnDu
+    ctrlBtnDu,
+    likesDu
 
   },
   setup(props){
@@ -100,7 +103,6 @@ export default {
     const loadArticlecontent = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}/content`)
-
         articles.content = res.data
       }catch(error){
         console.error('未能正常获取文章内容或者未能正确解析');
@@ -112,13 +114,6 @@ export default {
         let res = await axios.get(`http://localhost:3000/comments/${articleId}`)
         console.log(res)
         const commentsData = res.data
-        // chats = chatData.map((chat) => ({
-        //   id: chat.id,
-        //   content: chat.content,
-        //   likes: chat.likes,
-        //   created_Date: chat.created_Date,
-        //   name: chat.name,
-        //   contact: chat.contact,
         comments.value = commentsData.map((comment) => ({
           id: comment.id,
           content: comment.content,
