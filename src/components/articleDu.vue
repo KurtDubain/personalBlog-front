@@ -1,13 +1,17 @@
 <!-- 文章栏组件 -->
 <template>
     <div class="article-container">
-      <el-timeline>
+      <!-- <el-timeline> -->
         <!-- 根据articles的类型，需要使用键值对来实现逐一显示 -->
-        <el-timeline-item v-for="article in Object.keys(articles)" :key="articles[article].id"
+          <el-item v-for="article in Object.keys(articles)" :key="articles[article].id"
           center :timestamp="articles[article].date" placement="top" size="large" @click="goToArticle(articles[article].id)">
           <router-link :to="`/reader/${articles[article].id}`" class="article-link">
             <el-card class="article-card">
-              <h2 class="article-title">{{ articles[article].title }}</h2>
+              <span>
+                <h2 class="article-title">{{ articles[article].title }}</h2>
+                <h4 style="font-weight:lighter ">{{ articles[article].date }}</h4>
+
+              </span>
               <div class="article-tags">
                 <el-tag v-for="tag in articles[article].tags.tags" :key="tag" class="article-tag" type="info">
                   {{ tag }}
@@ -15,8 +19,9 @@
               </div>
             </el-card>
           </router-link>
-        </el-timeline-item>
-      </el-timeline>
+        </el-item>
+
+      <!-- </el-timeline> -->
     </div>
   </template>
   
@@ -51,6 +56,7 @@
   </script>
   
   <style scoped>
+
   .article-container {
     display: flex;
     flex-direction: column;

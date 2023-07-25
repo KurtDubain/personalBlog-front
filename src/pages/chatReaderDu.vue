@@ -7,7 +7,7 @@
         <el-main>
           <mainDu style="display:flex;flex-direction: column;align-items: center;">
             <chatHeadDu :chatInfo="chatInfo"></chatHeadDu>
-            评论：
+            <el-divider border-style="double" />
             <chatCommentDu :chatId="chatId" :chatCommentInfo="chatCommentInfo"></chatCommentDu>
           </mainDu>
         </el-main>
@@ -101,5 +101,9 @@ export default {
 </script>
 
 <style>
-
+@media screen and (max-width: 768px) {
+  .el-aside {
+    display: none;
+  }
+}
 </style>

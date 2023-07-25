@@ -2,7 +2,7 @@
 <template>
     <div class="show">
         <el-carousel :interval="4000" type="card" height="200px">
-            <el-carousel-item v-for="item in 6" :key="item">
+            <el-carousel-item v-for="item in 4" :key="item">
                 <img :src="getImage(item)" alt="">
             </el-carousel-item>
         </el-carousel>
@@ -24,8 +24,7 @@ export default{
                 imageVue,
                 imageVue,
                 imageVue,
-                imageVue,
-                imageVue,
+                
             ],
         })
         function getImage(item){

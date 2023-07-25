@@ -7,7 +7,7 @@
           <router-link to="/about" class="footer-link">关于</router-link>
           <router-link to="/contact" class="footer-link">联系我们</router-link>
         </div>
-        <div class="footer-info">
+        <div class="footer-info" >
           <p>版权所有 &copy; 雪碧</p>
           <!-- <p>地址：xxx市xxx区xxx街道xxx号</p> -->
           <p>电话：15100577937</p>
@@ -25,7 +25,8 @@ export default{
 </script>
 
   <style scoped>
-  .footer-container {
+
+.footer-container {
     background-color: #f2f2f2;
     padding: 20px 0;
     color: #888;

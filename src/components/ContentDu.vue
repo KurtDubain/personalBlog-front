@@ -5,15 +5,25 @@
     
     <!-- 解析的内容 -->
     <div class="markdown-content" v-html="parsedContent"></div>
-
+    
     <div class="metadata">
-      <!-- 文章直接可用的数据 -->
+
       <span class="date">{{ article.date }}</span>
-      <span class="views">{{ article.views }}</span>
-      <span class="comments">{{ article.commentsNum }}</span>
-      
+      <br><br>
+      <span class="views">
+      <el-icon><View /></el-icon>
+      {{ article.views }}</span>
+      <span class="comments">      
+        <el-icon><ChatDotSquare /></el-icon>
+        {{ article.commentsNum }}
+        
+      </span>
+      <span class="like-button">
+          <slot></slot>
+        </span>
+
     </div>
-        <slot></slot>
+        
   </div>
 </template>
 
@@ -53,6 +63,8 @@ export default {
   background-color: #f8f8f8;
   border-radius: 6px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 h1 {
@@ -66,6 +78,8 @@ h1 {
   font-size: 14px;
   color: #888;
   margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
 }
 
 .markdown-content {
@@ -78,19 +92,27 @@ h1 {
   margin-right: 10px;
 }
 
-.date::before {
-  content: "日期：";
+.date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.views::before {
-  content: "阅读量：";
+.views {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
 }
 
-.likes::before {
+/* .likes::before {
   content: "点赞数：";
-}
+} */
 
-.comments::before {
-  content: "评论数：";
+.comments {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: large;
 }
 </style>

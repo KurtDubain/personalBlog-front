@@ -1,29 +1,27 @@
-<!-- 文章内容显示页面 -->
 <template>
   <div class="common-layout">
-      <el-container>
-        <el-aside width="30%">
-          <ComListDu :comments="comments">
-
-          </ComListDu>
-        </el-aside>
-        <el-main>
-          <mainDu style="display:flex;flex-direction: column;align-items: center;">
-            
-              <ContentDu :article="articles">
-              <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
-              </ContentDu>
-          </mainDu>
-        </el-main>
-        <el-aside width="10%">
-                             
-            <ComShowDu :articleId="articleId" :loadComment="loadComment"></ComShowDu>
-            <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId"> 
-          </ctrlBtnDu>  
-        </el-aside>
-      </el-container>
-    </div>
+    <el-container>
+      <!-- 左侧是评论区 -->
+      <el-aside class="mobile-aside" width="30%">
+        <ComListDu :comments="comments"></ComListDu>
+      </el-aside>
+      <el-main>
+        <mainDu style="display:flex;flex-direction: column;align-items: center;">
+          <ContentDu :article="articles">
+           <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
+          </ContentDu>
+        </mainDu>
+      </el-main>
+      <!-- 右侧是切换按钮和登陆表 -->
+      <el-aside class="mobile-aside" width="10%">
+        <ComShowDu :articleId="articleId" :loadComment="loadComment"></ComShowDu>
+        <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId">
+        </ctrlBtnDu>
+      </el-aside>
+    </el-container>
+  </div>
 </template>
+
 
 <script>
 // import articleDu from '@/components/articleDu.vue';
@@ -204,5 +202,14 @@ export default {
 </script>
 
 <style scoped>
+/* 隐藏左侧和右侧的aside部分，并让el-main占据屏幕的全部宽度 */
+@media (max-width: 768px) {
+  .mobile-aside {
+    display: none;
+  }
+  el-main {
+    width: 100%;
+  }
+}
 
 </style>

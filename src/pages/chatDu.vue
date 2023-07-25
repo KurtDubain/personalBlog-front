@@ -1,21 +1,20 @@
 <!-- 留言界面 -->
 <template>
-    <div class="common-layout">
-      <el-container>
-        <el-aside width="20%">
-        </el-aside>
-        <el-main>
-          <mainDu style="display:flex;flex-direction: column;align-items: center;">
-  
+  <div class="common-layout">
+    <el-container>
+      <el-aside width="20%">
+      </el-aside>
+      <el-main>
+        <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <chatlittleDu :chats="trueChats"></chatlittleDu>
-          </mainDu>
-        </el-main>
-        <el-aside width="20%">
-          <chatOutDu></chatOutDu>
-        </el-aside>
-      </el-container>
-    </div>
-  </template>
+        </mainDu>
+      </el-main>
+      <el-aside width="20%">
+        <chatOutDu></chatOutDu>
+      </el-aside>
+    </el-container>
+  </div>
+</template>
   
   <script>
   import mainDu from '@/components/mainDu.vue'
@@ -34,6 +33,7 @@
       },
       setup(){
         let chats = reactive({})
+        
         onMounted(async()=>{
           await loadChats()
           EventBus.on('NeedRefreshChats',()=>{
@@ -69,4 +69,10 @@
   .el-main{
     padding-top:0px ;
   }
+  /* 使用媒体查询隐藏aside部分 */
+@media screen and (max-width: 768px) {
+  .el-aside {
+    display: none;
+  }
+}
   </style>

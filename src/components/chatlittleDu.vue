@@ -1,10 +1,11 @@
 <!-- 留言卡片组件 -->
 <template>
   <div class="chatlittle-container">
-    <el-timeline>
-      <el-timeline-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
+    <!-- <el-timeline> -->
+      <el-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
         <el-card class="chat-card">
           <div class="header-chat">
+            <el-icon><Avatar /></el-icon>
             <h2 class="chat-username">{{ chats[chat].username }}</h2>
             <likesDu :itemId="chats[chat].id" :itemType="'chat'"></likesDu>
 
@@ -17,12 +18,16 @@
             </div>
           </router-link>
           <div class="chat-details">
-              <span class="chat-views">Views: {{ chats[chat].views }}</span>
-              <span class="chat-reply">Reply: {{ chats[chat].reply }}</span>
+              <span class="chat-views"><el-icon><View /></el-icon> {{ chats[chat].views }}</span>
+              <span class="chat-reply"> <el-icon><ChatDotSquare /></el-icon>{{ chats[chat].reply }}</span>
+              <div>
+                <h4 style="font-weight:lighter ">{{ chats[chat].date }}</h4>
+
+              </div>
             </div>
         </el-card>
-      </el-timeline-item>
-    </el-timeline>
+      </el-item>
+    <!-- </el-timeline> -->
   </div>
 </template>
 

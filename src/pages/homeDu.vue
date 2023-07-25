@@ -1,20 +1,8 @@
-<!-- 路由首页 -->
-<!-- <template>
-  
-  <div>
-    <el-aside width="20%">Aside</el-aside>
-    <mainDu>
-      <carlightDu></carlightDu>
-      <articleDu :articles="latestArticle"></articleDu>
-    </mainDu>
-    <el-aside width="20%">Aside</el-aside>
-    
-  </div>
-</template> -->
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="30%">
+      <!-- 左侧 el-aside -->
+      <el-aside class="left-aside" width="30%" >
         <chatlittleDu :chats="latestChat"></chatlittleDu>
       </el-aside>
       <el-main>
@@ -23,13 +11,10 @@
           <div style="display:flex;flex-direction: column;align-items: center;">
             <articleDu :articles="latestArticle"></articleDu>
           </div>
-        
         </mainDu>
-        
       </el-main>
-      <el-aside width="10%">
-
-      </el-aside>
+      <!-- 右侧 el-aside -->
+      <el-aside class="right-aside" width="10%" ></el-aside>
     </el-container>
   </div>
 </template>
@@ -96,7 +81,28 @@ export default {
         .sort((a,b)=>new Date(b.date)-new Date(a.date))
         .slice(0,5)
       })
-      return {latestArticle,latestChat}
+       // 响应式设计相关
+    //   const showLeftAside = computed(() => {
+    //   // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
+    //     return window.innerWidth > 768;
+    //   });
+
+    //   const showRightAside = computed(() => {
+    //     // 当屏幕宽度小于等于 768px 时，隐藏右侧 el-aside
+    //     return window.innerWidth > 768;
+    //   });
+
+    // // 监听窗口大小变化，实时更新显示/隐藏状态
+    //   window.addEventListener('resize', () => {
+    //     showLeftAside.value = window.innerWidth > 768;
+    //     showRightAside.value = window.innerWidth > 768;
+    //   });
+      return {
+        latestArticle,
+        latestChat,
+        
+        
+      }
     }
 
 }
@@ -105,5 +111,15 @@ export default {
 <style scoped>
 .el-main{
   padding-top:0px ;
+}
+.el-aside {
+  transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+  /* 当屏幕宽度小于等于 768px 时，隐藏 el-aside */
+  .el-aside {
+    display: none;
+  }
 }
 </style>

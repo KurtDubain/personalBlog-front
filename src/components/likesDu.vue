@@ -133,10 +133,10 @@
     
   }
   
-  .like-pos{
+  /* .like-pos{
     position: relative;
     top: auto;
-  }
+  } */
   .like-btn span {
     margin-left: 4px;
   }
@@ -151,7 +151,7 @@
   .like-count {
     margin-left: 8px;
     font-size: 14px;
-    color: #333;
+    color: rgb(85, 85, 85);
   }
   </style>
   
