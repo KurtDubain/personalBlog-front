@@ -8,14 +8,14 @@
         <span class="comment-date">发布日期：{{ chatInfo.date }}</span>
         <span class="comment-views">浏览量：{{ chatInfo.views }}</span>
         <span class="comment-reply">回复：{{ chatInfo.reply }}</span>
-        <span class="comment-likes">点赞：{{ chatInfo.likes }}</span>
-        <button @click="handleLike" class="like-button">{{ isLiked ? '取消点赞' : '点赞' }}</button>
+        <likesDu :itemId="chatInfo.id" :itemType="'chat'"></likesDu>
       </div>
     </div>
   </template>
   
   <script>
-  import { ref } from 'vue';
+  // import { ref } from 'vue';
+  import likesDu from './likesDu.vue';
   export default {
     name: 'ChatHeadDu',
     props: {
@@ -28,16 +28,13 @@
     //     required: true
     //   }
     },
+    components:{
+      likesDu
+    },  
     setup(){
-      // 控制是否Like
-      const isLiked = ref(false)
-      const handleLike = ()=>{
-        isLiked.value = !isLiked.value
-      }
+      
       
       return{
-        isLiked,
-        handleLike
       }
     }
     

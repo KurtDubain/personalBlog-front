@@ -6,7 +6,8 @@
         <el-card class="chat-card">
           <div class="header-chat">
             <h2 class="chat-username">{{ chats[chat].username }}</h2>
-            
+            <likesDu :itemId="chats[chat].id" :itemType="'chat'"></likesDu>
+
             <!-- <h3 class="chat-account">{{ chats[chat].account }}</h3> -->
           </div>
           <router-link :to="`/chatComment/${chats[chat].id}`" class="chat-link">
@@ -28,7 +29,7 @@
 
 <script>
   import { useRouter } from 'vue-router'
-
+  import likesDu from './likesDu.vue';
 export default {
   name: "ChatLittleDu",
   props: {
@@ -36,6 +37,9 @@ export default {
       type: Object,
       default: () => ({}),
     },
+  },
+  components:{
+    likesDu
   },
   setup() {
       const router = useRouter();

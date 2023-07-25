@@ -1,4 +1,3 @@
-<!-- 文章评论展示组件 -->
 <template>
   <div class="list-container">
     <el-timeline>
@@ -7,7 +6,8 @@
         <el-card class="comment-card">
           <div class="header-chat">
             <h2 class="comment-name">{{ comment.name }}</h2>
-            <h3 class="comment-contact">{{ comment.contact }}</h3>
+            <!-- 将 likesDu 组件放入 el-card 组件中 -->
+            <likesDu :itemId="comment.id" :itemType="'comment'"></likesDu>
           </div>
           <p class="comment-content">{{ comment.content }}</p>
         </el-card>
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import likesDu from './likesDu.vue';
 export default {
   name: "ComListDu",
   props: {
@@ -26,6 +27,9 @@ export default {
       require:true
     }
   },
+  components:{
+    likesDu
+  }
 };
 </script>
 

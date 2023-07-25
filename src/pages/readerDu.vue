@@ -3,13 +3,15 @@
   <div class="common-layout">
       <el-container>
         <el-aside width="30%">
-          <ComListDu :comments="comments"></ComListDu>
+          <ComListDu :comments="comments">
+
+          </ComListDu>
         </el-aside>
         <el-main>
           <mainDu style="display:flex;flex-direction: column;align-items: center;">
             
               <ContentDu :article="articles">
-              <likesDu></likesDu>
+              <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
               </ContentDu>
           </mainDu>
         </el-main>
@@ -59,6 +61,7 @@ export default {
     let comments = ref([])
     let ctrltitle = reactive({})
     let lastId = reactive({})
+    // let itemType = ref('article')
     // let filterArray = ref(null)
     // const parseMarkDown = reactive('')
     // const filterArticle = inject('filterArticle')

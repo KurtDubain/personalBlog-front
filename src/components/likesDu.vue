@@ -2,7 +2,7 @@
     <button class="like-btn" @click="toggleLike" type="button"> 
       <span v-if="liked">
         <div class="like-pos">
-            <el-icon>  <Star color="rgb(255, 132, 0)" /></el-icon>
+            <el-icon>  <StarFilled color="rgb(255, 132, 0)" /></el-icon>
         </div>
         
         <!-- <el-icon><Star /></el-icon> -->
@@ -10,7 +10,7 @@
       </span>
       <span v-else>
         <div class="like-pos">
-            <el-icon><StarFilled color="rgb(255, 132, 0)" /></el-icon>
+            <el-icon><Star color="rgb(255, 132, 0)" /></el-icon>
         </div>
                 <!-- <el-icon> <Star color="red"/></el-icon> -->
         <!-- 点赞 -->
@@ -22,8 +22,8 @@
   
   <script>
   import { StarFilled } from '@element-plus/icons-vue';
-
-  import { ref, onMounted } from 'vue';
+  import { ElMessage } from 'element-plus';
+  import { ref, onMounted,watch } from 'vue';
   import axios from 'axios';
   
   export default {
@@ -33,28 +33,35 @@
             type: String,
             required: true,
         },
-        userId: {
-            type: String,
-            required: true,
-        },
+        
         itemType: {
             type: String,
             required: true,
             validator: (value) => ["article", "comment", "chat", "chatcomment"].includes(value),
         },
     },
+    components: { 
+        StarFilled 
+    },
+
     setup(props) {
+        // console.log(props)
         const liked = ref(false);
         const likeCount = ref(0);
+        const userId = ref(null)
         onMounted(async () => {
-            await fetchLikeInfo();
+            checkLoginStatus()
+            await fetchLikeInfo(props.itemType,props.itemId,userId);
         });
-        const fetchLikeInfo = async () => {
+
+        const fetchLikeInfo = async (type,itemId,userId) => {
             try {
+                // console.log(userId.value);
                 // 根据 itemType 和 itemId 发送请求，获取点赞信息
-                const response = await axios.get(`http://localhost:3000/likes/${props.itemType}/${props.itemId}/${props.userId}/getlikes`);
-                liked.value = response.data.liked;
-                likeCount.value = response.data.likeCount;
+                const response = await axios.get(`http://localhost:3000/likes/${type}/${itemId}/${userId.value}/getlikes`);
+                console.log(response.data)
+                likeCount.value = response.data.likeCount
+                liked.value = response.data.userLiked
             }
             catch (error) {
                 console.error("获取点赞信息失败", error);
@@ -62,34 +69,54 @@
         };
         const toggleLike = async () => {
             try {
-                if (liked.value) {
+                if(!userId.value){
+                    ElMessage('请先登录')
+                    return
+                }else{
+                    if (!liked.value) {
                     // 根据 itemType 和 itemId 发送请求，切换点赞状态
-                    await axios.post(`http://localhost:3000/likes/${props.itemType}/liked`, {
-                        itemId: props.itemId,
-                        userId: props.userId,
-                    });
-                }
-                else {
-                    await axios.post(`http://localhost:3000/likes/${props.itemType}/disliked`, {
-                        itemId: props.itemId,
-                        userId: props.userId,
-                    });
-                }
+                        await axios.post(`http://localhost:3000/likes/${props.itemType}/liked`, {
+                            itemId: props.itemId,
+                            userId: userId.value,
+                        });
+                    }
+                    else {
+                        await axios.post(`http://localhost:3000/likes/${props.itemType}/disliked`, {
+                            itemId: props.itemId,
+                            userId: userId.value,
+                        });
+                    }
                 // 根据 itemType 和 itemId 发送请求，切换点赞状态
                 // 更新点赞信息
-                await fetchLikeInfo();
+                    await fetchLikeInfo(props.itemType,props.itemId,userId);
+                }
+                
             }
             catch (error) {
                 console.error("点赞操作失败", error);
             }
         };
+        const checkLoginStatus = ()=>{
+            const userInfo = localStorage.getItem('userInfo')
+            if(userInfo){
+                const {id} = JSON.parse(userInfo)
+                userId.value = id
+                // console.log(JSON.parse(userInfo))
+            }else{
+                console.log('未登录');
+            }
+        }
+        watch(() => props.itemId,
+            async (newItemId) => {
+                await fetchLikeInfo(props.itemType,newItemId,userId)
+                
+            })
         return {
             liked,
             likeCount,
             toggleLike,
         };
     },
-    components: { StarFilled }
 };
   </script>
   

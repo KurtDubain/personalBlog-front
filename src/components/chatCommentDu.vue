@@ -5,18 +5,19 @@
       <div class="comment-info">
         <span class="comment-username">{{ comment.username }}</span>
         <span class="comment-date">{{ comment.date }}</span>
+        <likesDu :itemId="comment.id" :itemType="'chatcomment'"></likesDu>
+
       </div>
       <div class="comment-content">{{ comment.content }}</div>
-      <div class="comment-actions">
-        <button @click="handleLike(comment.id)" class="like-button">{{ isLiked(comment.id) ? '取消点赞' : '点赞' }}</button>
-        <span class="comment-likes">{{ comment.likes }}</span>
-      </div>
+      
+
     </div>
   </div>
 </template>
 
 <script>
 import { ref } from 'vue';
+import likesDu from './likesDu.vue';
 
 export default {
   name: 'ChatCommentDu',
@@ -29,6 +30,9 @@ export default {
       type: String,
       required: true,
     },
+  },
+  components:{
+    likesDu
   },
   setup() {
     const likedComments = ref([]);
