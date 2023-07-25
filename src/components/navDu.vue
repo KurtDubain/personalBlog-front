@@ -48,9 +48,20 @@
     <el-menu-item index="3">留言板</el-menu-item>
   </router-link>
     <div class="flex-grow" />
-    <router-link to="/write" style="text-decoration:none">
-      <el-menu-item index="4">更多</el-menu-item>
-    </router-link>
+    <el-sub-menu index="4">
+      <template #title>更多</template>
+
+      <router-link to="/write" style="text-decoration:none">
+        <el-menu-item index="4-1">嗖</el-menu-item>
+      </router-link>
+      <router-link to="/write" style="text-decoration:none">
+        <el-menu-item index="4-2">订阅</el-menu-item>
+      </router-link>
+      <router-link to="/write" style="text-decoration:none">
+        <el-menu-item index="4-3">实验室</el-menu-item>
+      </router-link>
+    </el-sub-menu>
+      
     
   </el-menu>
 

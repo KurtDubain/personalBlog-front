@@ -10,7 +10,6 @@
       <!-- 文章直接可用的数据 -->
       <span class="date">{{ article.date }}</span>
       <span class="views">{{ article.views }}</span>
-      <span class="likes">{{ article.likes }}</span>
       <span class="comments">{{ article.commentsNum }}</span>
       
     </div>

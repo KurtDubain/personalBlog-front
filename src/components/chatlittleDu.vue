@@ -17,7 +17,6 @@
             </div>
           </router-link>
           <div class="chat-details">
-              <span class="chat-likes">Likes: {{ chats[chat].likes }}</span>
               <span class="chat-views">Views: {{ chats[chat].views }}</span>
               <span class="chat-reply">Reply: {{ chats[chat].reply }}</span>
             </div>
