@@ -2,7 +2,7 @@
   <div class="common-layout">
     <el-container>
       <!-- 左侧是评论区 -->
-      <el-aside class="mobile-aside" width="30%">
+      <el-aside class="mobile-aside" width="20%">
         <ComListDu :comments="comments"></ComListDu>
       </el-aside>
       <el-main>
@@ -10,10 +10,13 @@
           <ContentDu :article="articles">
            <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
           </ContentDu>
+          <el-divider border-style="double" />
+
+          <ComListDu :comments="comments"></ComListDu>
         </mainDu>
       </el-main>
       <!-- 右侧是切换按钮和登陆表 -->
-      <el-aside class="mobile-aside" width="10%">
+      <el-aside class="mobile-aside" width="20%">
         <ComShowDu :articleId="articleId" :loadComment="loadComment"></ComShowDu>
         <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId">
         </ctrlBtnDu>
@@ -24,7 +27,7 @@
           <div class="loginDirect" @click="toggleLoginForm">
             <el-icon><HomeFilled /></el-icon>
           </div>
-          <ComShowDu :articleId="articleId" :loadComment="loadComment" class="loginForm" :style="{ left: showLoginForm ? '60%' : '100%' }"></ComShowDu>
+          <ComShowDu :articleId="articleId" :loadComment="loadComment" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></ComShowDu>
         </div>
       </div>
     </el-container>

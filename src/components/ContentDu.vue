@@ -41,22 +41,15 @@ export default {
   },
   setup(props) {
     // 解析文章md格式的文件
-    const customRenderer = new marked.Renderer();
-
-    // 处理代码块的情况，将代码块内容包裹在<code>标签中
-    customRenderer.code = (code, language) => {
-      return `<div style="overflow-x:auto;"><pre><code class="${language}" style="overflow-x:auto;">${code}</code></pre></div>`;
-    };
-
-    // 解析文章md格式的文件
     const parsedContent = computed(() => {
       // 判断是否存在，没有该语句会出现无法刷新内容的情况
       if (props.article && props.article.content) {
-        // 使用marked解析md文件，并且使用自定义渲染器
-        return marked(props.article.content, { sanitize: true, renderer: customRenderer });
+        return marked(props.article.content);
+      }else{
+        return '';
       }
-      return '';
     });
+
 
 
     return {
@@ -130,16 +123,14 @@ h1 {
 }
 pre {
   overflow-x: auto; /* 设置水平方向的滑动条 */
-  max-width: 10px; 
   background-color: #9d3737; /* 设置代码块背景色 */
   padding: 10px; /* 设置代码块内边距 */
-  /* border-radius: 6px; 设置代码块边框圆角 */
 }
+
 pre code {
   font-size: 16px;
   background-color: #e36363;
   padding: 8px;
   border-radius: 4px;
-  /* max-width: 50px; */
 }
 </style>

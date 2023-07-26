@@ -1,14 +1,19 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="20%">
-      </el-aside>
+      <el-aside width="20%"></el-aside>
       <el-main>
-        <mainDu style="display:flex;flex-direction: column;align-items: center;">
+        <mainDu
+          style="display:flex;flex-direction: column;align-items: center;"
+        >
           <div class="about-section">
             <h1 class="about-title">关于我</h1>
             <p class="about-description">我是雪碧，一个喜欢编程和音乐的程序员。</p>
-            <img src="../assets/个人照.jpg" alt="博主">
+            <img
+              src="../assets/个人照.jpg"
+              alt="博主"
+              class="about-image"
+            />
             <div class="about-details">
               <div class="about-item">
                 <h2>个人信息</h2>
@@ -31,37 +36,38 @@
               </div>
               <div class="about-item">
                 <h2>网站介绍</h2>
-                <p>一个用来简单记录自己生活的博客，</p>
-                <p>内容包括但不限于体育、技术相关的文章。</p>
-                <p>通过登陆也能够实现大家之间的互动，</p>
-                <p>诸如一些评论之类的简单功能，</p>
-                <p>不过后续我也会不断优化更新网站中的内容，</p>
-                <p>让网站内容更加丰富。</p>
-                <p>感兴趣的朋友可以加群，</p>
-                <p>我们可以一起探讨很多东西，一起进步！</p>
+                <p>
+                  一个用来简单记录自己生活的博客，内容包括但不限于体育、技术相关的文章。
+                </p>
+                <p>通过登陆也能够实现大家之间的互动，诸如一些评论之类的简单功能，不过后续我也会不断优化更新网站中的内容，让网站内容更加丰富。</p>
+                <p>感兴趣的朋友可以加群，我们可以一起探讨很多东西，一起进步！</p>
               </div>
             </div>
           </div>
         </mainDu>
       </el-main>
-      <el-aside width="20%">
-
-      </el-aside>
+      <el-aside width="20%"></el-aside>
     </el-container>
   </div>
 </template>
 
 <script>
-import mainDu from '../components/mainDu.vue'
+import mainDu from '../components/mainDu.vue';
 export default {
-  name:'aboutDu',
-  components:{
-    mainDu
-  }
-}
+  name: 'aboutDu',
+  components: {
+    mainDu,
+  },
+};
 </script>
 
 <style scoped>
+@media (max-width: 768px) {
+  /* 当屏幕宽度小于等于 768px 时，隐藏 el-aside */
+  .el-aside {
+    display: none;
+  }
+}
 .el-main {
   padding-top: 20px;
 }
@@ -151,12 +157,13 @@ export default {
     transform: translateY(0);
   }
 }
-.about-item:nth-child(4){
+
+.about-item:nth-child(4) {
   padding: 10%;
   padding-top: 0%;
+  /* Add animation properties to the "网站介绍" (Website Introduction) paragraphs with a delay */
 }
 
-/* Add animation properties to the "网站介绍" (Website Introduction) paragraphs with a delay */
 .about-item:nth-child(4) p {
   opacity: 0;
   transform: translateY(50%);
@@ -172,21 +179,21 @@ export default {
 
 /* Increase the font size of "网站介绍" (Website Introduction) paragraphs */
 .about-item:nth-child(4) p {
-  font-size: 16px;
-  
+  font-size: 18px;
 }
 
 /* Add some margin between "网站介绍" (Website Introduction) paragraphs */
 .about-item:nth-child(4) p:not(:first-child) {
   margin-top: 15px;
 }
+
 .about-section img {
-  max-width: 90%;
-  /* border-radius: 50%; */
+  max-width: 100%;
+  border-radius: 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
-.el-main{
-  padding-top:0 ;
+.el-main {
+  padding-top: 0;
 }
 </style>

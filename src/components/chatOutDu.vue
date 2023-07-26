@@ -1,54 +1,51 @@
-<!-- 留言页面登录组件及评论开关组件 -->
 <template>
-    <div class="midForm">
-      <div v-if="!isLog">
-        <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
-          <el-form-item label="你的昵称" class="little_text" >
-            <el-input v-model="formInline.username" placeholder="不能修改(除非联系博主)" clearable />
-          </el-form-item>
-          <el-form-item label="联系方式" class="little_text">
-            
-            <el-input v-model="formInline.account" placeholder="邮箱(唯一凭证)" clearable />
-            <el-switch
+  <div class="midForm">
+    <div v-if="!isLog">
+      <el-card>
+      <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
+        <el-form-item label="你的昵称" class="little_text">
+          <el-input v-model="formInline.username" placeholder="不能修改(除非联系博主)" clearable />
+        </el-form-item>
+        <el-form-item label="联系方式" class="little_text">
+          <el-input v-model="formInline.account" placeholder="邮箱(唯一凭证)" clearable />
+          <el-switch
             v-model="remBtn"
             class="ml-2"
             inline-prompt
             style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
             active-text="记住状态"
             inactive-text="忘掉状态"
-          />  
+          />
         </el-form-item>
-                  
-          <el-form-item class="button_row">
-            
-            <el-button type="primary" @click="onSubmit" :disabled="isFormInvalid">登陆</el-button>
-            
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else>
-        <div class="user-info">
-          <el-card class="box-card">
-            <template #header>
-              <div class="card-header">
-                <span>你好 {{ userInfo.username }}</span>
-                <el-button class="button" text @click="logout">退出登陆</el-button>
-              </div>
-            </template>
-  
-              <div class="text item">等级：{{ userInfo.level }}</div>
-              <el-button @click="showUserInfoCard">查看个人信息</el-button>
-              <el-form-item class="button_row">         
-                <el-button type="primary" @click="submitChat">留个言</el-button>
-                <chatMakeDu v-if="chatFormVisible" :chatFormVisible="chatFormVisible" @closeForm="closeChatForm" :userInfo="userInfo" ></chatMakeDu>
-              </el-form-item>
-              
-          </el-card>
-        </div>
-      </div>
-      
+
+        <el-form-item class="button_row">
+          <el-button type="primary" @click="onSubmit" :disabled="isFormInvalid">登陆</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
     </div>
-  </template>
+    <div v-else>
+      <div class="user-info">
+        <el-card class="box-card">
+          <template #header>
+            <div class="card-header">
+              <span><el-icon><UserFilled /></el-icon>{{ userInfo.username }}</span>
+              <el-button class="button" text @click="logout">退出登陆</el-button>
+            </div>
+          </template>
+
+          <!-- <div class="text item">等级：{{ userInfo.level }}</div> -->
+          <el-button @click="showUserInfoCard">查看个人信息</el-button>
+          <br><br>
+          <el-form-item class="button_row">
+            <el-button type="primary" @click="submitChat">留个言</el-button>
+            <chatMakeDu v-if="chatFormVisible" :chatFormVisible="chatFormVisible" @closeForm="closeChatForm" :userInfo="userInfo"></chatMakeDu>
+          </el-form-item>
+        </el-card>
+      </div>
+    </div>
+  </div>
+</template>
   
   <script>
   import { reactive, computed,ref,watch } from 'vue'
@@ -230,8 +227,7 @@
   }
   </script>
   
-  <style scoped>
-  .midForm {
+  <style scoped>.midForm {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -253,6 +249,30 @@
     text-align: center;
     justify-content: center;
     width: 80%;
+  }
+  
+  .el-button {
+    border: none;
+    cursor: pointer;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 5px;
+    transition: 0.2s;
+    background-color: #409eff;
+  }
+  
+  .el-button:hover {
+    background-color: #66b1ff;
+  }
+  
+  .el-button:active {
+    background-color: #3a8ee6;
+  }
+  
+  .el-button[disabled] {
+    background-color: #dcdfe6;
+    cursor: not-allowed;
   }
   
   </style>

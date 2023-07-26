@@ -19,7 +19,7 @@
             <div class="loginDirect" @click="toggleLoginForm">
                 <el-icon><HomeFilled /></el-icon>
             </div>
-            <chatCommentFormDu :chatId="chatId" class="loginForm" :style="{ left: showLoginForm ? '60%' : '100%' }"></chatCommentFormDu>
+            <chatCommentFormDu :chatId="chatId" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatCommentFormDu>
             </div>
         </div>
       </el-container>

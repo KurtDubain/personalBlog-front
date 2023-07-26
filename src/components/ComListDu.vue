@@ -1,18 +1,20 @@
 <template>
   <div class="list-container">
-    <el-timeline>
-      <!-- 同样是利用键值对逐一显示 -->
-      <el-timeline-item v-for="comment in Object.values(comments)" :key="comment.id" center :timestamp="comment.created_Date" placement="top">
-        <el-card class="comment-card">
-          <div class="header-chat">
+    <el-item v-for="comment in Object.values(comments)" :key="comment.id" center :timestamp="comment.created_Date" placement="top">
+      <div class="comment-card">
+        <div class="header-chat">
+          <el-icon><User size="large"/></el-icon>
+          <div class="comment-info">
             <h2 class="comment-name">{{ comment.name }}</h2>
-            <!-- 将 likesDu 组件放入 el-card 组件中 -->
-            <likesDu :itemId="comment.id" :itemType="'comment'"></likesDu>
+            <span class="comment-contact">{{ comment.email }}</span>
           </div>
-          <p class="comment-content">{{ comment.content }}</p>
-        </el-card>
-      </el-timeline-item>
-    </el-timeline>
+          <!-- 将 likesDu 组件放入 el-card 组件中 -->
+          <likesDu :itemId="comment.id" :itemType="'comment'"></likesDu>
+        </div>
+        <p class="comment-content">{{ comment.content }}</p>
+        <h4 class="created-date">{{ comment.created_Date }}</h4>
+      </div>
+    </el-item>
   </div>
 </template>
 
@@ -47,30 +49,52 @@ export default {
   margin: 10px;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  background-color: #fff;
-  padding: 15px;
+  background-color: #f5f5f5;
+  padding: 10px;
 }
 
 .header-chat {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+}
+
+.el-icon {
+  font-size: 24px;
+  color: #333;
+  margin-right: 10px;
+}
+
+.comment-info {
+  flex-grow: 1;
 }
 
 .comment-name {
   font-size: 18px;
   font-weight: bold;
-  margin-right: 10px;
+  color: #333;
+  margin: 0;
 }
 
 .comment-contact {
   font-size: 14px;
-  color: #999;
+  color: #888;
+  margin: 0;
 }
 
 .comment-content {
   font-size: 16px;
   line-height: 1.6;
   margin-top: 10px;
+  color: #333;
+}
+
+.created-date {
+  font-size: 14px;
+  color: #999;
+  margin-top: 10px;
+}
+
+.likes-count {
+  margin-left: 5px;
 }
 </style>

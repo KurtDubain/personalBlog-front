@@ -2,6 +2,7 @@
 <template>
     <div class="midForm">
       <div v-if="!isLog">
+        <el-card>
         <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
           <el-form-item label="你的昵称" class="little_text" >
             <el-input v-model="formInline.username" placeholder="不能修改(除非联系博主)" clearable />
@@ -29,18 +30,19 @@
             
           </el-form-item>
         </el-form>
+      </el-card>
       </div>
       <div v-else>
         <div class="user-info">
           <el-card class="box-card">
             <template #header>
               <div class="card-header">
-                <span>你好 {{ userInfo.username }}</span>
+                <span><el-icon><UserFilled /></el-icon>{{ userInfo.username }}</span>
                 <el-button class="button" text @click="logout">退出登陆</el-button>
               </div>
             </template>
   
-              <div class="text item">等级：{{ userInfo.level }}</div>
+              <!-- <div class="text item">等级：{{ userInfo.level }}</div> -->
               <el-button @click="showUserInfoCard">查看个人信息</el-button>
               <el-form-item class="big_text">
                 <el-input v-model="formInline.content" type="textarea" placeholder="想说点什么呢" clearable />

@@ -19,7 +19,7 @@
           <div class="loginDirect" @click="toggleLoginForm">
             <el-icon><HomeFilled /></el-icon>
           </div>
-          <chatOutDu :chats="trueChats" class="loginForm" :style="{ left: showLoginForm ? '60%' : '100%' }"></chatOutDu>
+          <chatOutDu :chats="trueChats" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatOutDu>
         </div>
       </div>
       
