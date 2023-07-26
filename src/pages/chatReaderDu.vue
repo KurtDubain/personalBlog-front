@@ -14,6 +14,14 @@
         <el-aside width="20%">  
             <chatCommentFormDu :chatId="chatId"></chatCommentFormDu>
         </el-aside>
+        <div class="loginBack">
+            <div v-if="isMobile" class="loginFormContainer">
+            <div class="loginDirect" @click="toggleLoginForm">
+                <el-icon><HomeFilled /></el-icon>
+            </div>
+            <chatCommentFormDu :chatId="chatId" class="loginForm" :style="{ left: showLoginForm ? '60%' : '100%' }"></chatCommentFormDu>
+            </div>
+        </div>
       </el-container>
     </div>
 </template>
@@ -23,7 +31,7 @@ import chatCommentDu from '@/components/chatCommentDu.vue'
 import chatHeadDu from '@/components/chatHeadDu.vue'
 import mainDu from '@/components/mainDu.vue';
 import chatCommentFormDu from '@/components/chatCommentFormDu.vue';
-import {ref,reactive, onMounted} from 'vue'
+import {ref,reactive, onMounted,onUnmounted} from 'vue'
 import axios from 'axios'
 import EventBus from '@/utils/eventBus';
 
@@ -52,11 +60,16 @@ export default {
                 EventBus.on('NeedRefreshChatComment',()=>{
                     loadChatCommentsInfo(props.chatId)
                 })
+                document.addEventListener('click', handleClickOutside);
             }catch(error){
                 console.error('评论初始化失败');
             }
         })
         // 加载指定留言的信息
+        onUnmounted(() => {
+          document.removeEventListener('click', handleClickOutside);
+        });
+
         const loadChatInfo = async(chatId)=>{
             try{
                 const res = await axios.get(`http://localhost:3000/chats/chatInfo/${chatId}`)
@@ -90,20 +103,70 @@ export default {
                 console.error('评论获取失败');
             }
         }
+
+        const isMobile = ref(window.innerWidth <= 768);
+
+        window.addEventListener('resize', () => {
+          isMobile.value = window.innerWidth <= 768;
+        });
+        const showLoginForm = ref(false);
+
+        const toggleLoginForm = () => {
+          showLoginForm.value = !showLoginForm.value;
+        };
+
+        const handleClickOutside = (event) => {
+          if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
+            showLoginForm.value = false;
+          }
+        };
         return{
             loadChatInfo,
             loadChatCommentsInfo,
             chatInfo,
-            chatCommentInfo
+            chatCommentInfo,
+            showLoginForm,
+            toggleLoginForm,
+            handleClickOutside,
+            isMobile
         }
     }
 }
 </script>
 
-<style>
+<style scoped>
 @media screen and (max-width: 768px) {
   .el-aside {
     display: none;
   }
+}
+.loginForm{
+  /* display: block; */
+  /* position: relative; */
+  left: 100%;
+}
+.loginBack {
+  /* background-color: black; */
+  position: fixed;
+  max-height: 200px;
+  max-width: 200px;
+  left: 50%;
+}
+
+.loginFormContainer {
+  position: relative;
+}
+
+.loginDirect {
+  font-size: 50px;
+  font-weight: bolder;
+  position: absolute;
+  color: rgba(139,136,120, 0.886);
+    /* rgba(222, 222, 222, 0.8); */
+  top: 50%;
+  transform: translateY(600%) translateX(300%);
+}
+.loginForm{
+  transition: left 0.5s ease-in-out;
 }
 </style>

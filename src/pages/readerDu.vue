@@ -18,6 +18,15 @@
         <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId">
         </ctrlBtnDu>
       </el-aside>
+
+      <div class="loginBack">
+        <div v-if="isMobile" class="loginFormContainer">
+          <div class="loginDirect" @click="toggleLoginForm">
+            <el-icon><HomeFilled /></el-icon>
+          </div>
+          <ComShowDu :articleId="articleId" :loadComment="loadComment" class="loginForm" :style="{ left: showLoginForm ? '60%' : '100%' }"></ComShowDu>
+        </div>
+      </div>
     </el-container>
   </div>
 </template>
@@ -25,7 +34,7 @@
 
 <script>
 // import articleDu from '@/components/articleDu.vue';
-import {reactive,onMounted, ref,watch}from 'vue'
+import {reactive,onMounted, ref,watch,onUnmounted}from 'vue'
 // import {marked} from 'marked'
 import axios from 'axios'
 import mainDu from '@/components/mainDu.vue'
@@ -77,12 +86,18 @@ export default {
         EventBus.on('NeedRefresh',()=>{
           loadComment(props.articleId)
         })
+        document.addEventListener('click', handleClickOutside);
+
         
       }catch(error){
         console.error('文章初始化失败');
       }
       
     })
+
+    onUnmounted(() => {
+      document.removeEventListener('click', handleClickOutside);
+    });
     // 加载对应id文章的除内容之外的信息
     const loadArticle = async(articleId)=>{
       try{
@@ -188,11 +203,33 @@ export default {
     // const filterArticleComputed = computed(()=>{
     //   return filterArticle.value
     // }) 
+
+    const isMobile = ref(window.innerWidth <= 768);
+
+    window.addEventListener('resize', () => {
+      isMobile.value = window.innerWidth <= 768;  
+    });
+    const showLoginForm = ref(false);
+
+    const toggleLoginForm = () => {          
+      showLoginForm.value = !showLoginForm.value;
+    };
+
+    const handleClickOutside = (event) => {
+      if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
+        showLoginForm.value = false;
+      }
+    };
+
     return{
       articles,
       comments,
       ctrltitle,
-      lastId
+      lastId,
+      isMobile,
+      showLoginForm,
+      toggleLoginForm,
+      handleClickOutside
       // filterArray
       // parseMarkDown
     }
@@ -211,5 +248,33 @@ export default {
     width: 100%;
   }
 }
+.loginForm{
+  /* display: block; */
+  /* position: relative; */
+  left: 100%;
+}
+.loginBack {
+  /* background-color: black; */
+  position: fixed;
+  max-height: 200px;
+  max-width: 200px;
+  left: 50%;
+}
 
+.loginFormContainer {
+  position: relative;
+}
+
+.loginDirect {
+  font-size: 50px;
+  font-weight: bolder;
+  position: absolute;
+  color: rgba(139,136,120, 0.886);
+    /* rgba(222, 222, 222, 0.8); */
+  top: 50%;
+  transform: translateY(600%) translateX(300%);
+}
+.loginForm{
+  transition: left 0.5s ease-in-out;
+}
 </style>

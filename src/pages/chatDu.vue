@@ -14,9 +14,15 @@
       <el-aside class="contentAside" width="20%">
         <chatOutDu></chatOutDu>
       </el-aside>
-      <div class="loginForm" v-if="isMobile">
-            <chatOutDu></chatOutDu>
+      <div class="loginBack">
+        <div v-if="isMobile" class="loginFormContainer">
+          <div class="loginDirect" @click="toggleLoginForm">
+            <el-icon><HomeFilled /></el-icon>
           </div>
+          <chatOutDu :chats="trueChats" class="loginForm" :style="{ left: showLoginForm ? '60%' : '100%' }"></chatOutDu>
+        </div>
+      </div>
+      
 
     </el-container>
   </div>
@@ -25,7 +31,7 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
-  import {reactive,onMounted, computed,ref} from 'vue'
+  import {reactive,onMounted, computed,ref,onUnmounted} from 'vue'
   import axios from 'axios'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
@@ -45,7 +51,14 @@
           EventBus.on('NeedRefreshChats',()=>{
             loadChats()
           })
+          document.addEventListener('click', handleClickOutside);
         })
+
+        onUnmounted(() => {
+          document.removeEventListener('click', handleClickOutside);
+        });
+
+        
     //     let filterChat = computed(()=>{
     //       const chatsArray = Object.values(chats)
     //       return chatsArray.slice()
@@ -72,12 +85,26 @@
         window.addEventListener('resize', () => {
           isMobile.value = window.innerWidth <= 768;
         });
+        const showLoginForm = ref(false);
+
+        const toggleLoginForm = () => {
+          showLoginForm.value = !showLoginForm.value;
+        };
+
+        const handleClickOutside = (event) => {
+          if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
+            showLoginForm.value = false;
+          }
+        };
 
         return {
           chats,
           trueChats,
           loadChats,
-          isMobile
+          isMobile,
+          showLoginForm,
+          toggleLoginForm,
+          handleClickOutside
         }
       }
   }
@@ -93,7 +120,32 @@
   }
 }
 .loginForm{
+  /* display: block; */
+  /* position: relative; */
+  left: 100%;
+}
+.loginBack {
+  /* background-color: black; */
   position: fixed;
-  display: block;
+  max-height: 200px;
+  max-width: 200px;
+  left: 50%;
+}
+
+.loginFormContainer {
+  position: relative;
+}
+
+.loginDirect {
+  font-size: 50px;
+  font-weight: bolder;
+  position: absolute;
+  color: rgba(139,136,120, 0.886);
+    /* rgba(222, 222, 222, 0.8); */
+  top: 50%;
+  transform: translateY(600%) translateX(300%);
+}
+.loginForm{
+  transition: left 0.5s ease-in-out;
 }
   </style>
