@@ -5,7 +5,7 @@
       <el-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
         <el-card class="chat-card">
           <div class="header-chat">
-            <el-icon><Avatar /></el-icon>
+            <el-icon><Avatar /></el-icon>&nbsp;
             <h2 class="chat-username">{{ chats[chat].username }}</h2>
             <likesDu :itemId="chats[chat].id" :itemType="'chat'"></likesDu>
 

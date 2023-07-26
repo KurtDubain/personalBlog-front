@@ -5,9 +5,12 @@
       <p class="comment-content">{{ chatInfo.content }}</p>
       <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
       <div class="comment-details">
-        <span class="comment-date">发布日期：{{ chatInfo.date }}</span>
-        <span class="comment-views">浏览量：{{ chatInfo.views }}</span>
-        <span class="comment-reply">回复：{{ chatInfo.reply }}</span>
+        <span class="comment-date">{{ chatInfo.date }}</span>
+        &nbsp;
+        <span class="comment-views"><el-icon><View /></el-icon>{{ chatInfo.views }}</span>
+        &nbsp;
+        <span class="comment-reply"><el-icon><ChatDotSquare /></el-icon>{{ chatInfo.reply }}</span>
+        &nbsp;
         <likesDu :itemId="chatInfo.id" :itemType="'chat'"></likesDu>
       </div>
     </div>
@@ -81,6 +84,18 @@
   font-size: 14px;
   color: #777;
 }
+.comment-date {
+  margin-left: 0;
+  flex: 1;
+}
+
+/* Align views, reply, and likes to the left */
+.comment-views,
+.comment-reply,
+.likesDu {
+  margin-right: auto;
+}
+
 
 .like-button {
   margin-left: auto;

@@ -3,7 +3,7 @@
   <div class="comment-list">
     <div v-for="comment in chatCommentInfo" :key="comment.id" class="comment-item">
       <div class="comment-info">
-        <span class="comment-username">{{ comment.username }}</span>
+        <span class="comment-username"><el-icon><User /></el-icon>&nbsp;{{ comment.username }}</span>
         <span class="comment-date">{{ comment.date }}</span>
         <likesDu :itemId="comment.id" :itemType="'chatcomment'"></likesDu>
 

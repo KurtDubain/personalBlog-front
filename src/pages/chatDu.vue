@@ -2,16 +2,22 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="20%">
+      <el-aside class="contentAside" width="20%">
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <chatlittleDu :chats="trueChats"></chatlittleDu>
+          
         </mainDu>
+        
       </el-main>
-      <el-aside width="20%">
+      <el-aside class="contentAside" width="20%">
         <chatOutDu></chatOutDu>
       </el-aside>
+      <div class="loginForm" v-if="isMobile">
+            <chatOutDu></chatOutDu>
+          </div>
+
     </el-container>
   </div>
 </template>
@@ -19,7 +25,7 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
-  import {reactive,onMounted, computed} from 'vue'
+  import {reactive,onMounted, computed,ref} from 'vue'
   import axios from 'axios'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
@@ -60,8 +66,19 @@
           return chatsArray.slice().sort((a,b)=>new Date(b.date)-new Date(a.date))
         })
 
-        
-        return {chats,trueChats,loadChats}
+        const isMobile = ref(window.innerWidth <= 768);
+
+    // 监听窗口宽度变化，更新移动端状态
+        window.addEventListener('resize', () => {
+          isMobile.value = window.innerWidth <= 768;
+        });
+
+        return {
+          chats,
+          trueChats,
+          loadChats,
+          isMobile
+        }
       }
   }
   </script>
@@ -71,8 +88,12 @@
   }
   /* 使用媒体查询隐藏aside部分 */
 @media screen and (max-width: 768px) {
-  .el-aside {
+  .contentAside {
     display: none;
   }
+}
+.loginForm{
+  position: fixed;
+  display: block;
 }
   </style>
