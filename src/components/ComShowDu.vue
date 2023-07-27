@@ -263,7 +263,7 @@ export default {
   width: 80%;
 }
 
-.el-button {
+/* .el-button {
   border: none;
   cursor: pointer;
   color: #fff;
@@ -285,6 +285,6 @@ export default {
 .el-button[disabled] {
   background-color: #dcdfe6;
   cursor: not-allowed;
-}
+} */
 
 </style>

@@ -11,7 +11,6 @@
            <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
           </ContentDu>
           <el-divider border-style="double" />
-
           <ComListDu :comments="comments"></ComListDu>
         </mainDu>
       </el-main>

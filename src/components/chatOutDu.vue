@@ -127,6 +127,7 @@
             userInfo.comments = user.comment_count;
             userInfo.level = user.level;
             userInfo.created_at = user.created_at
+
           }
         //   EventBus.emit('NeedRefresh')
         //   ElMessage.success('评论发表成功')
@@ -227,7 +228,8 @@
   }
   </script>
   
-  <style scoped>.midForm {
+  <style scoped>
+  .midForm {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -251,29 +253,7 @@
     width: 80%;
   }
   
-  .el-button {
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 5px;
-    transition: 0.2s;
-    background-color: #409eff;
-  }
-  
-  .el-button:hover {
-    background-color: #66b1ff;
-  }
-  
-  .el-button:active {
-    background-color: #3a8ee6;
-  }
-  
-  .el-button[disabled] {
-    background-color: #dcdfe6;
-    cursor: not-allowed;
-  }
+
   
   </style>
   
