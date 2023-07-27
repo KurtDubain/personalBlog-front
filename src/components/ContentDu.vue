@@ -68,6 +68,7 @@ export default {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  max-width: 100%;
 }
 
 h1 {
@@ -91,7 +92,7 @@ h1 {
   color: #555;
   max-width: 100%; /* 设置最大宽度为100%，防止内容过宽 */
   overflow-wrap: break-word; /* 当内容过长时，自动换行 */
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
 }
 
 .metadata span {
