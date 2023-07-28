@@ -97,9 +97,18 @@
             }
         };
         const checkLoginStatus = ()=>{
-            const userInfo = localStorage.getItem('userInfo')
+            let userInfo = null
+            const localUserInfo = localStorage.getItem('userInfo')
+            if(localUserInfo){
+                userInfo = JSON.parse(localUserInfo)
+            }else{
+                const sessionUserInfo = sessionStorage.getItem('userInfo')
+                userInfo = JSON.parse(sessionUserInfo)
+            }
+
+
             if(userInfo){
-                const {id} = JSON.parse(userInfo)
+                const {id} = userInfo
                 userId.value = id
                 // console.log(JSON.parse(userInfo))
             }else{

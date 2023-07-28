@@ -63,6 +63,7 @@
   import axios from 'axios'
   import EventBus from '../utils/eventBus'
   import { ElMessage,ElMessageBox } from 'element-plus'
+  import DOMPurify from 'dompurify'
   
   export default {
     name: 'ComShowDu',
@@ -91,14 +92,45 @@
       })
       // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
       const isFormInvalid = computed(() => {
-        return (
-          formInline.content.trim() === '' ||
-          !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(formInline.account)
-        )
+        const username = formInline.username.trim()
+        const account = formInline.account.trim()
+        const content = formInline.content.trim()
+        
+        if (username === '' || !isValidUsername(username)) {
+          return true;
+        }
+        if (account === '' || !isValidAccount(account)) {
+          return true;
+        }
+        if (content === '' || !isValidContent(content)) {
+          return true;
+        }
+
+        return false
+
       })
+      function isValidUsername(username) {
+        const cleanUsername = DOMPurify.sanitize(username);
+        return cleanUsername === username;
+      }
+
+      function isValidAccount(email) {
+        const cleanEmail = DOMPurify.sanitize(email);
+        return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(cleanEmail);
+      }
+
+      function isValidContent(content) {
+        const cleanContent = DOMPurify.sanitize(content);
+        return cleanContent === content;
+      }
+
+
       const isFormInvalidSecond = computed(() => {
-        return (
-          formInline.content.trim() === ''         )
+        const content = formInline.content.trim()
+        if(content === '' || !isValidContent){
+          return true
+        }
+        return false
       })
       // 表单提交功能
       const onSubmit = async () => {
@@ -176,9 +208,7 @@
           userInfo.level = JSON.parse(storedUserInfo).level
           
         }
-        if(!rememberedLogin){
-          remBtn.value = false
-        }
+        
       }
   
       // 监听登录状态的变化

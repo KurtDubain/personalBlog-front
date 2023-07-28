@@ -53,6 +53,8 @@
 //   import EventBus from '../utils/eventBus'
   import { ElMessage,ElMessageBox } from 'element-plus'
   import chatMakeDu from './chatMakeDu.vue'
+  import DOMPurify from 'dompurify'
+
 
   export default {
     name: 'chatOutDu',
@@ -84,11 +86,29 @@
       })
       // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
       const isFormInvalid = computed(() => {
-        return (
-          !/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(formInline.account)
-        )
+        const username = formInline.username.trim()
+        const account = formInline.account.trim()
+        
+        if (username === '' || !isValidUsername(username)) {
+          return true;
+        }
+        if (account === '' || !isValidAccount(account)) {
+          return true;
+        } 
+
+        return false
       })
       
+      function isValidUsername(username) {
+        const cleanUsername = DOMPurify.sanitize(username);
+        return cleanUsername === username;
+      }
+
+      function isValidAccount(email) {
+        const cleanEmail = DOMPurify.sanitize(email);
+        return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(cleanEmail);
+      }
+
       // 表单提交功能
       const onSubmit = async () => {
         try {

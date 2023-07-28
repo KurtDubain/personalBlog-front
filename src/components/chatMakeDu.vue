@@ -26,16 +26,18 @@
     </el-form>
     <template #footer>
       <el-button @click="ChatFormClose">取消</el-button>
-      <el-button type="primary" @click="submitForm">提交</el-button>
+      <el-button type="primary" @click="submitForm" :disabled="isFormInvalid">提交</el-button>
     </template>
   </el-dialog>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import EventBus from '@/utils/eventBus';
+import DOMPurify from 'dompurify'
+
 export default {
   name: 'CommentFormDialog',
   props: {
@@ -58,6 +60,20 @@ export default {
       image: null,
     });
     const commentForm = ref({});
+
+    const isFormInvalid = computed(()=>{
+      const content = form.value.content.trim()
+      if(content === ''|| !isValidContent(content)){
+        return true
+      }
+      return false
+    })
+
+    function isValidContent(content){
+      const cleanContent = DOMPurify.sanitize(content)
+      return cleanContent === content
+    }
+
     // 判断是否上传图片，以及限制上传图片的数量
     const beforeUpload = (file) => {
       if(form.value.image){
@@ -105,6 +121,9 @@ export default {
         ElMessage.error('请正确填写表单内容');
       }
     };
+
+
+    // 关闭表单，触发父组件事件
     const ChatFormClose = () => {
       emit('closeForm');
     };
@@ -116,7 +135,8 @@ export default {
       handleUploadSuccess,
       submitForm,
       commentForm,
-      dialogVisible
+      dialogVisible,
+      isFormInvalid
     };
   }
 };
