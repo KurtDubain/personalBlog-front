@@ -2,7 +2,7 @@
 <template>
   <div class="markdown-editor">
     <div class="editor">
-      <textarea v-model="MDFile.content" @input="handleInput" placeholder="在此处输入Markdown文本"></textarea>
+      <textarea v-model="MDFile.content" @input="handleInputWithDebounce" placeholder="在此处输入Markdown文本"></textarea>
     </div>
     <div class="preview" v-html="parsedMarkdown"></div>
   </div>
@@ -147,6 +147,22 @@ export default {
       }
     };
 
+    function debounce(callback,delay){
+      let timeoutId;
+      return function(){
+        const context = this
+        const args = arguments
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(()=>{
+          callback.apply(context,args)
+        },delay)
+      }
+    }
+    const debounceHandleInput = debounce(handleInput,2000)
+    const handleInputWithDebounce = () => {
+      debounceHandleInput();
+    };
+
     return {
       parsedMarkdown,
       handleInput,
@@ -155,6 +171,7 @@ export default {
       handleImageUpload,
       uploadImg,
       upMarkDown,
+      handleInputWithDebounce
     };
   },
 };

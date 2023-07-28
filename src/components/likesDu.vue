@@ -1,5 +1,5 @@
 <template>
-    <button class="like-btn" @click="throttleToggleLike" type="button"> 
+    <button class="like-btn" @click="throttledToggleLike" type="button"> 
       <span v-if="liked">
         <div class="like-pos">
             <el-icon>  <StarFilled color="rgb(255, 132, 0)" /></el-icon>
@@ -25,6 +25,7 @@
   import { ElMessage } from 'element-plus';
   import { ref, onMounted,watch } from 'vue';
   import axios from 'axios';
+  import {throttle} from 'lodash'
   
   export default {
     name: "likesDu",
@@ -116,19 +117,9 @@
             }
         }
 
-        let canClick = true
-        const throttle =(callback,delay)=>{
-            if(canClick){
-                canClick = false
-                callback()
-                setTimeout(()=>{
-                    canClick = true
-                },delay)
-            }
-        }
-        const throttleToggleLike = ()=>{
-            throttle(toggleLike,5000)
-        }
+
+        const throttledToggleLike = throttle(toggleLike, 5000, { leading: true, trailing: false });
+
 
         watch(() => props.itemId,
             async (newItemId) => {
@@ -139,7 +130,7 @@
             liked,
             likeCount,
             toggleLike,
-            throttleToggleLike
+            throttledToggleLike
         };
     },
 };

@@ -26,7 +26,7 @@
     </el-form>
     <template #footer>
       <el-button @click="ChatFormClose">取消</el-button>
-      <el-button type="primary" @click="submitForm" :disabled="isFormInvalid">提交</el-button>
+      <el-button type="primary" @click="throttledSubmitForm" :disabled="isFormInvalid">提交</el-button>
     </template>
   </el-dialog>
 </template>
@@ -37,6 +37,8 @@ import axios from 'axios';
 import { ElMessage } from 'element-plus';
 import EventBus from '@/utils/eventBus';
 import DOMPurify from 'dompurify'
+import {throttle} from 'lodash'
+
 
 export default {
   name: 'CommentFormDialog',
@@ -122,6 +124,8 @@ export default {
       }
     };
 
+    const throttledSubmitForm = throttle(submitForm, 15000, { leading: true, trailing: false });
+
 
     // 关闭表单，触发父组件事件
     const ChatFormClose = () => {
@@ -136,7 +140,8 @@ export default {
       submitForm,
       commentForm,
       dialogVisible,
-      isFormInvalid
+      isFormInvalid,
+      throttledSubmitForm
     };
   }
 };

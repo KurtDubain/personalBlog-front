@@ -26,7 +26,7 @@
           
           <el-form-item class="button_row">
             
-            <el-button type="primary" @click="onSubmit" :disabled="isFormInvalid">发布</el-button>
+            <el-button type="primary" @click="throttledOnSubmit" :disabled="isFormInvalid">发布</el-button>
             
           </el-form-item>
         </el-form>
@@ -48,7 +48,7 @@
                 <el-input v-model="formInline.content" type="textarea" placeholder="想说点什么呢" clearable />
               </el-form-item>
               <el-form-item class="button_row">         
-                <el-button type="primary" @click="submitWithLogin" :disabled="isFormInvalidSecond">发布</el-button>
+                <el-button type="primary" @click="throttledOnSubmitWithLogin" :disabled="isFormInvalidSecond">发布</el-button>
               </el-form-item>
               
           </el-card>
@@ -64,6 +64,8 @@
   import EventBus from '../utils/eventBus'
   import { ElMessage,ElMessageBox } from 'element-plus'
   import DOMPurify from 'dompurify'
+  import {throttle} from 'lodash'
+
   
   export default {
     name: 'ComShowDu',
@@ -259,7 +261,11 @@
           console.error('表单数据提交失败', err)
         }
       }
-  
+      const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
+      const throttledOnSubmitWithLogin = throttle(submitWithLogin, 15000, { leading: true, trailing: false });
+
+
+
       return {
         onSubmit,
         formInline,
@@ -270,7 +276,9 @@
         showUserInfoCard,
         logout,
         submitWithLogin,
-        isFormInvalidSecond
+        isFormInvalidSecond,
+        throttledOnSubmit,
+        throttledOnSubmitWithLogin
       }
     }
   }
