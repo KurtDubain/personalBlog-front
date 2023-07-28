@@ -1,5 +1,6 @@
 // 引入 Vue Router 和其他依赖
 import { createRouter, createWebHistory } from 'vue-router';
+// import {reactive} from 'vue'
 // 页面注册
 import Home from '../pages/homeDu.vue'
 import About from '../pages/aboutDu.vue'
@@ -99,7 +100,7 @@ router.beforeEach((to, from, next) => {
     updateUserInfo(userInfo);
   } else {
     // 清除用户信息
-    clearUserInfo();
+    clearUserInfo(JSON.parse(userInfoFromStorage));
   }
   
   // 继续导航
@@ -107,33 +108,32 @@ router.beforeEach((to, from, next) => {
 });
 
 // 更新用户信息
-const updateUserInfo = (userInfo) => {
+const updateUserInfo = (data) => {
   // 更新 Vue 应用的状态
   // 注意：这里需要在 Vue 实例中定义一个 ref 或 reactive 来保存用户信息，并在此处进行更新
-  // 例如：
-  // const userInfo = reactive({
-  //   username: '',
-  //   account: '',
-  //   likes: 0,
-  //   comments: 0,
-  //   level: 1,
-  //   id: 0
-  // });
-  // Object.assign(userInfo, userInfo);
+  const userInfo = reactive({
+    username: '',
+    account: '',
+    likes: 0,
+    comments: 0,
+    level: 1,
+    id: 0
+  });
+  Object.assign(userInfo, data);
 };
 
 // 清除用户信息
-const clearUserInfo = () => {
+const clearUserInfo = (userInfo) => {
   // 清除 Vue 应用的状态
-  // 例如：
-  // userInfo.username = '';
-  // userInfo.account = '';
-  // userInfo.likes = 0;
-  // userInfo.comments = 0;
-  // userInfo.level = 0;
-  // userInfo.id = 0;
+  
+  userInfo.username = '';
+  userInfo.account = '';
+  userInfo.likes = 0;
+  userInfo.comments = 0;
+  userInfo.level = 0;
+  userInfo.id = 0;
 };
-
 */
+
 
 export default router;

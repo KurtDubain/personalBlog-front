@@ -100,37 +100,28 @@
           const res = await axios.post('http://localhost:3000/users/FromChatLogin', formData)
           console.log('表单数据成功提交', res.data)
           
+
+          const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
+          const user = resUser.data[0];
+            userInfo.id = user.id
+            userInfo.username = user.username;
+            userInfo.account = user.account;
+            userInfo.likes = user.like_count;
+            userInfo.comments = user.comment_count;
+            userInfo.level = user.level;
+            userInfo.created_at = user.created_at
+          
           // 表单内容清空
           if(remBtn.value){
-            isLog.value = true
-            const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
-            console.log('记住用户数据成功处理',resUser.data)
-            const user = resUser.data[0];
-            userInfo.id = user.id
-            userInfo.username = user.username;
-            userInfo.account = user.account;
-            userInfo.likes = user.like_count;
-            userInfo.comments = user.comment_count;
-            userInfo.level = user.level;
-            userInfo.created_at = user.created_at
+            isLog.value = true            
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
-  
+            localStorage.setItem('rememberedLogin','true')
           }else{
             isLog.value = true
-            const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
-            console.log('不记住用户数据成功处理',resUser.data)
-            const user = resUser.data[0];
-            userInfo.id = user.id
-            userInfo.username = user.username;
-            userInfo.account = user.account;
-            userInfo.likes = user.like_count;
-            userInfo.comments = user.comment_count;
-            userInfo.level = user.level;
-            userInfo.created_at = user.created_at
+            sessionStorage.setItem('userInfo',JSON.stringify(userInfo))
+            localStorage.setItem('rememberedLogin','false')
 
           }
-        //   EventBus.emit('NeedRefresh')
-        //   ElMessage.success('评论发表成功')
         } catch (err) {
           console.error('表单数据提交失败', err)
           ElMessage.error('您的账户或昵称输入有误')
@@ -160,19 +151,20 @@
       const checkRememberedLogin = () => {
         // 检查是否记住登录状态
         const rememberedLogin = localStorage.getItem('rememberedLogin')
-        if (rememberedLogin === 'true') {
+        const storedUserInfo = rememberedLogin === 'true'?localStorage.getItem('userInfo'):sessionStorage.getItem('userInfo')
+
+        if (storedUserInfo) {
           isLog.value = true
           // 获取用户信息
-          const storedUserInfo = localStorage.getItem('userInfo')
-          if (storedUserInfo) {
-            userInfo.id = JSON.parse(storedUserInfo).id
-            userInfo.username = JSON.parse(storedUserInfo).username
-            userInfo.account = JSON.parse(storedUserInfo).account
-            userInfo.comments = JSON.parse(storedUserInfo).comments
-            userInfo.likes = JSON.parse(storedUserInfo).likes
-            userInfo.level = JSON.parse(storedUserInfo).level
-          }
+          userInfo.id = JSON.parse(storedUserInfo).id
+          userInfo.username = JSON.parse(storedUserInfo).username
+          userInfo.account = JSON.parse(storedUserInfo).account
+          userInfo.comments = JSON.parse(storedUserInfo).comments
+          userInfo.likes = JSON.parse(storedUserInfo).likes
+          userInfo.level = JSON.parse(storedUserInfo).level
+          
         }
+        
       }
   
       // 监听登录状态的变化
@@ -187,12 +179,19 @@
             level:userInfo.level,
             id:userInfo.id
           })
-          localStorage.setItem('userInfo', storedUserInfo)
-          localStorage.setItem('rememberedLogin', remBtn.value.toString())
+          if(localStorage.getItem('rememberedLogin') === true){
+            localStorage.setItem('userInfo', storedUserInfo)
+          }else{
+            sessionStorage.setItem('userInfo',storedUserInfo)
+          }
+          
+          
         } else {
           // 未登录状态，清除保存的用户信息和登录状态
           localStorage.removeItem('userInfo')
           localStorage.removeItem('rememberedLogin')
+          sessionStorage.removeItem('userInfo')
+
         }
       })
   
