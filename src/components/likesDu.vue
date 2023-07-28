@@ -1,5 +1,5 @@
 <template>
-    <button class="like-btn" @click="toggleLike" type="button"> 
+    <button class="like-btn" @click="throttleToggleLike" type="button"> 
       <span v-if="liked">
         <div class="like-pos">
             <el-icon>  <StarFilled color="rgb(255, 132, 0)" /></el-icon>
@@ -115,6 +115,21 @@
                 console.log('未登录');
             }
         }
+
+        let canClick = true
+        const throttle =(callback,delay)=>{
+            if(canClick){
+                canClick = false
+                callback()
+                setTimeout(()=>{
+                    canClick = true
+                },delay)
+            }
+        }
+        const throttleToggleLike = ()=>{
+            throttle(toggleLike,5000)
+        }
+
         watch(() => props.itemId,
             async (newItemId) => {
                 await fetchLikeInfo(props.itemType,newItemId,userId)
@@ -124,6 +139,7 @@
             liked,
             likeCount,
             toggleLike,
+            throttleToggleLike
         };
     },
 };
