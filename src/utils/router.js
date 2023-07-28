@@ -1,3 +1,5 @@
+// vue-router的配置项
+
 // 引入 Vue Router 和其他依赖
 import { createRouter, createWebHistory } from 'vue-router';
 // import {reactive} from 'vue'

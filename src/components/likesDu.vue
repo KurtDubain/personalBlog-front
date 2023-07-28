@@ -1,3 +1,4 @@
+<!-- 点赞组件 -->
 <template>
     <button class="like-btn" @click="throttledToggleLike" type="button"> 
       <span v-if="liked">
@@ -34,7 +35,7 @@
             type: String,
             required: true,
         },
-        
+        // 定义四种类型，分别对应数据库的四个类型
         itemType: {
             type: String,
             required: true,
@@ -47,14 +48,17 @@
 
     setup(props) {
         // console.log(props)
+        // 判断是否喜欢
         const liked = ref(false);
+        // 判断喜欢的数量
         const likeCount = ref(0);
+        // 定义用户id
         const userId = ref(null)
         onMounted(async () => {
             checkLoginStatus()
             await fetchLikeInfo(props.itemType,props.itemId,userId);
         });
-
+        // 获取指定项目的点赞情况
         const fetchLikeInfo = async (type,itemId,userId) => {
             try {
                 // console.log(userId.value);
@@ -68,6 +72,7 @@
                 console.error("获取点赞信息失败", error);
             }
         };
+        // 点赞或者取消点赞的请求的发送
         const toggleLike = async () => {
             try {
                 if(!userId.value){
@@ -97,8 +102,10 @@
                 console.error("点赞操作失败", error);
             }
         };
+        // 获取用户登陆情况，如果未登录，则禁止点赞
         const checkLoginStatus = ()=>{
             let userInfo = null
+            // 判断用户数据存储方式
             const localUserInfo = localStorage.getItem('userInfo')
             if(localUserInfo){
                 userInfo = JSON.parse(localUserInfo)
@@ -117,10 +124,10 @@
             }
         }
 
-
+        // 节流处理点赞操作
         const throttledToggleLike = throttle(toggleLike, 5000, { leading: true, trailing: false });
 
-
+        // 当点赞情况发生变化的时候，更新信息
         watch(() => props.itemId,
             async (newItemId) => {
                 await fetchLikeInfo(props.itemType,newItemId,userId)

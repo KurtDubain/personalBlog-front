@@ -1,3 +1,4 @@
+<!-- 阅读指定文章页面组件 -->
 <template>
   <div class="common-layout">
     <el-container>
@@ -20,7 +21,7 @@
         <ctrlBtnDu :ctrltitle="ctrltitle" :articleId="articleId" :lastId="lastId">
         </ctrlBtnDu>
       </el-aside>
-
+      <!-- 响应式表单 -->
       <div class="loginBack">
         <div v-if="isMobile" class="loginFormContainer">
           <div class="loginDirect" @click="toggleLoginForm">
@@ -205,18 +206,20 @@ export default {
     // const filterArticleComputed = computed(()=>{
     //   return filterArticle.value
     // }) 
-
+      // 响应式设计部分
+      // 判断是否是移动端窗口
     const isMobile = ref(window.innerWidth <= 768);
 
     window.addEventListener('resize', () => {
       isMobile.value = window.innerWidth <= 768;  
     });
+    // 是否展示响应式表单
     const showLoginForm = ref(false);
-
+    // 弹出响应式表单
     const toggleLoginForm = () => {          
       showLoginForm.value = !showLoginForm.value;
     };
-
+    // 隐藏响应式表单
     const handleClickOutside = (event) => {
       if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
         showLoginForm.value = false;

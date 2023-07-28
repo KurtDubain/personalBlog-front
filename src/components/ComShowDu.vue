@@ -1,6 +1,7 @@
 <!-- 文章评论发表表单的组件 -->
 <template>
   <div class="midForm">
+    <!-- 文章评论登陆表单 -->
     <div v-if="!isLog">
       <el-card class="box-card">
       <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
@@ -28,7 +29,7 @@
       </el-form>
     </el-card>
     </div>
-  
+  <!-- 文章评论已登录表单 -->
     <div v-else>
       <div class="user-info">
         <el-card class="box-card">
@@ -78,14 +79,17 @@ export default {
     }
   },
   setup(props) {
-    // 定义表单内容
+    // 定义是否记住登陆状态
     const remBtn = ref(true)
+    // 判断是否登录
     const isLog = ref(false)
+    // 定义表单内数据
     const formInline = reactive({
       username: '',
       account: '',
       content: ''
     })
+    // 定义用户数据
     const userInfo = reactive({
       username:'',
       account:'',
@@ -94,7 +98,7 @@ export default {
       level:1,
       id:0
     })
-    // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
+    // 使用DOMPurify来防止恶意脚本注入，同时判断是否为空和格式是否正确
     const isFormInvalid = computed(() => {
       const username = formInline.username.trim()
       const account = formInline.account.trim()
@@ -112,6 +116,7 @@ export default {
       return false
 
     })
+    // 定义的检验方法
     function isValidUsername(username) {
       const cleanUsername = DOMPurify.sanitize(username);
       return cleanUsername === username;
@@ -127,6 +132,7 @@ export default {
       return cleanContent === content;
     }
 
+    // 判断已经登陆的表单是否合规
     const isFormInvalidSecond = computed(() => {
         const content = formInline.content.trim()
         if(content === '' || !isValidContent){
@@ -146,7 +152,7 @@ export default {
         // 将表单内数据由axios发送提交，并由后端补充id、日期等信息
         const res = await axios.post('http://localhost:3000/comments/form', formData)
         console.log('表单数据成功提交', res.data)
-        
+        // 获取用户数据
         const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
           const user = resUser.data[0];
           userInfo.id = user.id
@@ -155,10 +161,11 @@ export default {
           userInfo.likes = user.like_count;
           userInfo.comments = user.comment_count;
           userInfo.level = user.level;
-          userInfo.created_at = user.created_at
-          formInline.content = ''
+          userInfo.created_at = user.created_at                  
+          // 表单内容清空
 
-        // 表单内容清空
+          formInline.content = ''
+        // 根据是否记住登陆状态，来判断存储数据的方式
         if(remBtn.value){
           isLog.value = true
           
@@ -173,6 +180,7 @@ export default {
           // 使用总线，实现发送一个表单，重新刷新评论表单列表，展示最新数据
           
         }
+        // 事件总线刷新评论区
         EventBus.emit('NeedRefresh')
         ElMessage.success('评论发表成功')
       } catch (err) {
@@ -233,6 +241,7 @@ export default {
           comments:userInfo.comments,
           level:userInfo.level
         })
+        // 根据不同登陆情况来用不同的存储数据的方式
         if(localStorage.getItem('rememberedLogin') === true){
             localStorage.setItem('userInfo', storedUserInfo)
           }else{
@@ -269,6 +278,7 @@ export default {
         console.error('表单数据提交失败', err)
       }
     }
+    // 节流发表文章评论
     const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
     const throttledOnSubmitWithLogin = throttle(submitWithLogin, 15000, { leading: true, trailing: false });
 

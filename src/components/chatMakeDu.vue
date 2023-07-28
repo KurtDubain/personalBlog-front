@@ -62,7 +62,7 @@ export default {
       image: null,
     });
     const commentForm = ref({});
-
+    // 判断表单是否为空，且是否含有恶意脚本
     const isFormInvalid = computed(()=>{
       const content = form.value.content.trim()
       if(content === ''|| !isValidContent(content)){
@@ -70,7 +70,7 @@ export default {
       }
       return false
     })
-
+    // 用于检验
     function isValidContent(content){
       const cleanContent = DOMPurify.sanitize(content)
       return cleanContent === content
@@ -123,7 +123,7 @@ export default {
         ElMessage.error('请正确填写表单内容');
       }
     };
-
+    // 节流控制发表频率
     const throttledSubmitForm = throttle(submitForm, 15000, { leading: true, trailing: false });
 
 

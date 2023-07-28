@@ -92,12 +92,12 @@
         level:1,
         id:0
       })
-      // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
+      // 判断表单内容是否合规
       const isFormInvalid = computed(() => {
         const username = formInline.username.trim()
         const account = formInline.account.trim()
         const content = formInline.content.trim()
-        
+        // 通过使用三个方法分别判断内容是否为空且是否包含恶意脚本，防止XSS注入
         if (username === '' || !isValidUsername(username)) {
           return true;
         }
@@ -111,6 +111,7 @@
         return false
 
       })
+      // 定义的三个方法，使用DOMPurify的sanitize方法消除恶意代码进行比较
       function isValidUsername(username) {
         const cleanUsername = DOMPurify.sanitize(username);
         return cleanUsername === username;
@@ -126,7 +127,7 @@
         return cleanContent === content;
       }
 
-
+      // 对已登录的用户进行内容的检验
       const isFormInvalidSecond = computed(() => {
         const content = formInline.content.trim()
         if(content === '' || !isValidContent){
@@ -149,6 +150,7 @@
           
           const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
             const user = resUser.data[0];
+            // 将获取的内容存入userInfo中
             userInfo.id = user.id
             userInfo.username = user.username;
             userInfo.account = user.account;
@@ -156,8 +158,10 @@
             userInfo.comments = user.comment_count;
             userInfo.level = user.level;
             userInfo.created_at = user.created_at
+            // 清空表单
             formInline.content = ''
-          // 表单内容清空
+
+            // 判断是否记住登陆，来执行不同的存储方式
           if(remBtn.value){
             isLog.value = true
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
@@ -170,6 +174,7 @@
             localStorage.setItem('rememberedLogin','false')
             // 使用总线，实现发送一个表单，重新刷新评论表单列表，展示最新数据
           }
+          // 事件总线，刷新评论
           EventBus.emit('NeedRefreshChatComment')
           ElMessage.success('评论发表成功')
         } catch (err) {
@@ -197,6 +202,7 @@
       const checkRememberedLogin = () => {
         // 检查是否记住登录状态
         const rememberedLogin = localStorage.getItem('rememberedLogin')
+        // 判断从哪里获取用户信息
         const storedUserInfo = rememberedLogin === 'true'?localStorage.getItem('userInfo'):sessionStorage.getItem('userInfo')
 
         if (storedUserInfo) {
@@ -225,6 +231,7 @@
             comments:userInfo.comments,
             level:userInfo.level
           })
+          // 根据用户登陆情况判断以何种方式读取数据
           if(localStorage.getItem('rememberedLogin') === true){
             localStorage.setItem('userInfo', storedUserInfo)
           }else{
@@ -261,6 +268,7 @@
           console.error('表单数据提交失败', err)
         }
       }
+      // 使用lodash库中的节流，防止多次提交评论表单
       const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
       const throttledOnSubmitWithLogin = throttle(submitWithLogin, 15000, { leading: true, trailing: false });
 

@@ -22,17 +22,18 @@
     <input v-model="MDFile.title" type="text" placeholder="输入标题">
 
   </div>
+  <!-- 标签选择 -->
   <div class="tags">
-  <label>
-    <input type="checkbox" v-model="MDFile.tags.tags" value="生活"> 生活
-  </label>
-  <label>
-    <input type="checkbox" v-model="MDFile.tags.tags" value="技术"> 技术
-  </label>
-  <label>
-    <input type="checkbox" v-model="MDFile.tags.tags" value="体育"> 体育
-  </label>
-</div>
+    <label>
+      <input type="checkbox" v-model="MDFile.tags.tags" value="生活"> 生活
+    </label>
+    <label>
+      <input type="checkbox" v-model="MDFile.tags.tags" value="技术"> 技术
+    </label>
+    <label>
+      <input type="checkbox" v-model="MDFile.tags.tags" value="体育"> 体育
+    </label>
+  </div>
 <button @click="upMarkDown">上传文章</button>
 
 </template>
@@ -146,7 +147,7 @@ export default {
 
       }
     };
-
+    // 防抖，避免文本输入请求时多次请求
     function debounce(callback,delay){
       let timeoutId;
       return function(){
@@ -158,7 +159,7 @@ export default {
         },delay)
       }
     }
-    // 防抖
+    // 防抖处理input事件
     const debounceHandleInput = debounce(handleInput,2000)
     const handleInputWithDebounce = () => {
       debounceHandleInput();

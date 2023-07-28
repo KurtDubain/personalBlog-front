@@ -14,6 +14,7 @@
         <el-aside width="20%">  
             <chatCommentFormDu :chatId="chatId"></chatCommentFormDu>
         </el-aside>
+        <!-- 响应式显示表单 -->
         <div class="loginBack">
             <div v-if="isMobile" class="loginFormContainer">
             <div class="loginDirect" @click="toggleLoginForm">
@@ -50,7 +51,9 @@ export default {
         }
     },
     setup(props){
+      // 定义指定留言信息
         let chatInfo = reactive({})
+        // 定义指定留言下的评论
         let chatCommentInfo = ref([])
         onMounted(async()=>{
             try{
@@ -65,11 +68,12 @@ export default {
                 console.error('评论初始化失败');
             }
         })
-        // 加载指定留言的信息
+        // 解绑事件
         onUnmounted(() => {
           document.removeEventListener('click', handleClickOutside);
         });
 
+        // 加载指定留言的信息
         const loadChatInfo = async(chatId)=>{
             try{
                 const res = await axios.get(`http://localhost:3000/chats/chatInfo/${chatId}`)
@@ -103,18 +107,20 @@ export default {
                 console.error('评论获取失败');
             }
         }
-
+        // 响应式设计
+        // 判断是否是移动端视窗大小
         const isMobile = ref(window.innerWidth <= 768);
-
+        // 监听视窗大小
         window.addEventListener('resize', () => {
           isMobile.value = window.innerWidth <= 768;
         });
+        // 判断是否要显示响应式表单
         const showLoginForm = ref(false);
-
+        // 打开表单按钮
         const toggleLoginForm = () => {
           showLoginForm.value = !showLoginForm.value;
         };
-
+        // 绑定关闭表单按钮
         const handleClickOutside = (event) => {
           if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
             showLoginForm.value = false;
@@ -135,6 +141,7 @@ export default {
 </script>
 
 <style scoped>
+/* 使用媒体查询判断是否需要隐藏两侧 */
 @media screen and (max-width: 768px) {
   .el-aside {
     display: none;

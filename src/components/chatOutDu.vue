@@ -1,5 +1,6 @@
 <template>
   <div class="midForm">
+    <!-- 未登录表单样式 -->
     <div v-if="!isLog">
       <el-card>
       <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
@@ -24,6 +25,7 @@
       </el-form>
     </el-card>
     </div>
+    <!-- 登录之后的表单样式 -->
     <div v-else>
       <div class="user-info">
         <el-card class="box-card">
@@ -68,14 +70,18 @@
       }
     },
     setup() {
-      // 定义表单内容
+      // 判断是否记住登陆状态
       const remBtn = ref(true)
+      // 判断是否已经登陆
       const isLog = ref(false)
+      // 判断发表留言的表单是否可见
       const chatFormVisible = ref(false)
+      // 定义表单内容
       const formInline = reactive({
         username: '',
         account: '',
       })
+      // 定义用户信息
       const userInfo = reactive({
         username:'',
         account:'',
@@ -98,7 +104,7 @@
 
         return false
       })
-      
+      // 用于检验表单内容是否合规
       function isValidUsername(username) {
         const cleanUsername = DOMPurify.sanitize(username);
         return cleanUsername === username;
@@ -120,7 +126,7 @@
           const res = await axios.post('http://localhost:3000/users/FromChatLogin', formData)
           console.log('表单数据成功提交', res.data)
           
-
+          // 获取用户信息
           const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
           const user = resUser.data[0];
             userInfo.id = user.id
@@ -130,8 +136,8 @@
             userInfo.comments = user.comment_count;
             userInfo.level = user.level;
             userInfo.created_at = user.created_at
-          
-          // 表单内容清空
+
+            // 根据是否记住登陆状态，来使用不同方式存储用户信息
           if(remBtn.value){
             isLog.value = true            
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
@@ -170,6 +176,7 @@
       //确保用户在登录状态下保持登录状态
       const checkRememberedLogin = () => {
         // 检查是否记住登录状态
+        // 根据登陆状态来判断用什么方式读取数据
         const rememberedLogin = localStorage.getItem('rememberedLogin')
         const storedUserInfo = rememberedLogin === 'true'?localStorage.getItem('userInfo'):sessionStorage.getItem('userInfo')
 
@@ -199,6 +206,7 @@
             level:userInfo.level,
             id:userInfo.id
           })
+          // 通过判断不同的登录状态来用不同方式获取数据
           if(localStorage.getItem('rememberedLogin') === true){
             localStorage.setItem('userInfo', storedUserInfo)
           }else{
@@ -217,7 +225,8 @@
   
       // 初始化检查是否记住登录状态
       checkRememberedLogin()
-  
+      
+      // 显示留言表单
       const submitChat = async () => {
         try {
           chatFormVisible.value = true
@@ -226,6 +235,7 @@
           console.error('表单数据提交失败', err)
         }
       }
+      // 关闭留言表单
       const closeChatForm = ()=>{
         chatFormVisible.value = false
       }

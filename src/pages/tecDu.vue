@@ -1,3 +1,4 @@
+<!-- 科技分类的页面组件 -->
 <template>
   <div class="common-layout">
     <el-container>

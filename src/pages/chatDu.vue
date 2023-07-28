@@ -14,6 +14,7 @@
       <el-aside class="contentAside" width="20%">
         <chatOutDu></chatOutDu>
       </el-aside>
+      <!-- 响应式表单 -->
       <div class="loginBack">
         <div v-if="isMobile" class="loginFormContainer">
           <div class="loginDirect" @click="toggleLoginForm">
@@ -51,10 +52,12 @@
           EventBus.on('NeedRefreshChats',()=>{
             loadChats()
           })
+          // 监听事件
           document.addEventListener('click', handleClickOutside);
         })
 
         onUnmounted(() => {
+          // 解绑事件
           document.removeEventListener('click', handleClickOutside);
         });
 
@@ -63,7 +66,6 @@
     //       const chatsArray = Object.values(chats)
     //       return chatsArray.slice()
     //     })
-        //通过使用计算属性，确保trueChats是最新的数据，并且传递给子组件 
         const loadChats = async()=>{
           try{
             // 获取留言全部内容
@@ -74,24 +76,32 @@
             console.error('留言数据获取失败');
           }
         }
+                
+        //通过使用计算属性，确保trueChats是最新的数据，并且传递给子组件 
         let trueChats = computed(()=>{
           const chatsArray = chats.value?Object.values(chats.value):[]
           return chatsArray.slice().sort((a,b)=>new Date(b.date)-new Date(a.date))
         })
 
+        // 响应式设计操作
+        // 判断视窗大小
         const isMobile = ref(window.innerWidth <= 768);
 
     // 监听窗口宽度变化，更新移动端状态
         window.addEventListener('resize', () => {
           isMobile.value = window.innerWidth <= 768;
         });
+        // 判断是否展示第二个表单
         const showLoginForm = ref(false);
 
+        // 表单显示开关
         const toggleLoginForm = () => {
           showLoginForm.value = !showLoginForm.value;
         };
 
+        // 隐藏表单时间
         const handleClickOutside = (event) => {
+          // !event.target表示目标之外的元素，closest('.loginFormContainer')是指定选择器的祖先元素
           if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
             showLoginForm.value = false;
           }

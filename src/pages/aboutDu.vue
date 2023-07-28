@@ -1,3 +1,4 @@
+<!-- 个人about页面组件 -->
 <template>
   <div class="common-layout">
     <el-container>
