@@ -18,26 +18,21 @@
   
   <script>
   // import { ref } from 'vue';
+  import {useStore} from 'vuex'
+  import {computed} from 'vue'
   import likesDu from './likesDu.vue';
   export default {
     name: 'ChatHeadDu',
-    props: {
-      chatInfo: {
-        type: Object,
-        default: () => ({}),
-      },
-    //   chatId: {
-    //     type: String,
-    //     required: true
-    //   }
-    },
+    
     components:{
       likesDu
     },  
     setup(){
-      
+      const store = useStore()
+      const chatInfo = computed(()=> store.state.chatReader.chatInfo)
       
       return{
+        chatInfo
       }
     }
     

@@ -33,19 +33,23 @@
 
 <script>
   import { useRouter } from 'vue-router'
+  import {useStore} from 'vuex'
   import likesDu from './likesDu.vue';
-export default {
+  import { computed } from 'vue';
+
+  export default {
   name: "ChatLittleDu",
-  props: {
-    chats: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
   components:{
     likesDu
   },
   setup() {
+
+    const store = useStore()
+
+    const chats = computed(()=> store.getters['chats/sortedChats'] )
+
+    // const chats = store.getters['chats/sortedChats']
+    
       const router = useRouter();
       // 传递路由参数
       const goToChat = (chatId) => {
@@ -58,6 +62,7 @@ export default {
       };
   
       return {
+        chats,
         goToChat
       };
     }

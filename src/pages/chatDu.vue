@@ -6,7 +6,7 @@
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <chatlittleDu :chats="trueChats"></chatlittleDu>
+          <chatlittleDu></chatlittleDu>
           
         </mainDu>
         
@@ -32,10 +32,10 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
-  import {reactive,onMounted, computed,ref,onUnmounted} from 'vue'
-  import axios from 'axios'
+  import {onMounted,ref,onUnmounted} from 'vue'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
+  import {useStore} from 'vuex'
 
   export default {
       name:"chatDu",
@@ -45,12 +45,12 @@
           chatOutDu
       },
       setup(){
-        let chats = reactive({})
+        const store = useStore()
         
         onMounted(async()=>{
-          await loadChats()
+          await store.dispatch('chats/loadChats')
           EventBus.on('NeedRefreshChats',()=>{
-            loadChats()
+            store.dispatch('chats/loadChats')
           })
           // 监听事件
           document.addEventListener('click', handleClickOutside);
@@ -60,29 +60,8 @@
           // 解绑事件
           document.removeEventListener('click', handleClickOutside);
         });
-
+   
         
-    //     let filterChat = computed(()=>{
-    //       const chatsArray = Object.values(chats)
-    //       return chatsArray.slice()
-    //     })
-        const loadChats = async()=>{
-          try{
-            // 获取留言全部内容
-            let res = await axios('http://localhost:3000/chats')
-            chats.value = res.data
-            
-          }catch(error){
-            console.error('留言数据获取失败');
-          }
-        }
-                
-        //通过使用计算属性，确保trueChats是最新的数据，并且传递给子组件 
-        let trueChats = computed(()=>{
-          const chatsArray = chats.value?Object.values(chats.value):[]
-          return chatsArray.slice().sort((a,b)=>new Date(b.date)-new Date(a.date))
-        })
-
         // 响应式设计操作
         // 判断视窗大小
         const isMobile = ref(window.innerWidth <= 768);
@@ -108,9 +87,7 @@
         };
 
         return {
-          chats,
-          trueChats,
-          loadChats,
+          store,
           isMobile,
           showLoginForm,
           toggleLoginForm,

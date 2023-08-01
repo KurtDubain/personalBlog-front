@@ -16,16 +16,13 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { computed } from 'vue';
 import likesDu from './likesDu.vue';
+import {useStore} from 'vuex'
 
 export default {
   name: 'ChatCommentDu',
   props: {
-    chatCommentInfo: {
-      type: Array,
-      required: true,
-    },
     chatId: {
       type: String,
       required: true,
@@ -35,27 +32,13 @@ export default {
     likesDu
   },
   setup() {
-    const likedComments = ref([]);
 
-    // 处理点赞按钮点击事件
-    const handleLike = (commentId) => {
-      const index = likedComments.value.indexOf(commentId);
-      if (index !== -1) {
-        likedComments.value.splice(index, 1);
-      } else {
-        likedComments.value.push(commentId);
-      }
-    };
-
-    // 判断是否已点赞
-    const isLiked = (commentId) => {
-      return likedComments.value.includes(commentId);
-    };
+    const store = useStore()
+    const chatCommentInfo = computed(()=> store.state.chatReader.chatCommentInfo )
+    
 
     return {
-      likedComments,
-      handleLike,
-      isLiked,
+      chatCommentInfo
     };
   },
 };

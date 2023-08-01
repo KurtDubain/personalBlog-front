@@ -2,11 +2,16 @@
 
 import { createStore } from 'vuex';
 
-import first from './modules/first'
+import chatsModule from './modules/chats'
+import chatReaderModule from './modules/chatReader';
+import articlesModule from './modules/articles';
 
 const store = createStore({
     modules:{
-        first
+        chats:chatsModule,
+        chatReader:chatReaderModule,
+        articles:articlesModule
+
     }
 })
 

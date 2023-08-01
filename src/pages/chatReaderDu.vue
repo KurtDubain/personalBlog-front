@@ -6,9 +6,9 @@
         </el-aside>
         <el-main>
           <mainDu style="display:flex;flex-direction: column;align-items: center;">
-            <chatHeadDu :chatInfo="chatInfo"></chatHeadDu>
+            <chatHeadDu></chatHeadDu>
             <el-divider border-style="double" />
-            <chatCommentDu :chatId="chatId" :chatCommentInfo="chatCommentInfo"></chatCommentDu>
+            <chatCommentDu :chatId="chatId"></chatCommentDu>
           </mainDu>
         </el-main>
         <el-aside width="20%">  
@@ -32,9 +32,9 @@ import chatCommentDu from '@/components/chatCommentDu.vue'
 import chatHeadDu from '@/components/chatHeadDu.vue'
 import mainDu from '@/components/mainDu.vue';
 import chatCommentFormDu from '@/components/chatCommentFormDu.vue';
-import {ref,reactive, onMounted,onUnmounted} from 'vue'
-import axios from 'axios'
+import {ref, onMounted,onUnmounted} from 'vue'
 import EventBus from '@/utils/eventBus';
+import {useStore} from 'vuex'
 
 export default {
     name:'chatReaderDu',
@@ -51,17 +51,16 @@ export default {
         }
     },
     setup(props){
-      // 定义指定留言信息
-        let chatInfo = reactive({})
-        // 定义指定留言下的评论
-        let chatCommentInfo = ref([])
+
+        const store = useStore()
+
         onMounted(async()=>{
             try{
                 // 钩子函数挂载加载时间和事件总线事件
-                await loadChatInfo(props.chatId)
-                await loadChatCommentsInfo(props.chatId)
+                await store.dispatch('chatReader/loadChatInfo',props.chatId)
+                await store.dispatch('chatReader/loadChatCommentsInfo',props.chatId)
                 EventBus.on('NeedRefreshChatComment',()=>{
-                    loadChatCommentsInfo(props.chatId)
+                  store.dispatch('chatReader/loadChatCommentsInfo',props.chatId)
                 })
                 document.addEventListener('click', handleClickOutside);
             }catch(error){
@@ -73,40 +72,6 @@ export default {
           document.removeEventListener('click', handleClickOutside);
         });
 
-        // 加载指定留言的信息
-        const loadChatInfo = async(chatId)=>{
-            try{
-                const res = await axios.get(`http://localhost:3000/chats/chatInfo/${chatId}`)
-                chatInfo.id = res.data[0].id
-                chatInfo.date =res.data[0].date
-                chatInfo.username = res.data[0].username
-                chatInfo.content = res.data[0].content
-                chatInfo.account = res.data[0].account
-                chatInfo.likes = res.data[0].likes
-                chatInfo.views = res.data[0].views
-                chatInfo.reply = res.data[0].reply
-                chatInfo.uid = res.data[0].uid
-                chatInfo.imgUrl = res.data[0].imgUrl
-
-                
-                // console.log(chatInfo,res.data[0])
-                // console.log('文章信息获取成功')
-            }catch(error){
-                console.error('留言获取失败');
-            }
-        }
-        // 加载指定留言下的评论信息
-        const loadChatCommentsInfo = async(chatId)=>{
-            try{
-                const res = await axios.get(`http://localhost:3000/chats/chatCommentInfo/${chatId}`)
-                chatCommentInfo.value = res.data
-                console.log(chatCommentInfo.value)
-                // console.log(articles)
-                // console.log('文章信息获取成功')
-            }catch(error){
-                console.error('评论获取失败');
-            }
-        }
         // 响应式设计
         // 判断是否是移动端视窗大小
         const isMobile = ref(window.innerWidth <= 768);
@@ -127,10 +92,7 @@ export default {
           }
         };
         return{
-            loadChatInfo,
-            loadChatCommentsInfo,
-            chatInfo,
-            chatCommentInfo,
+            
             showLoginForm,
             toggleLoginForm,
             handleClickOutside,
