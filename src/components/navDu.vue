@@ -51,7 +51,7 @@
       <router-link to="/write" style="text-decoration:none">
         <el-menu-item index="4-1">嗖</el-menu-item>
       </router-link>
-      <router-link to="/write" style="text-decoration:none">
+      <router-link to="/subscription" style="text-decoration:none">
         <el-menu-item index="4-2">订阅</el-menu-item>
       </router-link>
       <router-link to="/write" style="text-decoration:none">

@@ -4,13 +4,16 @@
       <div class="footer-content">
         <div class="footer-links">
           <router-link to="/" class="footer-link">首页</router-link>
+          <el-divider direction="vertical" />
           <router-link to="/about" class="footer-link">关于</router-link>
-          <router-link to="/contact" class="footer-link">联系我们</router-link>
+          <el-divider direction="vertical" />
+
+          <router-link to="/subscription" class="footer-link">联系我们</router-link>
         </div>
         <div class="footer-info" >
           <p>版权所有 &copy; 雪碧</p>
           <!-- <p>地址：xxx市xxx区xxx街道xxx号</p> -->
-          <p>电话：15100577937</p>
+          <p>备案号：粤ICP备12345678号</p>
           <p>Email：kurt.du.cobain@gmail.com</p>
         </div>
       </div>

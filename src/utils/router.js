@@ -13,6 +13,7 @@ import chatMaker from '../pages/chatDu.vue'
 import read from '../pages/readerDu.vue'
 import writer from '../pages/writeDu.vue'
 import chatReader from '../pages/chatReaderDu.vue'
+import subscription from '../pages/subscriptionDu.vue'
 
 
 // 创建 Vue Router 实例
@@ -87,55 +88,14 @@ const router = createRouter({
         name:'chatComment',
         component:chatReader,
         props:true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    }  ]
+    },
+    {
+        path:'/subscription',
+        name:'subscription',
+        component:subscription,
+    }
+    ]
 });
-/*
-// 定义全局前置守卫
-router.beforeEach((to, from, next) => {
-  // 检查是否记住登录状态
-  const rememberedLogin = localStorage.getItem('rememberedLogin');
-  const userInfoFromStorage = localStorage.getItem('userInfo');
-  
-  if (rememberedLogin === 'true' && userInfoFromStorage) {
-    const userInfo = JSON.parse(userInfoFromStorage);
-    // 更新用户信息
-    updateUserInfo(userInfo);
-  } else {
-    // 清除用户信息
-    clearUserInfo(JSON.parse(userInfoFromStorage));
-  }
-  
-  // 继续导航
-  next();
-});
-
-// 更新用户信息
-const updateUserInfo = (data) => {
-  // 更新 Vue 应用的状态
-  // 注意：这里需要在 Vue 实例中定义一个 ref 或 reactive 来保存用户信息，并在此处进行更新
-  const userInfo = reactive({
-    username: '',
-    account: '',
-    likes: 0,
-    comments: 0,
-    level: 1,
-    id: 0
-  });
-  Object.assign(userInfo, data);
-};
-
-// 清除用户信息
-const clearUserInfo = (userInfo) => {
-  // 清除 Vue 应用的状态
-  
-  userInfo.username = '';
-  userInfo.account = '';
-  userInfo.likes = 0;
-  userInfo.comments = 0;
-  userInfo.level = 0;
-  userInfo.id = 0;
-};
-*/
 
 
 export default router;
