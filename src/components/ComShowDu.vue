@@ -58,12 +58,13 @@
 </template>
 
 <script>
-import { reactive, computed,ref,watch } from 'vue'
-import axios from 'axios'
+import { reactive, computed,ref,watch,onMounted } from 'vue'
+// import axios from 'axios'
 import EventBus from '../utils/eventBus'
 import { ElMessage,ElMessageBox } from 'element-plus'
 import DOMPurify from 'dompurify'
 import {throttle} from 'lodash'
+import { useStore } from 'vuex'
 
 
 export default {
@@ -79,25 +80,19 @@ export default {
     }
   },
   setup(props) {
-    // 定义是否记住登陆状态
     const remBtn = ref(true)
-    // 判断是否登录
-    const isLog = ref(false)
-    // 定义表单内数据
+    const store = useStore()
+    const userInfo = computed(() => store.getters['users/getUserInfo']);
+    const isLog = computed(() => store.getters['users/isLoggedIn']);
     const formInline = reactive({
       username: '',
       account: '',
       content: ''
     })
-    // 定义用户数据
-    const userInfo = reactive({
-      username:'',
-      account:'',
-      likes:0,
-      comments:0,
-      level:1,
-      id:0
+    onMounted(()=>{
+      store.dispatch('users/checkRememberedLogin')
     })
+    
     // 使用DOMPurify来防止恶意脚本注入，同时判断是否为空和格式是否正确
     const isFormInvalid = computed(() => {
       const username = formInline.username.trim()
@@ -149,37 +144,11 @@ export default {
           username: formInline.username,
           account: formInline.account
         }
-        // 将表单内数据由axios发送提交，并由后端补充id、日期等信息
-        const res = await axios.post('http://localhost:3000/comments/form', formData)
-        console.log('表单数据成功提交', res.data)
-        // 获取用户数据
-        const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
-          const user = resUser.data[0];
-          userInfo.id = user.id
-          userInfo.username = user.username;
-          userInfo.account = user.account;
-          userInfo.likes = user.like_count;
-          userInfo.comments = user.comment_count;
-          userInfo.level = user.level;
-          userInfo.created_at = user.created_at                  
+        // 执行Vuex中的登录操作,并传入表单的值和按钮的值
+        await store.dispatch('users/loginUserFromArticles',{ formData, remBtn: remBtn.value })             
           // 表单内容清空
-
-          formInline.content = ''
-        // 根据是否记住登陆状态，来判断存储数据的方式
-        if(remBtn.value){
-          isLog.value = true
-          
-          localStorage.setItem('userInfo', JSON.stringify(userInfo));
-          localStorage.setItem('rememberedLogin','true')
-        }else{
-          isLog.value = true
-          
-          sessionStorage.setItem('userInfo',JSON.stringify(userInfo))
-          localStorage.setItem('rememberedLogin','false')
-
-          // 使用总线，实现发送一个表单，重新刷新评论表单列表，展示最新数据
-          
-        }
+        formInline.content = ''
+      
         // 事件总线刷新评论区
         EventBus.emit('NeedRefresh')
         ElMessage.success('评论发表成功')
@@ -193,53 +162,28 @@ export default {
 
     // 展示个人信息卡片
     const showUserInfoCard = () => {
-      ElMessageBox.alert(`用户名: ${userInfo.username}\n账号: ${userInfo.account}\n被喜欢数:${userInfo.likes}\n回复数:${userInfo.comments}`, '个人信息', {
+      ElMessageBox.alert(`用户名: ${userInfo.value.username}\n账号: ${userInfo.value.account}\n被喜欢数:${userInfo.value.likes}\n回复数:${userInfo.value.comments}`, '个人信息', {
         confirmButtonText: '确定'
       })
     }
 
     // 退出登录
     const logout = () => {
-      // 清空用户信息
-      userInfo.username = ''
-      userInfo.account = ''
-      // 切换回未登录状态
-      isLog.value = false
+      store.dispatch('users/logoutUser')
     }
 
-    //确保用户在登录状态下保持登录状态
-    const checkRememberedLogin = () => {
-      // 检查是否记住登录状态
-      const rememberedLogin = localStorage.getItem('rememberedLogin')
-      const storedUserInfo = rememberedLogin === 'true'?localStorage.getItem('userInfo'):sessionStorage.getItem('userInfo')
-      if (storedUserInfo) {
-        isLog.value = true
-        // 获取用户信息
-        
-          userInfo.id = JSON.parse(storedUserInfo).id
-          userInfo.username = JSON.parse(storedUserInfo).username
-          userInfo.account = JSON.parse(storedUserInfo).account
-          userInfo.comments = JSON.parse(storedUserInfo).comments
-          userInfo.likes = JSON.parse(storedUserInfo).likes
-          userInfo.level = JSON.parse(storedUserInfo).level
-        
-      }
-      if(!rememberedLogin){
-          remBtn.value = false
-        }
-    }
-
+    
     // 监听登录状态的变化
     watch(isLog, (newValue) => {
       if (newValue) {
         // 登录状态，保存用户信息和登录状态
         const storedUserInfo = JSON.stringify({ 
-          id:userInfo.id,
-          username: userInfo.username,
-          account: userInfo.account,
-          likes:userInfo.likes,
-          comments:userInfo.comments,
-          level:userInfo.level
+          id:userInfo.value.id,
+          username: userInfo.value.username,
+          account: userInfo.value.account,
+          likes:userInfo.value.likes,
+          comments:userInfo.value.comments,
+          level:userInfo.value.level
         })
         // 根据不同登陆情况来用不同的存储数据的方式
         if(localStorage.getItem('rememberedLogin') === true){
@@ -256,9 +200,6 @@ export default {
       }
     })
 
-    // 初始化检查是否记住登录状态
-    checkRememberedLogin()
-
     const submitWithLogin = async () => {
       try {
         
@@ -266,11 +207,10 @@ export default {
         const formData = {
           articleId: props.articleId,
           content: formInline.content,
-          username: userInfo.username,
-          account: userInfo.account
+          username: userInfo.value.username,
+          account: userInfo.value.account
         }
-        const res = await axios.post('http://localhost:3000/comments/form', formData)
-        console.log('表单数据成功提交', res.data)
+        await store.dispatch('users/loginedUserFromArticles',{formData})
         formInline.content = ''
         EventBus.emit('NeedRefresh')
         ElMessage.success('评论发表成功')

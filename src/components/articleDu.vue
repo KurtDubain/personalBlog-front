@@ -27,19 +27,22 @@
   
   <script>
   import { useRouter } from 'vue-router'
-  import {useStore} from 'vuex'
-  import {computed} from 'vue'
+  // import {useStore} from 'vuex'
+  // import {computed} from 'vue'
   
   export default {
     name: 'articleDu',
-    
+    props: {
+      articles: {
+        type: Object,
+        default: () => ({})
+      }
+    },
     setup() {
 
       const router = useRouter();
       // 传递路由参数
-      const store = useStore()
 
-      const articles = computed(()=>store.getters['articles/sortedArticles'])
       // console.log(articles)
       const goToArticle = (articleId) => {
         router.push({
@@ -52,7 +55,7 @@
   
       return {
         goToArticle,
-        articles
+        
       };
     }
   }

@@ -6,7 +6,7 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <articleDu :articles="filterArticle"></articleDu>
+          <articleDu :articles="filteredArticlesByTag"></articleDu>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,8 +18,8 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import articleDu from '@/components/articleDu.vue';
-  import axios from 'axios'
-  import {reactive,computed, onMounted} from 'vue'
+  import {useStore} from 'vuex'
+  import {computed, onMounted} from 'vue'
   export default {
       name:"pyhDu",
       components:{
@@ -27,42 +27,19 @@
           articleDu
       },
       setup(){
-        let articles = reactive({})
+        const store = useStore()
         onMounted(async()=>{
           try{
-            // 通过axios获取全部文章
-            let res = await axios.get('http://localhost:3000/articles')
-            articles.value = res.data
+            await store.dispatch('articles/loadArticles')
+
           }
           catch(error){
             console.error('未能获取到文章内容');
 
           }
         })
-        // let filterArticle = computed(()=>{
-        //   // console.log(articles)
-        //   const articlesArray = articles.value? Object.values(articles.value):[]
-        //   // console.log(articlesArray)
-        //   return articlesArray.filter((article)=>{
-            
-        //     // const tags = Array.isArray(article.tags)? article.tags:JSON.parse(article.tags)
-        //     return article && article.tags && article.tags.includes('生活')
-        //     // return article.tags.includs('生活')
-        //   })
-           
-        
-        // })
-        // 利用计算属性，来讲文章中含有“生活”标签的文章过滤并返回
-        let filterArticle = computed(() => {
-          const articlesArray = articles.value ? Object.values(articles.value) : [];
-          return articlesArray.filter((article) => {
-            if (article.tags && Array.isArray(article.tags.tags)) {
-              return article.tags.tags.includes('生活');
-            } else {
-              return false;
-            }
-          });
-        });
+        const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']('生活'));
+
         // 响应式设计相关
       const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -85,7 +62,7 @@
       //     return Object.prototype.hasOwnProperty.call(articles,article)
       // }
       return{
-        filterArticle,
+        filteredArticlesByTag,
         showLeftAside,
         showRightAside
         // hasArticle

@@ -4,13 +4,22 @@
     <el-container>
       <!-- 左侧是评论区 -->
       <el-aside class="mobile-aside" width="20%">
+        
         <ComListDu :comments="comments"></ComListDu>
+        
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <ContentDu :article="articles">
-           <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
-          </ContentDu>
+            <div class="tools_button">
+              <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
+              <div class="share-button" @click="shareArticle">
+                <el-icon><Promotion /></el-icon>
+              </div>
+            </div>
+           
+          
+         </ContentDu>
           <el-divider border-style="double" />
           <ComListDu :comments="comments"></ComListDu>
         </mainDu>
@@ -131,7 +140,7 @@ export default {
     const loadComment = async(articleId)=>{
       try{
         let res = await axios.get(`http://localhost:3000/comments/${articleId}`)
-        console.log(res)
+        // console.log(res)
         const commentsData = res.data
         comments.value = commentsData.map((comment) => ({
           id: comment.id,
@@ -141,7 +150,7 @@ export default {
           name: comment.name,
           contact: comment.contact,
     }));
-    console.log(comments); 
+    // console.log(comments); 
       }catch(error){
         console.error('文章评论信息获取失败');
       }
@@ -150,7 +159,6 @@ export default {
     const loadCtrlTitle = async(articleId)=>{
       try{
         const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
-        console.log(res.data)
         // 通过判断当前文章是否是第一个文章，来决定数据类型
         if (res.data.length === 1) {
           // 只获取到一个标题，说明当前文章可能是第一个或最后一个
@@ -184,7 +192,7 @@ export default {
       try{
         const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
         lastId.id = res.data
-        console.log('成功获取最后一个id')
+        // console.log('成功获取最后一个id')
       }catch(error){
         console.error('未能获取最后一个文章的id');
       }
@@ -225,6 +233,24 @@ export default {
         showLoginForm.value = false;
       }
     };
+    const shareArticle = async () => {
+      if (navigator.share) {
+        // 如果浏览器支持 Web Share API
+        try {
+          await navigator.share({
+            title: articles.title,
+            text: articles.title,
+            url: window.location.href
+          });
+          console.log('文章分享成功');
+        } catch (error) {
+          console.error('分享文章时出错：', error);
+        }
+      } else {
+        // 对于不支持 Web Share API 的浏览器，提供备选方案
+        alert('此浏览器不支持分享功能。');
+      }
+    };
 
     return{
       articles,
@@ -234,7 +260,8 @@ export default {
       isMobile,
       showLoginForm,
       toggleLoginForm,
-      handleClickOutside
+      handleClickOutside,
+      shareArticle
       // filterArray
       // parseMarkDown
     }
@@ -282,4 +309,31 @@ export default {
 .loginForm{
   transition: left 0.5s ease-in-out;
 }
+/* 在适当的位置添加这些样式 */
+.share-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+  bottom: 30px;
+  right: 30px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s;
+}
+
+.share-button:hover {
+  background-color: #0056b3;
+}
+
+.tools_button{
+  display: flex;
+  flex-direction: row;
+}
+
 </style>

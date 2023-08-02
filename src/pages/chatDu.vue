@@ -6,7 +6,7 @@
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <chatlittleDu></chatlittleDu>
+          <chatlittleDu :chats="sortedChats"></chatlittleDu>
           
         </mainDu>
         
@@ -20,7 +20,7 @@
           <div class="loginDirect" @click="toggleLoginForm">
             <el-icon><HomeFilled /></el-icon>
           </div>
-          <chatOutDu :chats="trueChats" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatOutDu>
+          <chatOutDu :chats="sortedChats" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatOutDu>
         </div>
       </div>
       
@@ -32,7 +32,7 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
-  import {onMounted,ref,onUnmounted} from 'vue'
+  import {onMounted,ref,onUnmounted,computed} from 'vue'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
   import {useStore} from 'vuex'
@@ -55,6 +55,8 @@
           // 监听事件
           document.addEventListener('click', handleClickOutside);
         })
+
+        const sortedChats = computed(()=> store.getters['chats/sortedChats'])
 
         onUnmounted(() => {
           // 解绑事件
@@ -87,6 +89,7 @@
         };
 
         return {
+          sortedChats,
           store,
           isMobile,
           showLoginForm,

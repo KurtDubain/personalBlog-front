@@ -31,7 +31,7 @@ const getters = {
   sortedChats: (state) => {
     const chatsArray = Object.values(state.chats);
     const sortedChats = chatsArray.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
-    console.log(sortedChats);
+    // console.log(sortedChats);
     return sortedChats
   },
 };

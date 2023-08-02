@@ -5,15 +5,20 @@ import axios from 'axios'
 
 const state = {
   articles: {},
+  currentCategory:null
 };
 
 const mutations = {
   SET_ARTICLES(state, articles) {
     state.articles = articles;
   },
+  SET_CURRENT_CATEGORY(state,category){
+    state.currentCategory = category
+  }
 };
 
 const actions = {
+  
   async loadArticles({ commit }) {
     try {
       // Fetch chats data from API
@@ -32,6 +37,14 @@ const getters = {
     const articlesArray = Object.values(state.articles);
     return articlesArray.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
   },
+  filteredArticlesByTag:(state)=>(filterTags)=>{
+    const articlesArray = Object.values(state.articles);
+    // 过滤包含标签'体育'的文章
+    const filteredArticles = articlesArray.filter((article) => article.tags && article.tags.tags.includes(filterTags));
+    // 对过滤后的结果进行日期倒序排序
+    return filteredArticles.slice().sort((a, b) => new Date(b.date) - new Date(a.date));
+  },
+  
 };
 
 

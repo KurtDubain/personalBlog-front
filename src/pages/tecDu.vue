@@ -6,7 +6,7 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <articleDu :articles="filterArticle"></articleDu>
+          <articleDu :articles="filteredArticlesByTag"></articleDu>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,8 +18,8 @@
 <script>
 import mainDu from '@/components/mainDu.vue'
 import articleDu from '@/components/articleDu.vue';
-import {reactive,computed,onMounted} from 'vue'
-import axios from 'axios';
+import {computed,onMounted} from 'vue'
+import {useStore} from 'vuex'
 export default {
     name:"pyhDu",
     components:{
@@ -27,12 +27,12 @@ export default {
         articleDu
     },
     setup(){
-      let articles = reactive({})
+      const store = useStore()
       onMounted(async()=>{
           try{
             // 获取所有文章信息
-            let res = await axios.get('http://localhost:3000/articles')
-            articles.value = res.data
+            await store.dispatch('articles/loadArticles')
+
           }
           catch(error){
             console.error('未能获取到文章内容');
@@ -40,10 +40,8 @@ export default {
           }
         })
         // 使用计算属性，过滤出标签中含有“技术”的文章
-      let filterArticle = computed(()=>{
-        const articlesArray = articles.value? Object.values(articles.value):[]
-        return articlesArray.filter((article)=>article.tags &&article.tags.tags.includes('技术'))
-      })
+        const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']('技术'));
+
       // 响应式设计相关
       const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -61,8 +59,8 @@ export default {
         showRightAside.value = window.innerWidth > 768;
       });
       return {
-        articles,
-        filterArticle,
+        filteredArticlesByTag,
+        
         showLeftAside,
         showRightAside
       }

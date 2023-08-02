@@ -33,20 +33,25 @@
 
 <script>
   import { useRouter } from 'vue-router'
-  import {useStore} from 'vuex'
+  // import {useStore} from 'vuex'
   import likesDu from './likesDu.vue';
-  import { computed } from 'vue';
+  // import { computed } from 'vue';
 
   export default {
   name: "ChatLittleDu",
   components:{
     likesDu
   },
+  props: {
+    chats: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   setup() {
 
-    const store = useStore()
 
-    const chats = computed(()=> store.getters['chats/sortedChats'] )
+    // const chats = computed(()=> store.getters['chats/sortedChats'] )
 
     // const chats = store.getters['chats/sortedChats']
     
@@ -62,7 +67,6 @@
       };
   
       return {
-        chats,
         goToChat
       };
     }

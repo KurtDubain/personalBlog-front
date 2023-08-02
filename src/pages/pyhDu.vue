@@ -6,7 +6,7 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <articleDu :articles="filterArticle"></articleDu>
+          <articleDu :articles="filteredArticlesByTag"></articleDu>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,8 +18,9 @@
 <script>
 import mainDu from '@/components/mainDu.vue'
 import articleDu from '@/components/articleDu.vue'
-import {reactive,computed,onMounted} from 'vue'
-import axios from 'axios'
+import {computed,onMounted} from 'vue'
+import {useStore} from 'vuex'
+
 export default {
     name:"pyhDu",
     components:{
@@ -27,24 +28,23 @@ export default {
         articleDu
     },
     setup(){
-      let articles = reactive({})
+      const store = useStore()
       // const category = 'pyh'
       onMounted(async()=>{
           try{
             // 获取全部文章内容
-            let res = await axios.get('http://localhost:3000/articles')
-            articles.value = res.data
+            await store.dispatch('articles/loadArticles')
           }
           catch(error){
             console.error('未能获取到文章内容');
 
           }
         })
+
+      const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']('体育'));
+
         // 使用过滤计算属性，过滤出含有“体育”的标签的文章并传递给子组件
-      let filterArticle = computed(()=>{
-        const articlesArray = articles.value? Object.values(articles.value):[]
-        return articlesArray.filter((article)=>article.tags &&article.tags.tags.includes('体育'))
-      })
+      
       // 响应式设计相关
       const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -63,8 +63,7 @@ export default {
       });
    
       return {
-        articles,
-        filterArticle,
+        filteredArticlesByTag,
         showLeftAside,
         showRightAside
       }
