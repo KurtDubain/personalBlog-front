@@ -80,6 +80,7 @@ export default {
     }
   },
   setup(props) {
+    // 定义按钮以及其他计算属性
     const remBtn = ref(true)
     const store = useStore()
     const userInfo = computed(() => store.getters['users/getUserInfo']);
@@ -210,6 +211,7 @@ export default {
           username: userInfo.value.username,
           account: userInfo.value.account
         }
+        // 对已登录的用户的表单进行处理
         await store.dispatch('users/loginedUserFromArticles',{formData})
         formInline.content = ''
         EventBus.emit('NeedRefresh')

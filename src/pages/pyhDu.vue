@@ -40,7 +40,7 @@ export default {
 
           }
         })
-
+        // 获取数据之后处理过滤数据
       const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']('体育'));
 
         // 使用过滤计算属性，过滤出含有“体育”的标签的文章并传递给子组件

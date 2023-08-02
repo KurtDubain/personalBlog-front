@@ -76,7 +76,7 @@
       }
     },
     setup(props) {
-      // 定义表单内容
+      // 定义按钮以及获取Vuex中的计算数据
       const remBtn = ref(true)
       const store = useStore()
       const userInfo = computed(() => store.getters['users/getUserInfo']);
@@ -86,6 +86,7 @@
         account: '',
         content: ''
       })
+      // 挂载执行检验用户登陆情况
       onMounted(()=>{
         store.dispatch('users/checkRememberedLogin')
       })
@@ -142,7 +143,7 @@
             username: formInline.username,
             account: formInline.account
           }
-          
+          // 执行表单发送以及用户登陆
           await store.dispatch('users/loginUserFromChats',{formData,remBtn:remBtn.value})
 
           formInline.content = ''
@@ -211,6 +212,7 @@
             account: userInfo.value.account
           }
           console.log(formData);
+          // 执行表单的发送
           await store.dispatch('users/loginedUserFromChats',{formData})
 
           formInline.content = ''

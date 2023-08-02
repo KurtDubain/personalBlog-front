@@ -55,7 +55,7 @@
           // 监听事件
           document.addEventListener('click', handleClickOutside);
         })
-
+        // 获取计算属性，倒序显示留言
         const sortedChats = computed(()=> store.getters['chats/sortedChats'])
 
         onUnmounted(() => {

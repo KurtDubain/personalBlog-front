@@ -32,9 +32,9 @@ export default {
     likesDu
   },
   setup() {
-
+    // 集中管理获取指定留言下的评论信息
     const store = useStore()
-    const chatCommentInfo = computed(()=> store.state.chatReader.chatCommentInfo )
+    const chatCommentInfo = computed(()=> store.state.chats.chatCommentInfo )
     
 
     return {

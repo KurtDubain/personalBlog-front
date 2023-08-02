@@ -56,11 +56,11 @@ export default {
 
         onMounted(async()=>{
             try{
-                // 钩子函数挂载加载时间和事件总线事件
-                await store.dispatch('chatReader/loadChatInfo',props.chatId)
-                await store.dispatch('chatReader/loadChatCommentsInfo',props.chatId)
+                // 钩子函数挂载加载事件和事件总线事件
+                await store.dispatch('chats/loadChatInfo',props.chatId)
+                await store.dispatch('chats/loadChatCommentsInfo',props.chatId)
                 EventBus.on('NeedRefreshChatComment',()=>{
-                  store.dispatch('chatReader/loadChatCommentsInfo',props.chatId)
+                  store.dispatch('chats/loadChatCommentsInfo',props.chatId)
                 })
                 document.addEventListener('click', handleClickOutside);
             }catch(error){

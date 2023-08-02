@@ -69,6 +69,7 @@
       }
     },
     setup() {
+      // 定义按钮以及其他计算属性
       const store = useStore()
       const remBtn = ref(true)
       const userInfo = computed(() => store.getters['users/getUserInfo']);
@@ -81,7 +82,7 @@
         username: '',
         account: '',
       })
-
+      // 挂载检查用户登陆情况
       onMounted(()=>{
         store.dispatch('users/checkRememberedLogin')
       })
@@ -118,6 +119,7 @@
             username: formInline.username,
             account: formInline.account
           }
+          // 执行用户登陆操作
           await store.dispatch('users/loginUserWithoutForm',{formData,remBtn:remBtn.value})
         } catch (err) {
           console.error('表单数据提交失败', err)

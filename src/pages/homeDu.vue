@@ -48,7 +48,7 @@ export default {
           console.log('未能获取文章内容')
         }
       })
-
+      // 获取数据之后，通过计算属性显示数据
       const sortedArticles = computed(() => store.getters['articles/sortedArticles']);
       const sortedChats = computed(()=> store.getters['chats/sortedChats'])
       

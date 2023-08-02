@@ -233,6 +233,7 @@ export default {
         showLoginForm.value = false;
       }
     };
+    // 分享API的应用（由web API提供）
     const shareArticle = async () => {
       if (navigator.share) {
         // 如果浏览器支持 Web Share API

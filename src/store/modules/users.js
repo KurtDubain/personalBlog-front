@@ -168,6 +168,7 @@ const getDefaultState = () => {
   };
   
   const getters = {
+    // 特殊处理
     getUserInfo: (state) => state.userInfo,
     isLoggedIn: (state) => state.isLoggedIn,
   };
