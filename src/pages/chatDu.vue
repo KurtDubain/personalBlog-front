@@ -7,7 +7,15 @@
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <chatlittleDu :chats="sortedChats"></chatlittleDu>
-          
+          <div class="page_ctrl">
+             <el-pagination
+              :page-size="pageSize"
+              :pager-count="5"
+              layout="prev, pager, next"
+              :total="totalChats"
+              @current-change="handlePageChange">
+            </el-pagination>
+          </div>
         </mainDu>
         
       </el-main>
@@ -32,7 +40,7 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
-  import {onMounted,ref,onUnmounted,computed} from 'vue'
+  import {onMounted,ref,onUnmounted,computed,watch} from 'vue'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
   import {useStore} from 'vuex'
@@ -46,7 +54,13 @@
       },
       setup(){
         const store = useStore()
-        
+        const currentPage = ref(1)
+        const perPage = 3
+
+        const sortedChats = computed(()=> store.getters['chats/sortedChats'])
+        const totalChats = computed(()=> store.getters['chats/totalChats'])
+        console.log(totalChats.value);
+
         onMounted(async()=>{
           await store.dispatch('chats/loadChats')
           EventBus.on('NeedRefreshChats',()=>{
@@ -56,14 +70,23 @@
           document.addEventListener('click', handleClickOutside);
         })
         // 获取计算属性，倒序显示留言
-        const sortedChats = computed(()=> store.getters['chats/sortedChats'])
 
         onUnmounted(() => {
           // 解绑事件
           document.removeEventListener('click', handleClickOutside);
         });
    
-        
+        const handlePageChange = (newPage) => {
+          currentPage.value = newPage;
+          store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
+          store.dispatch('chats/loadChats'); // 重新加载留言数据
+        };
+        watch(currentPage, (newPage) => {
+          // 重新加载文章和留言数据
+          
+          store.commit('chats/SET_CURRENT_PAGE', newPage);
+          store.dispatch('chats/loadChats');
+        }); 
         // 响应式设计操作
         // 判断视窗大小
         const isMobile = ref(window.innerWidth <= 768);
@@ -90,11 +113,13 @@
 
         return {
           sortedChats,
-          store,
           isMobile,
           showLoginForm,
           toggleLoginForm,
-          handleClickOutside
+          handleClickOutside,
+          handlePageChange,
+          totalChats,
+          pageSize:perPage
         }
       }
   }
@@ -137,5 +162,12 @@
 }
 .loginForm{
   transition: left 0.5s ease-in-out;
+}
+.el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
   </style>

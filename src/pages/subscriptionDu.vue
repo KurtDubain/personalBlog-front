@@ -26,7 +26,7 @@
                     <el-input v-model="form.account" type="textarea" />
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="onSubmit">Go！</el-button>
+                    <el-button type="primary" @click="throttledOnSubmit">Go！</el-button>
                     <el-button>Back</el-button>
                 </el-form-item>
             </el-form>
@@ -43,6 +43,7 @@
   import { reactive } from 'vue'
   import { ElMessage } from 'element-plus'
   import axios from 'axios'
+  import {throttle} from 'lodash'
   
   export default {
     name: 'subscriptionDu',
@@ -60,18 +61,18 @@
         try{
             if(form.action === '1'){
                 try{
-                    const res = await axios.post('http://localhost:3000/subscription/sub')
-                    console.log(res.data);
+                    const res = await axios.post('http://localhost:3000/subscription/Sub',form)
+                    ElMessage.success(res.data.message)
                 }catch(error){
-                    console.error('订阅失败',error);
+                    ElMessage.error(error.response.data.message)
                 }
             }
             else if(form.action === '2'){
                 try{
-                    const res = await axios.post('http://localhost:3000/subscription/UnSub')
-                    console.log(res.data);
+                    const res = await axios.post('http://localhost:3000/subscription/UnSub',form)
+                    ElMessage.success(res.data.message)
                 }catch(error){
-                    console.log('取消订阅失败',error)
+                  ElMessage.error(error.response.data.message)
                 }
             }else{
                 ElMessage.error('异常错误，请联系博主进行查看')
@@ -80,10 +81,13 @@
             console.error('表单提交失败');
         }
       }
-  
+      const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
+
+
       return {
         form,
-        onSubmit
+        onSubmit,
+        throttledOnSubmit
       }
     }
   }

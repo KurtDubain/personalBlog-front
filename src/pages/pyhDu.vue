@@ -7,6 +7,13 @@
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <articleDu :articles="filteredArticlesByTag"></articleDu>
+          <el-pagination
+              :page-size="pageSize"
+              :pager-count="5"
+              layout="prev, pager, next"
+              :total="totalArticlesByTag"
+              @current-change="handlePageChange">
+            </el-pagination>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,7 +25,7 @@
 <script>
 import mainDu from '@/components/mainDu.vue'
 import articleDu from '@/components/articleDu.vue'
-import {computed,onMounted} from 'vue'
+import {computed,onMounted,watch,ref} from 'vue'
 import {useStore} from 'vuex'
 
 export default {
@@ -29,11 +36,15 @@ export default {
     },
     setup(){
       const store = useStore()
+      const pageSize = 4
+      const currentPage = ref(1);
+
+
       // const category = 'pyh'
       onMounted(async()=>{
           try{
             // 获取全部文章内容
-            await store.dispatch('articles/loadArticles')
+            await store.dispatch('articles/loadFilteredArticlesByTag', '体育')
           }
           catch(error){
             console.error('未能获取到文章内容');
@@ -41,10 +52,19 @@ export default {
           }
         })
         // 获取数据之后处理过滤数据
-      const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']('体育'));
-
-        // 使用过滤计算属性，过滤出含有“体育”的标签的文章并传递给子组件
-      
+      const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
+      const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
+      console.log(filteredArticlesByTag.value,totalArticlesByTag.value);
+      const handlePageChange = (newPage) => {
+        currentPage.value = newPage;
+        store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
+        store.dispatch('articles/loadFilteredArticlesByTag'); // 重新加载文章数据
+      };
+      watch(currentPage, (newPage) => {
+        // 重新加载文章和留言数据
+        store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);
+        store.dispatch('articles/loadFilteredArticlesByTag');
+      });
       // 响应式设计相关
       const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -65,7 +85,10 @@ export default {
       return {
         filteredArticlesByTag,
         showLeftAside,
-        showRightAside
+        showRightAside,
+        totalArticlesByTag,
+        pageSize,
+        handlePageChange
       }
     }
 }
@@ -83,5 +106,12 @@ export default {
   .el-aside {
     display: none;
   }
+}
+.el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

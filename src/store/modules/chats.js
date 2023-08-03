@@ -8,6 +8,9 @@ const state = {
   chats: {},
   chatInfo: {}, // 用于存储指定留言的信息
   chatCommentInfo: [], // 用于存储指定留言的评论信息
+  currentPage:1,
+  pageSize:3,
+  totalChats:0
 };
 
 const mutations = {
@@ -23,18 +26,25 @@ const mutations = {
   SET_CHAT_COMMENT_INFO(state, chatCommentInfo) {
     state.chatCommentInfo = chatCommentInfo;
   },
+  SET_CURRENT_PAGE(state,page){
+    state.currentPage = page
+  },
+  SET_TOTAL_CHATS(state,totalChats){
+    state.totalChats = totalChats
+  }
 };
 
 const actions = {
   // 加载全部文章
-  async loadChats({ commit }) {
+  async loadChats({ commit, state }) {
     try {
       // Fetch chats data from API
-      const response = await axios.get('http://localhost:3000/chats');
-      const chatsData = response.data;
+      const response = await axios.get(`http://localhost:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
+      const { chats, totalChats } = response.data;
       // Commit the chats data to the state
-      // 更新文章信息
-      commit('SET_CHATS', chatsData);
+      commit('SET_CHATS', chats);
+      // Commit the total chats count to the state
+      commit('SET_TOTAL_CHATS', totalChats);
     } catch (error) {
       console.error('留言数据获取失败');
     }
@@ -80,6 +90,9 @@ const getters = {
     // console.log(sortedChats);
     return sortedChats
   },
+  totalChats:(state)=>state.totalChats
+  
+
 };
 
 
