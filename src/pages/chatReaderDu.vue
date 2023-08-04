@@ -57,11 +57,15 @@ export default {
         onMounted(async()=>{
             try{
                 // 钩子函数挂载加载事件和事件总线事件
+                // 获取指定留言信息
                 await store.dispatch('chats/loadChatInfo',props.chatId)
+                // 获取指定留言下的评论信息
                 await store.dispatch('chats/loadChatCommentsInfo',props.chatId)
+                // 发布刷新事件
                 EventBus.on('NeedRefreshChatComment',()=>{
                   store.dispatch('chats/loadChatCommentsInfo',props.chatId)
                 })
+                // 监听鼠标事件，控制表单的隐藏与现实
                 document.addEventListener('click', handleClickOutside);
             }catch(error){
                 console.error('评论初始化失败');

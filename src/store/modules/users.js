@@ -6,6 +6,7 @@ const getDefaultState = () => {
     // 读取本地存储的用户信息
     const storedUserInfo = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
     return {
+      // 判断是否有用户信息，否则初始化为空信息
       userInfo: storedUserInfo ? JSON.parse(storedUserInfo) : {
         username: '',
         account: '',
@@ -43,9 +44,9 @@ const getDefaultState = () => {
     // 处理用户未登录时的表单
     async loginUserFromArticles({ commit }, {formData,remBtn}) {
         try{
-            // 模拟登录过程，并提交 mutations
-            // console.log(formData);
+            // 发送登陆以及评论表单
             await axios.post(`http://localhost:3000/comments/form`, formData)
+            // 获取用户数据
             const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {
@@ -71,9 +72,10 @@ const getDefaultState = () => {
         }
       
     },
+    // 处理未登录的用户的留言表单
     async loginUserFromChats({ commit }, {formData,remBtn}) {
         try{
-            // console.log(formData);
+          // 发送留言表单
             await axios.post('http://localhost:3000/chats/postChatComment', formData)            
             const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
@@ -105,12 +107,13 @@ const getDefaultState = () => {
         await axios.post(`http://localhost:3000/comments/form`, formData)
         // commit('SET_USER_INFO', userInfo);
     },
+    // 对于已经登陆的用户进行留言表单的处理
     async loginedUserFromChats(_,{formData}){
 
         await axios.post(`http://localhost:3000/chats/postChatComment`, formData)
         // commit('SET_USER_INFO', userInfo);
     },
-
+    // 对不包含表单的用户登陆进行处理
     async loginUserWithoutForm({commit},{formData,remBtn}){
         try{
             
@@ -146,6 +149,7 @@ const getDefaultState = () => {
         commit('RESET_STATE');
 
         commit('SET_IS_LOGGED_IN', false); // 显式设置为未登录状态
+        // 删除所有本地数据
         localStorage.removeItem('rememberedLogin');
         localStorage.removeItem('userInfo');
         sessionStorage.removeItem('userInfo');

@@ -83,13 +83,16 @@ export default {
     // 定义按钮以及其他计算属性
     const remBtn = ref(true)
     const store = useStore()
+    // 获取用户信息
     const userInfo = computed(() => store.getters['users/getUserInfo']);
+    // 获取登陆状态
     const isLog = computed(() => store.getters['users/isLoggedIn']);
     const formInline = reactive({
       username: '',
       account: '',
       content: ''
     })
+    // 使用钩子函数检查用户的登录状态并做出操作
     onMounted(()=>{
       store.dispatch('users/checkRememberedLogin')
     })
@@ -200,7 +203,7 @@ export default {
 
       }
     })
-
+    // 处理已经登陆的用户的评论表单
     const submitWithLogin = async () => {
       try {
         

@@ -1,7 +1,7 @@
 // store/index.js
 
 import { createStore } from 'vuex';
-
+// 引入modules
 import chatsModule from './modules/chats'
 // import chatReaderModule from './modules/chatReader';
 import articlesModule from './modules/articles';

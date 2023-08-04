@@ -54,6 +54,7 @@
         const likeCount = ref(0);
         // 定义用户id
         const userId = ref(null)
+
         onMounted(async () => {
             checkLoginStatus()
             await fetchLikeInfo(props.itemType,props.itemId,userId);
@@ -78,6 +79,7 @@
                     ElMessage('请先登录')
                     return
                 }else{
+                    // 切换点赞状态
                     if (!liked.value) {
                     // 根据 itemType 和 itemId 发送请求，切换点赞状态
                         await axios.post(`http://localhost:3000/likes/${props.itemType}/liked`, {
@@ -113,7 +115,7 @@
                 userInfo = JSON.parse(sessionUserInfo)
             }
 
-
+            // 如果用户登陆，则获取用户id信息
             if(userInfo){
                 const {id} = userInfo
                 userId.value = id

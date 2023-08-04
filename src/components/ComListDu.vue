@@ -1,3 +1,4 @@
+<!-- 文章评论展示小组件 -->
 <template>
   <div class="list-container">
     <el-item v-for="comment in Object.values(comments)" :key="comment.id" center :timestamp="comment.created_Date" placement="top">

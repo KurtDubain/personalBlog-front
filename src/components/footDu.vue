@@ -13,7 +13,7 @@
         <div class="footer-info" >
           <p>版权所有 &copy; 雪碧</p>
           <!-- <p>地址：xxx市xxx区xxx街道xxx号</p> -->
-          <p>备案号：粤ICP备12345678号</p>
+          <p>冀ICP备2023028175号</p>
           <p>Email：kurt.du.cobain@gmail.com</p>
         </div>
       </div>

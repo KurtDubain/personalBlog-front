@@ -35,12 +35,15 @@
       },
       setup(){
         const store = useStore()
+        // 控制一个页面显示4个文章数据
         const pageSize = 4
+        // 初始化当前页码
         const currentPage = ref(1);
 
 
         onMounted(async()=>{
           try{
+            // 加载指定标签的文章数据
             await store.dispatch('articles/loadFilteredArticlesByTag', '生活')
 
           }
@@ -49,13 +52,17 @@
 
           }
         })
-        // 获取数据之后处理过滤数据
   // 获取数据之后处理过滤数据
       const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
+      // 指定标签下的文章的总数量，实现页码的计算
       const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
+      // 页面切换事件
       const handlePageChange = (newPage) => {
+        // 更新页码
         currentPage.value = newPage;
+        // 更新Vuex中的页码数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
+        // 重新加载文章数据
         store.dispatch('articles/loadFilteredArticlesByTag'); // 重新加载文章数据
       };
       watch(currentPage, (newPage) => {

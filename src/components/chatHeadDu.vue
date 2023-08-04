@@ -30,6 +30,7 @@
     setup(){
       // 集中管理了留言信息的显示
       const store = useStore()
+      // 获取指定的留言信息
       const chatInfo = computed(()=> store.state.chats.chatInfo)
       
       return{

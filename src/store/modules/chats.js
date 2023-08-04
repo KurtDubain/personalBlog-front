@@ -5,13 +5,13 @@ import axios from 'axios'
 
 
 const state = {
-  chats: {},
+  chats: {},//留言数据
   chatInfo: {}, // 用于存储指定留言的信息
   chatCommentInfo: [], // 用于存储指定留言的评论信息
-  currentPage:1,
-  pageSize:3,
-  totalChats:0,
-  searchKeyword:''
+  currentPage:1,//留言页的当前页码
+  pageSize:3,//用于设定一个页面的留言容纳量
+  totalChats:0,//用于存储留言总量
+  searchKeyword:''//初始化关键字
 };
 
 const mutations = {
@@ -27,12 +27,15 @@ const mutations = {
   SET_CHAT_COMMENT_INFO(state, chatCommentInfo) {
     state.chatCommentInfo = chatCommentInfo;
   },
+  // 更新当前页码
   SET_CURRENT_PAGE(state,page){
     state.currentPage = page
   },
+  // 更新留言的总量
   SET_TOTAL_CHATS(state,totalChats){
     state.totalChats = totalChats
   },
+  // 更新搜索关键字
   SET_SEARCH_KEYWORD(state,searchKeyword){
     state.searchKeyword = searchKeyword
   }
@@ -44,6 +47,7 @@ const actions = {
     try {
       // Fetch chats data from API
       let response
+      // 进行判断，如果存在关键字则按照关键字进行检索，否则显示全部数据
       if(state.searchKeyword){
         response = await axios.get(`http://localhost:3000/chats/search?page=${state.currentPage}&size=${state.pageSize}&keyword=${state.searchKeyword}`);
       }else{

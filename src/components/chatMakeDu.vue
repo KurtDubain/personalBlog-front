@@ -70,7 +70,7 @@ export default {
       }
       return false
     })
-    // 用于检验
+    // 用于检验表单是否存在危险脚本
     function isValidContent(content){
       const cleanContent = DOMPurify.sanitize(content)
       return cleanContent === content
@@ -107,6 +107,7 @@ export default {
             uid:props.userInfo.id,
 
           };
+          // 处理表单的提交
           await axios.post('http://localhost:3000/chats/formUpload', formData);
           // props.chatFormVisible.value=false
           // 刷新评论区

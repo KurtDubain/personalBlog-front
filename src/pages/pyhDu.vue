@@ -36,14 +36,16 @@ export default {
     },
     setup(){
       const store = useStore()
+      // 设置一个页面显示的文章栏的数量
       const pageSize = 4
+      // 初始化当前页码
       const currentPage = ref(1);
 
 
       // const category = 'pyh'
       onMounted(async()=>{
           try{
-            // 获取全部文章内容
+            // 获取指定分类的文章数据
             await store.dispatch('articles/loadFilteredArticlesByTag', '体育')
           }
           catch(error){
@@ -53,12 +55,15 @@ export default {
         })
         // 获取数据之后处理过滤数据
       const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
+      // 获取指定分类下的文章总数
       const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
+      // 处理页面切换方法
       const handlePageChange = (newPage) => {
         currentPage.value = newPage;
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
         store.dispatch('articles/loadFilteredArticlesByTag'); // 重新加载文章数据
       };
+      // 监视数据,实现更新
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);

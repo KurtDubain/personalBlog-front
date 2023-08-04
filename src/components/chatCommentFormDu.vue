@@ -32,6 +32,7 @@
         </el-form>
       </el-card>
       </div>
+      <!-- 登陆之后的表单 -->
       <div v-else>
         <div class="user-info">
           <el-card class="box-card">
@@ -76,11 +77,14 @@
       }
     },
     setup(props) {
-      // 定义按钮以及获取Vuex中的计算数据
+      // 定义按钮，保存是否记住登陆状态
       const remBtn = ref(true)
       const store = useStore()
+      // 获取用户信息
       const userInfo = computed(() => store.getters['users/getUserInfo']);
+      // 获取登陆情况
       const isLog = computed(() => store.getters['users/isLoggedIn']);
+      // 定义表单
       const formInline = reactive({
         username: '',
         account: '',
@@ -200,7 +204,7 @@
       })
   
       
-  
+      // 处理已登录的用户的评论表单
       const submitWithLogin = async () => {
         try {
           
@@ -215,6 +219,7 @@
           await store.dispatch('users/loginedUserFromChats',{formData})
 
           formInline.content = ''
+          // 更新评论区
           EventBus.emit('NeedRefreshChatComment')
           ElMessage.success('评论发表成功')
         } catch (err) {

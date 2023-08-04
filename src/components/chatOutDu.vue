@@ -71,8 +71,11 @@
     setup() {
       // 定义按钮以及其他计算属性
       const store = useStore()
+      // 定义是否记住登陆状态
       const remBtn = ref(true)
+      // 获取用户信息
       const userInfo = computed(() => store.getters['users/getUserInfo']);
+      // 获取登陆状态
       const isLog = computed(() => store.getters['users/isLoggedIn']);
       
       // 判断发表留言的表单是否可见
@@ -106,7 +109,7 @@
         const cleanUsername = DOMPurify.sanitize(username);
         return cleanUsername === username;
       }
-
+      
       function isValidAccount(email) {
         const cleanEmail = DOMPurify.sanitize(email);
         return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(cleanEmail);

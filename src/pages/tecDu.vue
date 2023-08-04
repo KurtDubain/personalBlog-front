@@ -35,11 +35,12 @@ export default {
     },
     setup(){
       const store = useStore()
+      // 初始化一个页面的文章栏容纳量以及当前的页码
       const pageSize = 4
       const currentPage = ref(1);
       onMounted(async()=>{
           try{
-            // 获取所有文章信息
+            // 获取指定标签的文章数据
             await store.dispatch('articles/loadFilteredArticlesByTag', '技术')
 
           }
@@ -48,13 +49,17 @@ export default {
 
           }
         })
+        // 获取指定标签的文章数据
       const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
+      // 获取指定标签的文章总数,用于计算页码
       const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
+      // 处理页面跳转的方法
       const handlePageChange = (newPage) => {
         currentPage.value = newPage;
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
         store.dispatch('articles/loadFilteredArticlesByTag'); // 重新加载文章数据
       };
+      // 监视页面跳转情况,并根据页面的情况更新数据
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);

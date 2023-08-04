@@ -1,3 +1,4 @@
+<!-- 订阅页面组件 -->
 <template>
     <div class="common-layout">
       <el-container>
@@ -52,14 +53,16 @@
       mainDu
     },
     setup() {
+      // 初始化表单数据
       const form = reactive({
         name: '',
         action:"1",
         account:''
       })
-  
+  // 提交表单功能
       const onSubmit = async() => {
         try{
+          // 根据所选择的Action来判断是否要订阅
             if(form.action === '1'){
                 try{
                     const res = await axios.post('http://localhost:3000/subscription/Sub',form)
@@ -82,8 +85,9 @@
             console.error('表单提交失败');
         }
       }
+      // 使用节流控制提交频率
       const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
-      
+      // 检验提交的表单是否合法
       const isFormInvalid = computed(() =>{
         const username = form.name.trim()
         const account = form.account.trim()
@@ -95,7 +99,7 @@
         }
         return false
       })
-
+      // 用于检验对应输入框数据是否合法的方法
       function isValidUsername(username) {
         const cleanUsername = DOMPurify.sanitize(username);
         return cleanUsername === username;

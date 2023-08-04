@@ -34,6 +34,7 @@ export default {
   setup() {
     // 集中管理获取指定留言下的评论信息
     const store = useStore()
+    // 获取更新后的留言下的评论信息
     const chatCommentInfo = computed(()=> store.state.chats.chatCommentInfo )
     
 

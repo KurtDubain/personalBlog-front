@@ -62,16 +62,23 @@
           chatOutDu
       },
       setup(){
+        
         const store = useStore()
+        // 定义当前页码
         const currentPage = ref(1)
+        // 定义每页显示的留言数量
         const perPage = 3
-
+        // 获取排序好的留言
         const sortedChats = computed(()=> store.getters['chats/sortedChats'])
+        // 获取留言总量，根据总量计算共需多少页码
         const totalChats = computed(()=> store.getters['chats/totalChats'])
+        // 初始化关键字
         const searchKeyword = ref('')
 
         onMounted(async()=>{
+          // 初始化加载留言数据
           await store.dispatch('chats/loadChats')
+          // 更新留言数据
           EventBus.on('NeedRefreshChats',()=>{
             store.dispatch('chats/loadChats')
           })
@@ -87,23 +94,30 @@
         
         const handleSearch = () => {
           // 触发搜索事件，更新搜索结果
+          // 更新关键字
           store.commit('chats/SET_SEARCH_KEYWORD', searchKeyword.value);
           store.commit('chats/SET_CURRENT_PAGE', 1); // 将当前页重置为1，以便从第一页开始加载搜索结果
+          // 重新加载事件
           store.dispatch('chats/loadChats');
         };
 
+        // 触发页面切换事件
         const handlePageChange = (newPage) => {
+          // 获取当前的页码值
           currentPage.value = newPage;
+          // 更新当前的页码
           store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
+          // 根据页码值重新更新数据
           store.dispatch('chats/loadChats'); // 重新加载留言数据
         };
+        // 监视数据的变化，用于重新加载留言数据
         watch(currentPage, (newPage) => {
-          // 重新加载文章和留言数据
           
           store.commit('chats/SET_CURRENT_PAGE', newPage);
           store.dispatch('chats/loadChats');
         });
         
+        // 判断搜索框输入的数据是否合法
         const isInvalid = computed(()=>{
           const content = searchKeyword.value
           if(!isValidContent(content)){
@@ -111,12 +125,12 @@
           }
           return false
         })
-
+        // 检验内容的方法
         function isValidContent(content){
           const cleanContent = DOMPurify.sanitize(content)
           return cleanContent === content
         }        
-        
+        // 节流防止多次加载搜索事件
         const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
 
         // 响应式设计操作
@@ -135,7 +149,7 @@
           showLoginForm.value = !showLoginForm.value;
         };
 
-        // 隐藏表单时间
+        // 隐藏表单
         const handleClickOutside = (event) => {
           // !event.target表示目标之外的元素，closest('.loginFormContainer')是指定选择器的祖先元素
           if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {

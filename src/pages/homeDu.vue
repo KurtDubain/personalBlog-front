@@ -61,38 +61,47 @@ export default {
       const currentPage = ref(1);
       const perPage = 3;
 
-      // 获取数据之后，通过计算属性显示数据
+      // 获取数据之后，通过计算属性显示排序之后的文章数据
       const sortedArticles = computed(()=> store.getters['articles/sortedArticles'])
+      // 获取文章总量,用于计算页码数量
       const totalArticles = computed(()=> store.getters['articles/totalArticles'])
+      // 服务端返回的页码总量
       const totalPages = computed(()=> store.getters['articles/totalPages'])
 
+      // 获取已经排序之后的留言数据
       const sortedChats = computed(()=> store.getters['chats/sortedChats'])
+      // 获取留言的总数
       const totalChats = computed(()=> store.getters['chats/totalChats'])
+      // 初始化文章搜索的关键字
       const searchKeyword = ref(''); // 用于存储搜索关键字
 
       onMounted(async () => {
         try {
+          // 初始化加载文章和留言数据
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
         } catch (error) {
           console.error('未能获取文章内容或留言内容');
         }
       });
-
+      // 搜索事件
       const handleSearch = () => {
         // 触发搜索事件，更新搜索结果
+        // 更新文章搜索关键字和当前页码,重新加载文章页面数据
         store.commit('articles/SET_SEARCH_KEYWORD', searchKeyword.value);
         store.commit('articles/SET_CURRENT_PAGE', 1); // 将当前页重置为1，以便从第一页开始加载搜索结果
         store.dispatch('articles/loadArticles');
       };
-
+      // 切换页面事件
       const handlePageChange = (newPage) => {
+        // 获取当前页码并将页码更新到状态库中,重新加载数据
         currentPage.value = newPage;
         store.commit('articles/SET_CURRENT_PAGE', newPage); // 更新articles模块的currentPage状态
         store.dispatch('articles/loadArticles'); // 重新加载文章数据
         store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
         store.dispatch('chats/loadChats'); // 重新加载留言数据
       };
+      // 监视页码变化,用于更新文章数据
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE', newPage);
@@ -100,7 +109,7 @@ export default {
         store.commit('chats/SET_CURRENT_PAGE', newPage);
         store.dispatch('chats/loadChats');
       });
-      
+      // 判断文章搜索栏是否合法
       const isInvalid = computed(()=>{
         const content = searchKeyword.value
         if(!isValidContent(content)){
@@ -108,12 +117,12 @@ export default {
         }
         return false
       })
-
+      // 检验输入框的方法
       function isValidContent(content){
         const cleanContent = DOMPurify.sanitize(content)
         return cleanContent === content
       }
-
+      // 使用节流防止多次提交搜索请求
       const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
 
 
