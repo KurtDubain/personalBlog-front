@@ -211,7 +211,6 @@
             username: userInfo.value.username,
             account: userInfo.value.account
           }
-          console.log(formData);
           // 执行表单的发送
           await store.dispatch('users/loginedUserFromChats',{formData})
 

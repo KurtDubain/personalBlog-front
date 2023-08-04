@@ -14,7 +14,8 @@ const state = {
   filteredArticlesByTag:{},
   totalArticlesByTag:0,
   pageSizeByTag:4,
-  currentPageByTag:1
+  currentPageByTag:1,
+  searchKeyword:''
 };
 
 // 定义数据处理操作
@@ -42,6 +43,9 @@ const mutations = {
   },
   SET_CURRENT_PAGE_BY_TAG(state,page){
     state.currentPageByTag = page
+  },
+  SET_SEARCH_KEYWORD(state,searchKeyword){
+    state.searchKeyword = searchKeyword
   }
 };
 
@@ -50,8 +54,12 @@ const actions = {
   // 文章加载处理
   async loadArticles({ commit, state }) {
     try {
-      // Fetch articles data from API
-      const response = await axios.get(`http://localhost:3000/articles?page=${state.currentPage}&size=${state.pageSize}`);
+      let response
+      if(state.searchKeyword){
+        response = await axios.get (`http://localhost:3000/articles/search/Page?keyword=${state.searchKeyword}&page=${state.currentPage}&size=${state.pageSize}`)
+      }else{
+        response = await axios.get(`http://localhost:3000/articles?page=${state.currentPage}&size=${state.pageSize}`);
+      }
       const { articles, totalArticles, totalPages } = response.data;
       // Commit the articles data to the state
       commit('SET_ARTICLES', articles);

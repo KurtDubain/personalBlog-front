@@ -7,7 +7,7 @@
           <mainDu style="display:flex;flex-direction: column;align-items: center;">
             <!-- 图片区域 -->
             <div class="image-container">
-              <img src="../assets/qq群.jpg" alt="Image" />
+              <img src="../assets/saoma.jpg" alt="Image" />
             </div>
   
             <!-- 表单区域 -->
@@ -82,12 +82,12 @@
         }
       }
       const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
-
+      
 
       return {
         form,
         onSubmit,
-        throttledOnSubmit
+        throttledOnSubmit,
       }
     }
   }
@@ -112,12 +112,16 @@
   /* 图片容器样式 */
   .image-container {
     max-width: 100%; /* 图片容器宽度 */
-    height: fit-content; /* 图片容器高度 */
+    height: auto; /* 图片容器高度 */
     margin-bottom: 20px; /* 图片容器与表单区域之间的间距 */
     display: flex;
     justify-content: center;
     align-items: center;
   }
+  .image-container img {
+  max-width: 100%; /* 图片最大宽度为容器宽度 */
+  height: auto; /* 高度自适应，按比例展示 */
+}
   
   /* 表单容器样式 */
   .form-container {

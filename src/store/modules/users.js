@@ -45,8 +45,7 @@ const getDefaultState = () => {
         try{
             // 模拟登录过程，并提交 mutations
             // console.log(formData);
-            const res = await axios.post(`http://localhost:3000/comments/form`, formData)
-            console.log('表单数据成功提交',res.data);
+            await axios.post(`http://localhost:3000/comments/form`, formData)
             const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {
@@ -74,10 +73,8 @@ const getDefaultState = () => {
     },
     async loginUserFromChats({ commit }, {formData,remBtn}) {
         try{
-            // 模拟登录过程，并提交 mutations
             // console.log(formData);
-            const res = await axios.post('http://localhost:3000/chats/postChatComment', formData)            
-            console.log('表单数据成功提交',res.data);
+            await axios.post('http://localhost:3000/chats/postChatComment', formData)            
             const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {
@@ -105,22 +102,19 @@ const getDefaultState = () => {
     },
     // 对于已经登陆的用户进行表单的处理
     async loginedUserFromArticles(_,{formData}){
-        const res = await axios.post(`http://localhost:3000/comments/form`, formData)
-        console.log('表单数据成功提交',res.data);
+        await axios.post(`http://localhost:3000/comments/form`, formData)
         // commit('SET_USER_INFO', userInfo);
     },
     async loginedUserFromChats(_,{formData}){
 
-        const res = await axios.post(`http://localhost:3000/chats/postChatComment`, formData)
-        console.log('表单数据成功提交',res.data);
+        await axios.post(`http://localhost:3000/chats/postChatComment`, formData)
         // commit('SET_USER_INFO', userInfo);
     },
 
     async loginUserWithoutForm({commit},{formData,remBtn}){
         try{
             
-            const res = await axios.post('http://localhost:3000/users/FromChatLogin', formData)
-            console.log('表单数据成功提交',res.data);
+            await axios.post('http://localhost:3000/users/FromChatLogin', formData)
             const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {

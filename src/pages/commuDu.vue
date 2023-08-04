@@ -53,7 +53,6 @@
   // 获取数据之后处理过滤数据
       const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
       const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
-      console.log(filteredArticlesByTag.value,totalArticlesByTag.value);
       const handlePageChange = (newPage) => {
         currentPage.value = newPage;
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态

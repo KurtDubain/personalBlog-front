@@ -6,6 +6,12 @@
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
+          <div class="search_content">
+            <el-input class="search_input" v-model="searchKeyword" placeholder="搜索留言内容或用户名" clearable />
+            <el-button class="search_button" @click="handleSearch">
+              <el-icon><Search/></el-icon>
+            </el-button>
+          </div>
           <chatlittleDu :chats="sortedChats"></chatlittleDu>
           <div class="page_ctrl">
              <el-pagination
@@ -59,7 +65,7 @@
 
         const sortedChats = computed(()=> store.getters['chats/sortedChats'])
         const totalChats = computed(()=> store.getters['chats/totalChats'])
-        console.log(totalChats.value);
+        const searchKeyword = ref('')
 
         onMounted(async()=>{
           await store.dispatch('chats/loadChats')
@@ -75,7 +81,14 @@
           // 解绑事件
           document.removeEventListener('click', handleClickOutside);
         });
-   
+        
+        const handleSearch = () => {
+          // 触发搜索事件，更新搜索结果
+          store.commit('chats/SET_SEARCH_KEYWORD', searchKeyword.value);
+          store.commit('chats/SET_CURRENT_PAGE', 1); // 将当前页重置为1，以便从第一页开始加载搜索结果
+          store.dispatch('chats/loadChats');
+        };
+
         const handlePageChange = (newPage) => {
           currentPage.value = newPage;
           store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
@@ -119,7 +132,9 @@
           handleClickOutside,
           handlePageChange,
           totalChats,
-          pageSize:perPage
+          pageSize:perPage,
+          handleSearch,
+          searchKeyword
         }
       }
   }
@@ -169,5 +184,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.search_content{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: max-content;
+
+}
+.search_input{
+  flex: 4;
+}
+.search_button{
+  flex: 1;
 }
   </style>

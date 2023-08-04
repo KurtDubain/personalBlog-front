@@ -9,19 +9,23 @@
       <el-main>
         <mainDu>
           <carlightDu></carlightDu>
+          <div class="search_content">
+            <el-input class="search_input" v-model="searchKeyword" placeholder="搜索文章标题或标签" clearable />
+            <el-button class="search_button" @click="handleSearch">
+              <el-icon><Search/></el-icon>
+            </el-button>
+          </div>
           <div style="display:flex;flex-direction: column;align-items: center;">
             <articleDu :articles="sortedArticles"></articleDu>
           </div>
-          <div class="page_ctrl">
              <el-pagination
-               v-if="totalPages > 1"
               :page-size="pageSize"
               :pager-count="5"
               layout="prev, pager, next"
               :total="totalArticles"
               @current-change="handlePageChange">
             </el-pagination>
-          </div>
+          
           
         </mainDu>
       </el-main>
@@ -39,14 +43,17 @@ import articleDu from '@/components/articleDu.vue';
 import chatlittleDu from '@/components/chatlittleDu.vue';
 import {onMounted,computed,watch,ref} from 'vue'
 import {useStore} from 'vuex'
+import { Search } from '@element-plus/icons-vue';
+
 export default {
     name:'homeDu',
     components:{
-        mainDu,
-        carlightDu,
-        articleDu,
-        chatlittleDu
-    },
+    mainDu,
+    carlightDu,
+    articleDu,
+    chatlittleDu,
+    Search
+},
     setup() {
       const store = useStore();
       const currentPage = ref(1);
@@ -59,15 +66,23 @@ export default {
 
       const sortedChats = computed(()=> store.getters['chats/sortedChats'])
       const totalChats = computed(()=> store.getters['chats/totalChats'])
+      const searchKeyword = ref(''); // 用于存储搜索关键字
 
       onMounted(async () => {
         try {
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
         } catch (error) {
-          console.log('未能获取文章内容或留言内容');
+          console.error('未能获取文章内容或留言内容');
         }
       });
+
+      const handleSearch = () => {
+        // 触发搜索事件，更新搜索结果
+        store.commit('articles/SET_SEARCH_KEYWORD', searchKeyword.value);
+        store.commit('articles/SET_CURRENT_PAGE', 1); // 将当前页重置为1，以便从第一页开始加载搜索结果
+        store.dispatch('articles/loadArticles');
+      };
 
       const handlePageChange = (newPage) => {
         currentPage.value = newPage;
@@ -91,7 +106,9 @@ export default {
         pageSize: perPage,
         handlePageChange,
         totalChats,
-        sortedChats
+        sortedChats,
+        searchKeyword,
+        handleSearch
       };
   },
 
@@ -112,8 +129,20 @@ export default {
     display: none;
   }
 }
-.page_ctrl{
-  background: none;
+.search_content{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding-left: 10%;
+  padding-right: 10%;
+  padding-top: 5%;
+
+}
+.search_input{
+  flex: 3;
+}
+.search_button{
+  flex: 1;
 }
 .el-pagination{
   --el-pagination-button-disabled-bg-color: none;

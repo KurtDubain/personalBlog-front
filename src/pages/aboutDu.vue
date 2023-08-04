@@ -8,7 +8,7 @@
           style="display:flex;flex-direction: column;align-items: center;"
         >
           <div class="about-section">
-            <h1 class="about-title">关于我</h1>
+            <h1 class="about-title">雪碧的小屋</h1>
             <p class="about-description">我是雪碧，一个喜欢编程和音乐的程序员。</p>
             <img
               src="../assets/个人照.jpg"

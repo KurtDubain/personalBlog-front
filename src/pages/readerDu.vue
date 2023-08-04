@@ -243,7 +243,6 @@ export default {
             text: articles.title,
             url: window.location.href
           });
-          console.log('文章分享成功');
         } catch (error) {
           console.error('分享文章时出错：', error);
         }

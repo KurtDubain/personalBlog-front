@@ -64,7 +64,6 @@
                 // console.log(userId.value);
                 // 根据 itemType 和 itemId 发送请求，获取点赞信息
                 const response = await axios.get(`http://localhost:3000/likes/${type}/${itemId}/${userId.value}/getlikes`);
-                console.log(response.data)
                 likeCount.value = response.data.likeCount
                 liked.value = response.data.userLiked
             }
@@ -120,7 +119,7 @@
                 userId.value = id
                 // console.log(JSON.parse(userInfo))
             }else{
-                console.log('未登录');
+                console.error('未登录');
             }
         }
 

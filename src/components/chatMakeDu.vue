@@ -107,8 +107,7 @@ export default {
             uid:props.userInfo.id,
 
           };
-          const res = await axios.post('http://localhost:3000/chats/formUpload', formData);
-          console.log('表单数据成功提交', res.data,formData);
+          await axios.post('http://localhost:3000/chats/formUpload', formData);
           // props.chatFormVisible.value=false
           // 刷新评论区
           EventBus.emit('NeedRefreshChats')

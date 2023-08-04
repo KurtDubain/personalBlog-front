@@ -38,8 +38,7 @@ export default {
       default: () => ({})
     }
   },
-  setup(props) {
-    console.log(props.articles);
+  setup() {
     const router = useRouter();
     // 传递路由参数
 

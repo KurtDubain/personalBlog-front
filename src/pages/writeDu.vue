@@ -108,7 +108,7 @@ export default {
         
       } else {
         uploadStatus.value = null;
-        console.log('请选择图片并输入照片名称');
+        ElMessage('请选择图片并输入照片名称');
       }
     };
 
@@ -128,21 +128,17 @@ export default {
           }
         })
         if(res.status === 200){
-          console.log('上传成功')
           ElMessage.success(`${MDFile.title} 文件上传成功`)
         }else{
-          console.log('上传失败');
           ElMessage.error('文件上传失败')
 
         }
        }catch(error){
         console.error(error);
-        console.log('上传过程出问题了');
         ElMessage.error('文件上传失败')
 
        }
       } else {
-        console.log('请不要置空');
         ElMessage.error('请不要置空')
 
       }

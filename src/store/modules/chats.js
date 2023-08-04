@@ -10,7 +10,8 @@ const state = {
   chatCommentInfo: [], // 用于存储指定留言的评论信息
   currentPage:1,
   pageSize:3,
-  totalChats:0
+  totalChats:0,
+  searchKeyword:''
 };
 
 const mutations = {
@@ -31,6 +32,9 @@ const mutations = {
   },
   SET_TOTAL_CHATS(state,totalChats){
     state.totalChats = totalChats
+  },
+  SET_SEARCH_KEYWORD(state,searchKeyword){
+    state.searchKeyword = searchKeyword
   }
 };
 
@@ -39,7 +43,12 @@ const actions = {
   async loadChats({ commit, state }) {
     try {
       // Fetch chats data from API
-      const response = await axios.get(`http://localhost:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
+      let response
+      if(state.searchKeyword){
+        response = await axios.get(`http://localhost:3000/chats/search?page=${state.currentPage}&size=${state.pageSize}&keyword=${state.searchKeyword}`);
+      }else{
+        response = await axios.get(`http://localhost:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
+      }
       const { chats, totalChats } = response.data;
       // Commit the chats data to the state
       commit('SET_CHATS', chats);
