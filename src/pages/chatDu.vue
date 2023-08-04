@@ -8,7 +8,7 @@
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <div class="search_content">
             <el-input class="search_input" v-model="searchKeyword" placeholder="搜索留言内容或用户名" clearable />
-            <el-button class="search_button" @click="handleSearch">
+            <el-button class="search_button" @click="throttledhandleSearch" :disabled="isInvalid">
               <el-icon><Search/></el-icon>
             </el-button>
           </div>
@@ -50,6 +50,9 @@
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
   import {useStore} from 'vuex'
+  import DOMPurify from 'dompurify'
+  import { throttle } from 'lodash';
+
 
   export default {
       name:"chatDu",
@@ -99,7 +102,23 @@
           
           store.commit('chats/SET_CURRENT_PAGE', newPage);
           store.dispatch('chats/loadChats');
-        }); 
+        });
+        
+        const isInvalid = computed(()=>{
+          const content = searchKeyword.value
+          if(!isValidContent(content)){
+            return true
+          }
+          return false
+        })
+
+        function isValidContent(content){
+          const cleanContent = DOMPurify.sanitize(content)
+          return cleanContent === content
+        }        
+        
+        const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
+
         // 响应式设计操作
         // 判断视窗大小
         const isMobile = ref(window.innerWidth <= 768);
@@ -134,7 +153,9 @@
           totalChats,
           pageSize:perPage,
           handleSearch,
-          searchKeyword
+          searchKeyword,
+          isInvalid,
+          throttledhandleSearch
         }
       }
   }

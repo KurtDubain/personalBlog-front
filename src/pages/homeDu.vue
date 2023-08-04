@@ -11,7 +11,7 @@
           <carlightDu></carlightDu>
           <div class="search_content">
             <el-input class="search_input" v-model="searchKeyword" placeholder="搜索文章标题或标签" clearable />
-            <el-button class="search_button" @click="handleSearch">
+            <el-button class="search_button" @click="throttledhandleSearch" :disabled="isInvalid">
               <el-icon><Search/></el-icon>
             </el-button>
           </div>
@@ -44,6 +44,8 @@ import chatlittleDu from '@/components/chatlittleDu.vue';
 import {onMounted,computed,watch,ref} from 'vue'
 import {useStore} from 'vuex'
 import { Search } from '@element-plus/icons-vue';
+import DOMPurify from 'dompurify'
+import { throttle } from 'lodash';
 
 export default {
     name:'homeDu',
@@ -98,6 +100,23 @@ export default {
         store.commit('chats/SET_CURRENT_PAGE', newPage);
         store.dispatch('chats/loadChats');
       });
+      
+      const isInvalid = computed(()=>{
+        const content = searchKeyword.value
+        if(!isValidContent(content)){
+          return true
+        }
+        return false
+      })
+
+      function isValidContent(content){
+        const cleanContent = DOMPurify.sanitize(content)
+        return cleanContent === content
+      }
+
+      const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
+
+
       return {
         totalPages,
         totalArticles,
@@ -108,7 +127,9 @@ export default {
         totalChats,
         sortedChats,
         searchKeyword,
-        handleSearch
+        handleSearch,
+        isInvalid,
+        throttledhandleSearch
       };
   },
 

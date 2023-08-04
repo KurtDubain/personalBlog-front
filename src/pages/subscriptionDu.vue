@@ -26,7 +26,7 @@
                     <el-input v-model="form.account" type="textarea" />
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" @click="throttledOnSubmit">Go！</el-button>
+                    <el-button type="primary" @click="throttledOnSubmit" :disabled="isFormInvalid">Go！</el-button>
                     <el-button>Back</el-button>
                 </el-form-item>
             </el-form>
@@ -40,10 +40,11 @@
   
   <script>
   import mainDu from '@/components/mainDu.vue'
-  import { reactive } from 'vue'
+  import { computed, reactive } from 'vue'
   import { ElMessage } from 'element-plus'
   import axios from 'axios'
-  import {throttle} from 'lodash'
+  import { throttle} from 'lodash'
+  import DOMPurify from 'dompurify'
   
   export default {
     name: 'subscriptionDu',
@@ -83,11 +84,33 @@
       }
       const throttledOnSubmit = throttle(onSubmit, 15000, { leading: true, trailing: false });
       
+      const isFormInvalid = computed(() =>{
+        const username = form.name.trim()
+        const account = form.account.trim()
+        if(username === '' || !isValidUsername(username)){
+          return true
+        }
+        if(account === '' || !isValidAccount(account)){
+          return true
+        }
+        return false
+      })
+
+      function isValidUsername(username) {
+        const cleanUsername = DOMPurify.sanitize(username);
+        return cleanUsername === username;
+      }
+
+      function isValidAccount(email) {
+        const cleanEmail = DOMPurify.sanitize(email);
+        return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(cleanEmail);
+      }
 
       return {
         form,
         onSubmit,
         throttledOnSubmit,
+        isFormInvalid
       }
     }
   }
