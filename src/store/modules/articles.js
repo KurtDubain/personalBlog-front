@@ -1,6 +1,5 @@
 // 对文章数据的处理
-import axios from 'axios'
-
+import axios from "axios";
 // store/modules/chats.js
 
 // 定义数据状态
@@ -66,9 +65,9 @@ const actions = {
       let response
       // 判断是否要进行搜索还是默认全部数据的显示
       if(state.searchKeyword){
-        response = await axios.get (`http://localhost:3000/articles/search/Page?keyword=${state.searchKeyword}&page=${state.currentPage}&size=${state.pageSize}`)
+        response = await axios.get (`http://www.dyp02.vip:3000/articles/search/Page?keyword=${state.searchKeyword}&page=${state.currentPage}&size=${state.pageSize}`)
       }else{
-        response = await axios.get(`http://localhost:3000/articles?page=${state.currentPage}&size=${state.pageSize}`);
+        response = await axios.get(`http://www.dyp02.vip:3000/articles?page=${state.currentPage}&size=${state.pageSize}`);
       }
       const { articles, totalArticles, totalPages } = response.data;
       // Commit the articles data to the state
@@ -78,19 +77,19 @@ const actions = {
       // Commit the total articles count to the state
       commit('SET_TOTAL_ARTICLES', totalArticles);
     } catch (error) {
-      console.error('文章数据获取失败');
+      console.error('文章数据获取失败',error);
     }
   },
   // 对分类页面的数据加载
   async loadFilteredArticlesByTag({ commit, state }, currentCategory) {
     try {
       // 需要多带一个标签参数
-      const response = await axios.get(`http://localhost:3000/articles/ByTag/PageCtrl?page=${state.currentPage}&size=${state.pageSizeByTag}&currentCategory=${currentCategory}`);
+      const response = await axios.get(`http://www.dyp02.vip:3000/articles/ByTag/PageCtrl?page=${state.currentPage}&size=${state.pageSizeByTag}&currentCategory=${currentCategory}`);
       const { articles, totalArticles } = response.data;
       commit('SET_FILTERED_ARTICLES_BY_TAG', articles);
       commit('SET_TOTAL_ARTICLES_BY_TAG', totalArticles);
     } catch (error) {
-      console.error('分类页面文章数据获取失败');
+      console.error('分类页面文章数据获取失败',error);
     }
   }
 };

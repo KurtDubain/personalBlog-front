@@ -48,7 +48,6 @@
 // import articleDu from '@/components/articleDu.vue';
 import {reactive,onMounted, ref,watch,onUnmounted}from 'vue'
 // import {marked} from 'marked'
-import axios from 'axios'
 import mainDu from '@/components/mainDu.vue'
 import ComListDu from '../components/ComListDu.vue'
 import ComShowDu from '../components/ComShowDu.vue'
@@ -56,6 +55,7 @@ import ContentDu from '../components/ContentDu.vue'
 import EventBus from '../utils/eventBus'
 import ctrlBtnDu from '../components/ctrlBtnDu.vue'
 import likesDu from '@/components/likesDu.vue'
+import axios from 'axios'
 
 export default {
   name:"readerDu",
@@ -113,7 +113,7 @@ export default {
     // 加载对应id文章的除内容之外的信息
     const loadArticle = async(articleId)=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/${articleId}`)
         
         articles.title = res.data.title
         articles.date =res.data.date
@@ -124,22 +124,22 @@ export default {
         // console.log(articles)
         // console.log('文章信息获取成功')
       }catch(error){
-        console.error('文章信息获取失败');
+        console.error('文章信息获取失败',error);
       }
     }
     // 加载文章内容md文件数据
     const loadArticlecontent = async(articleId)=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}/content`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/${articleId}/content`)
         articles.content = res.data
       }catch(error){
-        console.error('未能正常获取文章内容或者未能正确解析');
+        console.error('未能正常获取文章内容或者未能正确解析',error);
       }
     }
     // 加载文章评论数据
     const loadComment = async(articleId)=>{
       try{
-        let res = await axios.get(`http://localhost:3000/comments/${articleId}`)
+        let res = await axios.get(`http://www.dyp02.vip:3000/comments/${articleId}`)
         // console.log(res)
         const commentsData = res.data
         comments.value = commentsData.map((comment) => ({
@@ -152,13 +152,13 @@ export default {
     }));
     // console.log(comments); 
       }catch(error){
-        console.error('文章评论信息获取失败');
+        console.error('文章评论信息获取失败',error);
       }
     }
     // 加载当前文章前后题目数据
     const loadCtrlTitle = async(articleId)=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/${articleId}/ctlTitles`)
         // 通过判断当前文章是否是第一个文章，来决定数据类型
         if (res.data.length === 1) {
           // 只获取到一个标题，说明当前文章可能是第一个或最后一个
@@ -184,17 +184,17 @@ export default {
         // ctrltitle.Ipre = res.data[0].Ipre
         // ctrltitle.Inext = res.data[0].Inext
       }catch(error){
-        console.error('前后标题获取失败');
+        console.error('前后标题获取失败',error);
       }
     }
     // 加载最后一个文章的id数据
     const loadLastId = async()=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/lastId/return`)
         lastId.id = res.data
         // console.log('成功获取最后一个id')
       }catch(error){
-        console.error('未能获取最后一个文章的id');
+        console.error('未能获取最后一个文章的id',error);
       }
     }
     // 监听文章id变化，实时改变文章对应数据（主要是解决点击切换按钮没有响应的情况）

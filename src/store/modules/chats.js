@@ -1,6 +1,5 @@
 // 对留言的处理
-import axios from 'axios'
-
+import axios from "axios";
 // store/modules/chats.js
 
 
@@ -49,9 +48,9 @@ const actions = {
       let response
       // 进行判断，如果存在关键字则按照关键字进行检索，否则显示全部数据
       if(state.searchKeyword){
-        response = await axios.get(`http://localhost:3000/chats/search?page=${state.currentPage}&size=${state.pageSize}&keyword=${state.searchKeyword}`);
+        response = await axios.get(`http://www.dyp02.vip:3000/chats/search?page=${state.currentPage}&size=${state.pageSize}&keyword=${state.searchKeyword}`);
       }else{
-        response = await axios.get(`http://localhost:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
+        response = await axios.get(`http://www.dyp02.vip:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
       }
       const { chats, totalChats } = response.data;
       // Commit the chats data to the state
@@ -59,13 +58,13 @@ const actions = {
       // Commit the total chats count to the state
       commit('SET_TOTAL_CHATS', totalChats);
     } catch (error) {
-      console.error('留言数据获取失败');
+      console.error('留言数据获取失败',error);
     }
   },
   // 加载指定文章信息
   async loadChatInfo({ commit }, chatId) {
     try {
-        const res = await axios.get(`http://localhost:3000/chats/chatInfo/${chatId}`);
+        const res = await axios.get(`http://www.dyp02.vip:3000/chats/chatInfo/${chatId}`);
         const chatInfo = {}
         chatInfo.id = res.data[0].id
         chatInfo.date =res.data[0].date
@@ -80,17 +79,17 @@ const actions = {
         // 更新指定信息
       commit('SET_CHAT_INFO', chatInfo);
     } catch (error) {
-      console.error('留言获取失败');
+      console.error('留言获取失败',error);
     }
   },
   // 加载指定文章下的评论信息
   async loadChatCommentsInfo({ commit }, chatId) {
     try {
-      const response = await axios.get(`http://localhost:3000/chats/chatCommentInfo/${chatId}`);
+      const response = await axios.get(`http://www.dyp02.vip:3000/chats/chatCommentInfo/${chatId}`);
       const chatCommentInfo = response.data;
       commit('SET_CHAT_COMMENT_INFO', chatCommentInfo);
     } catch (error) {
-      console.error('评论获取失败');
+      console.error('评论获取失败',error);
     }
   },
 };

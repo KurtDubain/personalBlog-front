@@ -1,6 +1,5 @@
 // store/modules/user.js
 import axios from "axios";
-
 // 设置默认用户信息
 const getDefaultState = () => {
     // 读取本地存储的用户信息
@@ -45,9 +44,9 @@ const getDefaultState = () => {
     async loginUserFromArticles({ commit }, {formData,remBtn}) {
         try{
             // 发送登陆以及评论表单
-            await axios.post(`http://localhost:3000/comments/form`, formData)
+            await axios.post(`http://www.dyp02.vip:3000/comments/form`, formData)
             // 获取用户数据
-            const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
+            const resUser = await axios.get(`http://www.dyp02.vip:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {
                 id: user.id,
@@ -76,8 +75,8 @@ const getDefaultState = () => {
     async loginUserFromChats({ commit }, {formData,remBtn}) {
         try{
           // 发送留言表单
-            await axios.post('http://localhost:3000/chats/postChatComment', formData)            
-            const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
+            await axios.post('http://www.dyp02.vip:3000/chats/postChatComment', formData)            
+            const resUser = await axios.get(`http://www.dyp02.vip:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {
                 id: user.id,
@@ -104,21 +103,21 @@ const getDefaultState = () => {
     },
     // 对于已经登陆的用户进行表单的处理
     async loginedUserFromArticles(_,{formData}){
-        await axios.post(`http://localhost:3000/comments/form`, formData)
+        await axios.post(`http://www.dyp02.vip:3000/comments/form`, formData)
         // commit('SET_USER_INFO', userInfo);
     },
     // 对于已经登陆的用户进行留言表单的处理
     async loginedUserFromChats(_,{formData}){
 
-        await axios.post(`http://localhost:3000/chats/postChatComment`, formData)
+        await axios.post(`http://www.dyp02.vip:3000/chats/postChatComment`, formData)
         // commit('SET_USER_INFO', userInfo);
     },
     // 对不包含表单的用户登陆进行处理
     async loginUserWithoutForm({commit},{formData,remBtn}){
         try{
             
-            await axios.post('http://localhost:3000/users/FromChatLogin', formData)
-            const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formData.username}`)
+            await axios.post('http://www.dyp02.vip:3000/users/FromChatLogin', formData)
+            const resUser = await axios.get(`http://www.dyp02.vip:3000/users/FromComments/${formData.username}`)
             const user = resUser.data[0]
             const userInfo = {
                 id: user.id,

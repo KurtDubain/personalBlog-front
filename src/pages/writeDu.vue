@@ -41,8 +41,8 @@
 <script>
 import { reactive, computed, ref } from 'vue';
 import { marked } from 'marked';
-import axios from 'axios';
 import { ElMessage } from 'element-plus'
+import axios from 'axios';
 
 // import { el } from 'element-plus/es/locale';
 
@@ -86,7 +86,7 @@ export default {
         const formData = new FormData()
         formData.append('image',MDFile.imageFile,MDFile.imageName)
         try{
-          const res = await axios.post('http://localhost:3000/write/imgUpload',formData,{
+          const res = await axios.post('http://www.dyp02.vip:3000/write/imgUpload',formData,{
             headers:{
               'Content-Type':'multipart/form-data'
             }
@@ -122,7 +122,7 @@ export default {
        formData.append('tags',JSON.stringify(MDFile.tags))
        formData.append('title',MDFile.title)
        try{
-        const res = await axios.post('http://localhost:3000/write/ContentUpload',formData,{
+        const res = await axios.post('http://www.dyp02.vip:3000/write/ContentUpload',formData,{
           headers:{
             'Content-Type':'multipart/form-data'
           }
