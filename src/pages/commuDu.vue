@@ -63,12 +63,15 @@
         // 更新Vuex中的页码数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
         // 重新加载文章数据
-        store.dispatch('articles/loadFilteredArticlesByTag'); // 重新加载文章数据
+        store.dispatch('articles/loadFilteredArticlesByTag', '生活'); // 重新加载文章数据
       };
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);
-        store.dispatch('articles/loadFilteredArticlesByTag');
+        store.dispatch('articles/loadFilteredArticlesByTag', '生活');
+      },
+      {
+        immediate:true
       });
         // 响应式设计相关
       const showLeftAside = computed(() => {

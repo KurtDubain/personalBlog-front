@@ -115,6 +115,10 @@
           
           store.commit('chats/SET_CURRENT_PAGE', newPage);
           store.dispatch('chats/loadChats');
+
+        },
+        {
+          immediate:true
         });
         
         // 判断搜索框输入的数据是否合法
@@ -213,18 +217,19 @@
 .loginForm{
   transition: left 0.5s ease-in-out;
 }
-.el-pagination{
+/* .el-pagination{
   --el-pagination-button-disabled-bg-color: none;
   --el-pagination-bg-color: none;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 .search_content{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: max-content;
+  width: 80%;
+  padding-top: 5%;
 
 }
 .search_input{

@@ -98,16 +98,19 @@ export default {
         currentPage.value = newPage;
         store.commit('articles/SET_CURRENT_PAGE', newPage); // 更新articles模块的currentPage状态
         store.dispatch('articles/loadArticles'); // 重新加载文章数据
-        store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
-        store.dispatch('chats/loadChats'); // 重新加载留言数据
+        // store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
+        // store.dispatch('chats/loadChats'); // 重新加载留言数据
       };
       // 监视页码变化,用于更新文章数据
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE', newPage);
         store.dispatch('articles/loadArticles');
-        store.commit('chats/SET_CURRENT_PAGE', newPage);
-        store.dispatch('chats/loadChats');
+        // store.commit('chats/SET_CURRENT_PAGE', newPage);
+        // store.dispatch('chats/loadChats');
+      },
+      {
+        immediate:true
       });
       // 判断文章搜索栏是否合法
       const isInvalid = computed(()=>{

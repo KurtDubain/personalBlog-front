@@ -65,7 +65,7 @@
           // 根据所选择的Action来判断是否要订阅
             if(form.action === '1'){
                 try{
-                    const res = await axios.post('http://www.dyp02.vip:3000/subscription/Sub',form)
+                    const res = await axios.post('http://localhost:3000/subscription/Sub',form)
                     ElMessage.success(res.data.message)
                 }catch(error){
                     ElMessage.error(error.response.data.message)
@@ -73,7 +73,7 @@
             }
             else if(form.action === '2'){
                 try{
-                    const res = await axios.post('http://www.dyp02.vip:3000/subscription/UnSub',form)
+                    const res = await axios.post('http://localhost:3000/subscription/UnSub',form)
                     ElMessage.success(res.data.message)
                 }catch(error){
                   ElMessage.error(error.response.data.message)
