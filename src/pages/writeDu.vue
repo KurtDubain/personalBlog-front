@@ -1,41 +1,55 @@
 <!-- 用于博主实现文章发表的页面组件 -->
 <template>
-  <div class="markdown-editor">
-    <div class="editor">
-      <textarea v-model="MDFile.content" @input="handleInputWithDebounce" placeholder="在此处输入Markdown文本"></textarea>
+  <div class="articleMake">
+      <div class="markdown-editor">
+      <div class="editor">
+        <textarea v-model="MDFile.content" @input="handleInputWithDebounce" placeholder="在此处输入Markdown文本"></textarea>
+      </div>
+      <div class="preview" v-html="parsedMarkdown"></div>
     </div>
-    <div class="preview" v-html="parsedMarkdown"></div>
-  </div>
-  <div class="upload-section">
-    <div class="image-upload">
-      <input type="file" accept="image/*" @change="handleImageUpload" ref="imageInput">
-      <input v-model="MDFile.imageName" type="text" placeholder="输入照片名称">
-      <button @click="uploadImg">上传图片</button>
+    <div class="upload-section">
+      <div class="image-upload">
+        <input type="file" accept="image/*" @change="handleImageUpload" ref="imageInput">
+        <input v-model="MDFile.imageName" type="text" placeholder="输入照片名称">
+        <button @click="uploadImg">上传图片</button>
+      </div>
+      <div class="upload-result" v-if="uploadStatus !== null">
+        <p v-if="uploadStatus === 'success'">上传成功</p>
+        <p v-else-if="uploadStatus === 'fail'">上传失败</p>
+      </div>
     </div>
-    <div class="upload-result" v-if="uploadStatus !== null">
-      <p v-if="uploadStatus === 'success'">上传成功</p>
-      <p v-else-if="uploadStatus === 'fail'">上传失败</p>
-    </div>
-  </div>
-  <div class="upload-section">
-    <input v-model="MDFile.name" type="text" placeholder="输入文件序号">
-    <input v-model="MDFile.title" type="text" placeholder="输入标题">
+    <div class="upload-section">
+      <input v-model="MDFile.name" type="text" placeholder="输入文件序号">
+      <input v-model="MDFile.title" type="text" placeholder="输入标题">
 
-  </div>
-  <!-- 标签选择 -->
-  <div class="tags">
-    <label>
-      <input type="checkbox" v-model="MDFile.tags.tags" value="生活"> 生活
-    </label>
-    <label>
-      <input type="checkbox" v-model="MDFile.tags.tags" value="技术"> 技术
-    </label>
-    <label>
-      <input type="checkbox" v-model="MDFile.tags.tags" value="体育"> 体育
-    </label>
-  </div>
-<button @click="upMarkDown">上传文章</button>
+    </div>
+    <!-- 标签选择 -->
+    <div class="tags">
+      <label>
+        <input type="checkbox" v-model="MDFile.tags.tags" value="生活"> 生活
+      </label>
+      <label>
+        <input type="checkbox" v-model="MDFile.tags.tags" value="技术"> 技术
+      </label>
+      <label>
+        <input type="checkbox" v-model="MDFile.tags.tags" value="体育"> 体育
+      </label>
+    </div> 
+  
 
+    <button @click="upMarkDown">上传文章</button>
+  </div>
+  <div class="announceMake">
+    <h2>发布公告</h2>
+    <div class="announce-content">
+      <textarea v-model="announce.content" placeholder="在此处输入公告内容"></textarea>
+      <br>
+      <input v-model="announce.author" type="text" placeholder="输入作者名称">
+    </div>
+    <div class="announce-upload">
+      <button @click="upAnnounce">发布公告</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -58,6 +72,10 @@ export default {
       tags:{tags:[]},
       title:''
     });
+    let announce = reactive({
+      content:'',
+      author:''
+    })
 
     const uploadStatus = ref(null);
 
@@ -143,6 +161,24 @@ export default {
 
       }
     };
+
+    const upAnnounce = async ()=>{
+      if(announce.content && announce.author){
+        try{
+          const res = await axios.post('http://localhost:3000/announce/PostAnnounceForm',announce)
+          if(res.status === 200){
+            ElMessage.success(`公告发表成功`)
+            announce.content = ''
+            announce.author = ''
+          }
+        }catch(error){
+          console.log(error);
+          ElMessage.error('公告发布失败')
+        }
+      }else{
+        ElMessage.error('请不要置空')
+      }
+    }
     // 防抖，避免文本输入请求时多次请求
     function debounce(callback,delay){
       let timeoutId;
@@ -169,7 +205,9 @@ export default {
       handleImageUpload,
       uploadImg,
       upMarkDown,
-      handleInputWithDebounce
+      handleInputWithDebounce,
+      announce,
+      upAnnounce
     };
   },
 };

@@ -57,13 +57,30 @@
       <router-link to="/write" style="text-decoration:none">
         <el-menu-item index="4-3">实验室</el-menu-item>
       </router-link>
+      <el-menu-item index="4-4" @click="showAnnouncement">公告</el-menu-item>
+
     </el-sub-menu>
   </el-menu>
 </template>
 
 <script>
+// import { ref } from 'vue';
+import { useStore } from 'vuex';
+
 export default {
-  name: 'navDu',
+  name: 'NavDu',
+  setup() {
+    const store = useStore();
+
+    const showAnnouncement = () => {
+      store.commit('announce/SHOW_ANNOUNCEMENT');
+      console.log(store.state.announce.visible)
+    };
+
+    return {
+      showAnnouncement
+    };
+  }
 };
 </script>
 
