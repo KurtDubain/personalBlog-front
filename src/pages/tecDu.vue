@@ -56,6 +56,7 @@ export default {
       // 处理页面跳转的方法
       const handlePageChange = (newPage) => {
         currentPage.value = newPage;
+
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
         store.dispatch('articles/loadFilteredArticlesByTag', '技术'); // 重新加载文章数据
       };

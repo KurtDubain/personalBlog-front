@@ -62,9 +62,9 @@
   <style scoped>
   .notice-container {
     width: 100%;
-    height: 40px; /* Increase the height for better visibility */
+    height: 4vh; /* Increase the height for better visibility */
     overflow: hidden;
-    line-height: 40px;
+    line-height: 4vh;
     text-align: center;
     position: fixed;
     top: 0;
@@ -84,12 +84,14 @@
   .notice-content {
     display: flex;
     align-items: center;
+    flex-direction: row;
   }
   
   .header {
     display: flex;
     align-items: center;
     margin-right: 10px;
+    min-width: 80px;
   }
   
   .notice-item {

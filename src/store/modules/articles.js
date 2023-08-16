@@ -84,7 +84,7 @@ const actions = {
   async loadFilteredArticlesByTag({ commit, state }, currentCategory) {
     try {
       // 需要多带一个标签参数
-      const response = await axios.get(`http://localhost:3000/articles/ByTag/PageCtrl?page=${state.currentPage}&size=${state.pageSizeByTag}&currentCategory=${currentCategory}`);
+      const response = await axios.get(`http://localhost:3000/articles/ByTag/PageCtrl?page=${state.currentPageByTag}&size=${state.pageSizeByTag}&currentCategory=${currentCategory}`);
       const { articles, totalArticles } = response.data;
       commit('SET_FILTERED_ARTICLES_BY_TAG', articles);
       commit('SET_TOTAL_ARTICLES_BY_TAG', totalArticles);
