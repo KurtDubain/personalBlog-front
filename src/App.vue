@@ -16,6 +16,7 @@
         <!-- <el-aside width="20%">Aside</el-aside> -->
       </el-container>
     </el-container>
+    <topAnnounceDu></topAnnounceDu>
    <announcementDu v-if="showAnnouncement"></announcementDu>
   </div>
   
@@ -26,6 +27,7 @@ import footDu from './components/footDu.vue';
 // import homeDu from './pages/homeDu.vue'
 import navDu from './components/navDu.vue';
 import announcementDu from './components/announcementDu.vue';
+import topAnnounceDu from './components/topAnnounceDu.vue';
 import {computed} from 'vue'
 import { useStore } from 'vuex'
 
@@ -35,7 +37,8 @@ export default {
     // homeDu,
     navDu,
     footDu,
-    announcementDu
+    announcementDu,
+    topAnnounceDu
   },
   setup(){
     const store = useStore()

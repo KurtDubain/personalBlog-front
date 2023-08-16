@@ -1,13 +1,7 @@
 import axios from "axios";
 
 const state = {
-  announcement:{
-    // content:'',
-    // created_at:'',
-    // id:'',
-    // is_top:false,
-    // author:''
-  },
+  announcement:[],
   visible:false
 }
   
