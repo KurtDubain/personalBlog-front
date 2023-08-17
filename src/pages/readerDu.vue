@@ -113,7 +113,7 @@ export default {
     // 加载对应id文章的除内容之外的信息
     const loadArticle = async(articleId)=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/${articleId}`)
         
         articles.title = res.data.title
         articles.date =res.data.date
@@ -130,7 +130,7 @@ export default {
     // 加载文章内容md文件数据
     const loadArticlecontent = async(articleId)=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}/content`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/${articleId}/content`)
         articles.content = res.data
       }catch(error){
         console.error('未能正常获取文章内容或者未能正确解析',error);
@@ -139,7 +139,7 @@ export default {
     // 加载文章评论数据
     const loadComment = async(articleId)=>{
       try{
-        let res = await axios.get(`http://localhost:3000/comments/${articleId}`)
+        let res = await axios.get(`http://www.dyp02.vip:3000/comments/${articleId}`)
         // console.log(res)
         const commentsData = res.data
         comments.value = commentsData.map((comment) => ({
@@ -158,7 +158,7 @@ export default {
     // 加载当前文章前后题目数据
     const loadCtrlTitle = async(articleId)=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/${articleId}/ctlTitles`)
         // 通过判断当前文章是否是第一个文章，来决定数据类型
         if (res.data.length === 1) {
           // 只获取到一个标题，说明当前文章可能是第一个或最后一个
@@ -190,7 +190,7 @@ export default {
     // 加载最后一个文章的id数据
     const loadLastId = async()=>{
       try{
-        const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
+        const res = await axios.get(`http://www.dyp02.vip:3000/articles/lastId/return`)
         lastId.id = res.data
         // console.log('成功获取最后一个id')
       }catch(error){

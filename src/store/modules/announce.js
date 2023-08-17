@@ -19,7 +19,7 @@ const mutations = {
 
 const actions ={
   async loadAnnouncement({ commit }) {
-    let res = await axios.get('http://localhost:3000/announce/GetAnnounceFormByNum')
+    let res = await axios.get('http://www.dyp02.vip:3000/announce/GetAnnounceFormByNum')
     const { announceData } = res.data
 
     // 在这里获取公告内容，例如通过接口请求获取数据

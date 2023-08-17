@@ -48,9 +48,9 @@ const actions = {
       let response
       // 进行判断，如果存在关键字则按照关键字进行检索，否则显示全部数据
       if(state.searchKeyword){
-        response = await axios.get(`http://localhost:3000/chats/search?page=${state.currentPage}&size=${state.pageSize}&keyword=${state.searchKeyword}`);
+        response = await axios.get(`http://www.dyp02.vip:3000/chats/search?page=${state.currentPage}&size=${state.pageSize}&keyword=${state.searchKeyword}`);
       }else{
-        response = await axios.get(`http://localhost:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
+        response = await axios.get(`http://www.dyp02.vip:3000/chats?page=${state.currentPage}&size=${state.pageSize}`);
       }
       const { chats, totalChats } = response.data;
       // Commit the chats data to the state
@@ -64,7 +64,7 @@ const actions = {
   // 加载指定文章信息
   async loadChatInfo({ commit }, chatId) {
     try {
-        const res = await axios.get(`http://localhost:3000/chats/chatInfo/${chatId}`);
+        const res = await axios.get(`http://www.dyp02.vip:3000/chats/chatInfo/${chatId}`);
         const chatInfo = {}
         chatInfo.id = res.data[0].id
         chatInfo.date =res.data[0].date
@@ -85,7 +85,7 @@ const actions = {
   // 加载指定文章下的评论信息
   async loadChatCommentsInfo({ commit }, chatId) {
     try {
-      const response = await axios.get(`http://localhost:3000/chats/chatCommentInfo/${chatId}`);
+      const response = await axios.get(`http://www.dyp02.vip:3000/chats/chatCommentInfo/${chatId}`);
       const chatCommentInfo = response.data;
       commit('SET_CHAT_COMMENT_INFO', chatCommentInfo);
     } catch (error) {
