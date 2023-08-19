@@ -57,7 +57,10 @@
       <router-link to="/write" style="text-decoration:none">
         <el-menu-item index="4-3">实验室</el-menu-item>
       </router-link>
-      <el-menu-item index="4-4" @click="showAnnouncement">公告</el-menu-item>
+      <router-link to="/weather" style="text-decoration:none">
+        <el-menu-item index="4-4">天气预报</el-menu-item>
+      </router-link>
+      <el-menu-item index="4-5" @click="showAnnouncement">公告</el-menu-item>
 
     </el-sub-menu>
   </el-menu>

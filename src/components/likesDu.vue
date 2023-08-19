@@ -66,7 +66,7 @@ import axios from 'axios';
             try {
                 // console.log(userId.value);
                 // 根据 itemType 和 itemId 发送请求，获取点赞信息
-                const response = await axios.get(`http://www.dyp02.vip:3000/likes/${type}/${itemId}/${userId.value}/getlikes`);
+                const response = await axios.get(`http://localhost:3000/likes/${type}/${itemId}/${userId.value}/getlikes`);
                 likeCount.value = response.data.likeCount
                 liked.value = response.data.userLiked
             }
@@ -84,13 +84,13 @@ import axios from 'axios';
                     // 切换点赞状态
                     if (!liked.value) {
                     // 根据 itemType 和 itemId 发送请求，切换点赞状态
-                        await axios.post(`http://www.dyp02.vip:3000/likes/${props.itemType}/liked`, {
+                        await axios.post(`http://localhost:3000/likes/${props.itemType}/liked`, {
                             itemId: props.itemId,
                             userId: userId.value,
                         });
                     }
                     else {
-                        await axios.post(`http://www.dyp02.vip:3000/likes/${props.itemType}/disliked`, {
+                        await axios.post(`http://localhost:3000/likes/${props.itemType}/disliked`, {
                             itemId: props.itemId,
                             userId: userId.value,
                         });

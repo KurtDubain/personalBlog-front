@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const newAxios = axios.create({
-  baseURL: 'http://www.dyp02.vip:3000',
+  baseURL: 'http://localhost:3000',
   timeout: 5000,
 });
 

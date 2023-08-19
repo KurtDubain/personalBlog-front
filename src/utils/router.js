@@ -14,7 +14,7 @@ import read from '../pages/readerDu.vue'
 import writer from '../pages/writeDu.vue'
 import chatReader from '../pages/chatReaderDu.vue'
 import subscription from '../pages/subscriptionDu.vue'
-
+import weather from '../pages/weatherDu.vue'
 
 // 创建 Vue Router 实例
 const router = createRouter({
@@ -93,6 +93,11 @@ const router = createRouter({
         path:'/subscription',
         name:'subscription',
         component:subscription,
+    },
+    {
+        path:'/weather',
+        name:'weather',
+        component:weather
     }
     ]
 });

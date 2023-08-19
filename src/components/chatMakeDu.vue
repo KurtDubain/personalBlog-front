@@ -8,7 +8,7 @@
       <el-form-item label="图片">
         <el-upload
           class="upload-demo"
-          action="http://www.dyp02.vip:3000/chats/imageUpload"
+          action="http://localhost:3000/chats/imageUpload"
           :show-file-list="false"
           :on-success="handleUploadSuccess"
           :before-upload="beforeUpload"
@@ -107,7 +107,7 @@ export default {
 
           };
           // 处理表单的提交
-          await axios.post('http://www.dyp02.vip:3000/chats/formUpload', formData);
+          await axios.post('http://localhost:3000/chats/formUpload', formData);
           // props.chatFormVisible.value=false
           // 刷新评论区
           EventBus.emit('NeedRefreshChats')
