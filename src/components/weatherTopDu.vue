@@ -1,8 +1,25 @@
 <template>
     <div class="weather-description">
+      <el-input
+          v-model="pointWeather"
+          placeholder="输入你想搜索的地点"
+          class="weather-search"
+          :size="large"
+        >
+          <template #prepend>
+            <el-icon @click="getLocationWeather"><LocationInformation /></el-icon>
+
+          </template>
+          <template #append>
+            <el-icon @click="getPointWeather"><Search /></el-icon>
+          </template>
+        </el-input>
       <div class="weather-header">
-        <h2 class="weather-title">{{ cityName }} 当天天气情况</h2>
-        <p class="weather-date">{{ currentDate }}</p>
+        
+        <h4>当前位置:</h4>
+          <h2 class="weather-title">{{ cityName }}</h2>
+
+        <!-- <p class="weather-date">{{ currentDate }}（更新于）</p> -->
       </div>
   
       <div class="weather-card temperature-card">
@@ -11,20 +28,22 @@
           <div class="temperature">{{ temperature }} °C</div>
         </div>
       </div>
+      <div class="weather-msg">
+        <div class="weather-card info-card">
+          <div class="card-title">湿度</div>
+            <div class="card-content">
+              <div class="weather-info">{{ humidity }}%</div>
+            </div>
+          </div>
   
-      <div class="weather-card info-card">
-        <div class="card-title">湿度</div>
-        <div class="card-content">
-          <div class="weather-info">{{ humidity }}%</div>
-        </div>
+        <div class="weather-card info-card">
+          <div class="card-title">天气状况</div>
+            <div class="card-content">
+              <div class="weather-info">{{ weatherCondition }}</div>
+            </div>
+          </div>
       </div>
-  
-      <div class="weather-card info-card">
-        <div class="card-title">天气状况</div>
-        <div class="card-content">
-          <div class="weather-info">{{ weatherCondition }}</div>
-        </div>
-      </div>
+      
   
       <div class="weather-card notice-card">
         <div class="card-title">注意事项</div>
@@ -38,19 +57,48 @@
   <script>
   export default {
     name: 'weatherTopDu',
+    setup() {
+    // 设置初始数据
+    const cityName = '北京';
+    const currentDate = '2023-08-20';
+    const temperature = 28;
+    const humidity = 80;
+    const weatherCondition = '晴天';
+    const notice = '请注意防晒';
+
+    // 返回数据给组件模板使用
+    return {
+      cityName,
+      currentDate,
+      temperature,
+      humidity,
+      weatherCondition,
+      notice
+    };
+  },
     
   };
+  
   </script>
   
 <style scoped>
 /* ...existing styles */
-
+.weather-header{
+  display: flex;
+  align-items: center;
+}
+.weather-header h4 {
+  font-size: 14px;
+  margin-right: 7px;
+  color: #888;
+}
 
 /* ...existing styles */
 
 .weather-cards {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   flex-wrap: wrap;
   margin-top: 20px;
 }
@@ -72,13 +120,24 @@
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
   margin: 10px 0;
   padding: 10px;
-}
+  background-color: rgba(171, 203, 153, 0.609);
 
+}
+.weather-msg{
+  display: flex;
+  flex-direction: row;
+}
+.weather-title{
+  text-align: center;
+  /* left: 50%; */
+  /* transform: translate(-50%); */
+}
 .card-title {
   font-size: 16px;
   font-weight: bold;
   margin-bottom: 10px;
   color: #333;
+  
 }
 
 .card-content {
@@ -97,6 +156,28 @@
 .notice {
   color: #777;
 }
+.info-card{
+  margin: 1px;
+}
+.temperature-card{
+  margin: 1px;
+
+}
+.notice-card{
+  margin: 1px;
+  margin-bottom: 5px;
+}
+.weather-search{
+  margin-top: 5px;
+  width: 80%;
+  /* height: 10%; */
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%);
+}
+
+
+
+
 </style>
-      background-color: rgba(171, 203, 153, 0.609);
   
