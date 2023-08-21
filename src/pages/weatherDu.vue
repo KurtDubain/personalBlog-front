@@ -5,8 +5,8 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;">
-          <weatherTopDu></weatherTopDu>
-          <weatherUnderDu></weatherUnderDu>
+          <weatherTopDu :todayWeather="todayWeather" @getLocationWeather="getLocationWeather" @getPointWeather="getPointWeather"></weatherTopDu>
+          <weatherUnderDu :forecastData="forecastData"></weatherUnderDu>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,7 +18,7 @@
 <script>
 
 import { computed } from 'vue';
-
+import axios from 'axios';
 import mainDu from '@/components/mainDu.vue';
 import weatherUnderDu from '@/components/weatherUnderDu.vue';
 import weatherTopDu from '@/components/weatherTopDu.vue';
@@ -31,6 +31,87 @@ export default {
     weatherTopDu
   },
   setup() {
+    let todayWeather
+    let forecastData
+
+
+    const getLocationWeather = ()=>{
+      if('geolocation' in navigator){
+        navigator.geolocation.getCurrentPosition(position =>{
+          const { latitude , longitude} = position.coords
+          // console.log(position)
+          // console.log(latitude,longitude)
+          const GaoDeReGeoApi = `https://restapi.amap.com/v3/geocode/regeo?key=c8e2aba05a3e979ef85476ec92388c44&location=${longitude},${latitude}`
+          axios.get(GaoDeReGeoApi)
+            .then(response =>{
+              const data = response.data
+              // cityName.value = data.regeocode.addressComponent.city
+              // console.log(data)
+              // cityName.value = `${data.regeocode.addressComponent.province}+${data.regeocode.addressComponent.city}+${data.regeocode.addressComponent.district}`
+              const adcode = data.regeocode.addressComponent.adcode
+
+              const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
+              axios.get(GaoDeWeatherApi)
+                .then(weatherResponse => {
+                  const data = weatherResponse.data;
+
+                  todayWeather = data.forecasts[0].cast[0]
+                  forecastData = data.forecasts[0].cast
+                  // console.log(weatherData);
+                  // temperature.value = weatherData.lives[0].temperature;
+                  // humidity.value = weatherData.lives[0].humidity;
+                  // weatherCondition.value = weatherData.lives[0].weather;
+                  // notice.value = weatherData.lives[0].reporttime;
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            })
+            .catch(error=>{
+              console.error(error);
+            })
+        })
+      }else{
+        console.log('地理位置获取失败')
+      }
+    }
+
+    const getPointWeather = (location) =>{
+      const GaoDeGeoApi = `https://restapi.amap.com/v3/geocode/geo?key=c8e2aba05a3e979ef85476ec92388c44&address=${location}`
+      axios.get(GaoDeGeoApi)
+        .then(response =>{
+          const data = response.data
+          console.log(data);
+          if(data.geocodes.length > 0){
+            const adcode = data.geocodes[0].adcode
+            // console.log(adcode);
+            // cityName.value = `${data.geocodes[0].province}${data.geocodes[0].city}${data.geocodes[0].district}`
+
+            const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
+            axios.get(GaoDeWeatherApi)
+              .then(weatherResponse => {
+                const data = weatherResponse.data;
+                todayWeather = data.forecasts[0].cast[0]
+                forecastData = data.forecasts[0].cast
+                // console.log(weatherData);
+                // temperature.value = weatherData.lives[0].temperature;
+                // humidity.value = weatherData.lives[0].humidity;
+                // weatherCondition.value = weatherData.lives[0].weather;
+                // notice.value = weatherData.lives[0].reporttime;
+              })
+              .catch(error =>{
+                console.log(error)
+              })
+          }else{
+            console.error('未找到指定地区')
+          }
+        })
+        .catch(error =>{
+          console.error(error);
+        })
+    }
+
+
 
     const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -50,7 +131,11 @@ export default {
 
     return {
       showLeftAside,
-      showRightAside
+      showRightAside,
+      getLocationWeather,
+      getPointWeather,
+      todayWeather,
+      forecastData
     };
   },
 };

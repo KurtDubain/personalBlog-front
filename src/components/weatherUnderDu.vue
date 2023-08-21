@@ -18,7 +18,12 @@
   
   export default {
     name: 'weatherUnderDu',
-    
+    props:{
+      forecastData:{
+        type:Array,
+        default:() => []
+      }
+    },
     setup() {
       const echartsChart = ref(null);
   
@@ -49,7 +54,7 @@
       },
       xAxis: {
         type: 'category',
-        data: ['今天', '明天', '后天', '第四天', '第五天'],
+        data: ['今天', '明天', '后天', '第四天'],
       },
       yAxis: {
         type: 'value',

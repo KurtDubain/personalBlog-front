@@ -7,11 +7,15 @@
           :size="large"
         >
           <template #prepend>
-            <el-icon @click="getLocationWeather"><LocationInformation /></el-icon>
-
+            <el-button @click="getLocationWeather()">
+              <el-icon><LocationInformation /></el-icon>
+            </el-button>
           </template>
           <template #append>
-            <el-icon @click="getPointWeather"><Search /></el-icon>
+            <el-button @click="getPointWeather()">
+              <el-icon ><Search /></el-icon>
+            </el-button>
+
           </template>
         </el-input>
       <div class="weather-header">
@@ -55,16 +59,40 @@
   </template>
   
   <script>
+import { ref } from 'vue';
+// import axios from 'axios';
+// import { Position } from '@element-plus/icons-vue/dist/types';
   export default {
     name: 'weatherTopDu',
-    setup() {
+    props:{
+      todayWeather: {
+        type: Object,
+        default: () => ({})
+      }
+    },
+    emit:['getPointWeather','getLocationWeather'],
+    setup(_,{emit}) {
     // 设置初始数据
-    const cityName = '北京';
-    const currentDate = '2023-08-20';
-    const temperature = 28;
-    const humidity = 80;
-    const weatherCondition = '晴天';
-    const notice = '请注意防晒';
+    const cityName = ref(''); // 初始化为空
+    const temperature = ref(0);
+    const humidity = ref(0);
+    const weatherCondition = ref('');
+    const notice = ref('');
+    const currentDate = ref(new Date())
+    const pointWeather = ref('')
+
+    const getLocationWeather = ()=>{
+      emit('getLocationWeather')
+    }
+
+    const getPointWeather = ()=>{
+      const location = pointWeather.value
+      emit('getPointWeather',{location})
+    }
+
+    
+
+    
 
     // 返回数据给组件模板使用
     return {
@@ -73,7 +101,10 @@
       temperature,
       humidity,
       weatherCondition,
-      notice
+      notice,
+      getLocationWeather,
+      getPointWeather,
+      pointWeather
     };
   },
     
