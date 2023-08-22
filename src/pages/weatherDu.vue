@@ -17,7 +17,7 @@
 
 <script>
 
-import { computed } from 'vue';
+import { computed,ref } from 'vue';
 import axios from 'axios';
 import mainDu from '@/components/mainDu.vue';
 import weatherUnderDu from '@/components/weatherUnderDu.vue';
@@ -31,85 +31,65 @@ export default {
     weatherTopDu
   },
   setup() {
-    let todayWeather
-    let forecastData
+    let todayWeather = ref({address:'',weather:{}})
+    let forecastData = ref([])
 
 
-    const getLocationWeather = ()=>{
-      if('geolocation' in navigator){
-        navigator.geolocation.getCurrentPosition(position =>{
-          const { latitude , longitude} = position.coords
-          // console.log(position)
-          // console.log(latitude,longitude)
-          const GaoDeReGeoApi = `https://restapi.amap.com/v3/geocode/regeo?key=c8e2aba05a3e979ef85476ec92388c44&location=${longitude},${latitude}`
-          axios.get(GaoDeReGeoApi)
-            .then(response =>{
-              const data = response.data
-              // cityName.value = data.regeocode.addressComponent.city
-              // console.log(data)
-              // cityName.value = `${data.regeocode.addressComponent.province}+${data.regeocode.addressComponent.city}+${data.regeocode.addressComponent.district}`
-              const adcode = data.regeocode.addressComponent.adcode
+    const getLocationWeather = async () => {
+      if ('geolocation' in navigator) {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
 
-              const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
-              axios.get(GaoDeWeatherApi)
-                .then(weatherResponse => {
-                  const data = weatherResponse.data;
+          const { latitude, longitude } = position.coords;
 
-                  todayWeather = data.forecasts[0].cast[0]
-                  forecastData = data.forecasts[0].cast
-                  // console.log(weatherData);
-                  // temperature.value = weatherData.lives[0].temperature;
-                  // humidity.value = weatherData.lives[0].humidity;
-                  // weatherCondition.value = weatherData.lives[0].weather;
-                  // notice.value = weatherData.lives[0].reporttime;
-                })
-                .catch(error => {
-                  console.error(error);
-                });
-            })
-            .catch(error=>{
-              console.error(error);
-            })
-        })
-      }else{
-        console.log('地理位置获取失败')
-      }
-    }
+          const GaoDeReGeoApi = `https://restapi.amap.com/v3/geocode/regeo?key=c8e2aba05a3e979ef85476ec92388c44&location=${longitude},${latitude}`;
+          const response = await axios.get(GaoDeReGeoApi);
+          const data = response.data;
 
-    const getPointWeather = (location) =>{
-      const GaoDeGeoApi = `https://restapi.amap.com/v3/geocode/geo?key=c8e2aba05a3e979ef85476ec92388c44&address=${location}`
-      axios.get(GaoDeGeoApi)
-        .then(response =>{
-          const data = response.data
-          console.log(data);
-          if(data.geocodes.length > 0){
-            const adcode = data.geocodes[0].adcode
-            // console.log(adcode);
-            // cityName.value = `${data.geocodes[0].province}${data.geocodes[0].city}${data.geocodes[0].district}`
+          const adcode = data.regeocode.addressComponent.adcode;
+          todayWeather.value.address = data.regeocode.formatted_address;
 
-            const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
-            axios.get(GaoDeWeatherApi)
-              .then(weatherResponse => {
-                const data = weatherResponse.data;
-                todayWeather = data.forecasts[0].cast[0]
-                forecastData = data.forecasts[0].cast
-                // console.log(weatherData);
-                // temperature.value = weatherData.lives[0].temperature;
-                // humidity.value = weatherData.lives[0].humidity;
-                // weatherCondition.value = weatherData.lives[0].weather;
-                // notice.value = weatherData.lives[0].reporttime;
-              })
-              .catch(error =>{
-                console.log(error)
-              })
-          }else{
-            console.error('未找到指定地区')
-          }
-        })
-        .catch(error =>{
+          const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
+          const weatherResponse = await axios.get(GaoDeWeatherApi);
+          const weatherData = weatherResponse.data;
+
+          todayWeather.value.weather = weatherData.forecasts[0];
+          forecastData = weatherData.forecasts[0].casts;
+        } catch (error) {
           console.error(error);
-        })
-    }
+        }
+      } else {
+        console.log('地理位置获取失败');
+      }
+    };
+
+    const getPointWeather = async (location) => {
+      const GaoDeGeoApi = `https://restapi.amap.com/v3/geocode/geo?key=c8e2aba05a3e979ef85476ec92388c44&address=${location}`;
+      try {
+        const response = await axios.get(GaoDeGeoApi);
+        const data = response.data;
+
+        if (data.geocodes.length > 0) {
+          const adcode = data.geocodes[0].adcode;
+          todayWeather.value.address = data.geocodes[0].formatted_address;
+
+          const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
+          const weatherResponse = await axios.get(GaoDeWeatherApi);
+          const weatherData = weatherResponse.data;
+
+          todayWeather.value.weather = weatherData.forecasts[0];
+          forecastData.value = weatherData.forecasts[0].casts;
+          console.log(forecastData.value)
+        } else {
+          console.error('未找到指定地区');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
 
 
 

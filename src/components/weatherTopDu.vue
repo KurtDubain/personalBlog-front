@@ -34,9 +34,9 @@
       </div>
       <div class="weather-msg">
         <div class="weather-card info-card">
-          <div class="card-title">湿度</div>
+          <div class="card-title">风力</div>
             <div class="card-content">
-              <div class="weather-info">{{ humidity }}%</div>
+              <div class="weather-info">{{ wind }} {{ windLevel }}</div>
             </div>
           </div>
   
@@ -52,14 +52,14 @@
       <div class="weather-card notice-card">
         <div class="card-title">注意事项</div>
         <div class="card-content">
-          <p class="notice">{{ notice }}</p>
+          <!-- <p class="notice">{{ notice }}</p> -->
         </div>
       </div>
     </div>
   </template>
   
   <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 // import axios from 'axios';
 // import { Position } from '@element-plus/icons-vue/dist/types';
   export default {
@@ -71,40 +71,70 @@ import { ref } from 'vue';
       }
     },
     emit:['getPointWeather','getLocationWeather'],
-    setup(_,{emit}) {
-    // 设置初始数据
-    const cityName = ref(''); // 初始化为空
-    const temperature = ref(0);
-    const humidity = ref(0);
-    const weatherCondition = ref('');
-    const notice = ref('');
-    const currentDate = ref(new Date())
-    const pointWeather = ref('')
-
+    setup(props,{emit}) {
+    
+    let cityName = ref(props.todayWeather.address || '');
+    let weatherCasts = props.todayWeather.weather?.casts || [];
+    let temperature = ref(weatherCasts[0]?.daytemp || '');
+    let wind = ref(weatherCasts[0]?.daywind || '');
+    let windLevel = ref(weatherCasts[0]?.daypower || '');
+    let weatherCondition = ref(weatherCasts[0]?.dayweather || '');
+    let currentDate = ref(weatherCasts[0]?.date || '')
+    let pointWeather = ref('')
+    
     const getLocationWeather = ()=>{
       emit('getLocationWeather')
     }
-
+    console.log(props.todayWeather)
     const getPointWeather = ()=>{
       const location = pointWeather.value
-      emit('getPointWeather',{location})
+      emit('getPointWeather',location)
     }
 
-    
+    watch(
+      () => props.todayWeather, 
+      (newVal) => {
+        if (newVal && newVal.weather && newVal.weather.casts) {
+          const weatherCasts = newVal.weather.casts;
 
-    
+          cityName.value = newVal.address;
+          temperature.value = weatherCasts[0].daytemp;
+          wind.value = weatherCasts[0].daywind;
+          windLevel.value = weatherCasts[0].daypower;
+          weatherCondition.value = weatherCasts[0].dayweather;
+        }
+      },
+      {deep:true}
+    ); 
+
+    // 
+    // watchEffect(()=>{
+    //   if(props.todayWeather && props.todayWeather.address){
+    //     const weatherCasts = props.todayWeather.weather.casts;
+    //     // const weatherCast 
+    //     console.log(weatherCasts);
+    //     cityName.value = props.todayWeather.address;
+    //     temperature.value = weatherCasts[0].daytemp;
+    //     wind.value = weatherCasts[0].daywind;
+    //     windLevel.value = weatherCasts[0].daypower;
+    //     weatherCondition.value = weatherCasts[0].dayweather;
+
+    //   }
+    // })
+
 
     // 返回数据给组件模板使用
     return {
       cityName,
       currentDate,
       temperature,
-      humidity,
       weatherCondition,
-      notice,
+      // notice,
       getLocationWeather,
       getPointWeather,
-      pointWeather
+      pointWeather,
+      wind,
+      windLevel
     };
   },
     
