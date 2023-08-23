@@ -2,6 +2,12 @@
   <div class="weather-page">
     <div class="weather-forecast">
       <div ref="echartsChart" class="echarts-chart"></div>
+      <div class="weather-description">
+        <div v-for="item in forecastData" :key="item.date" class="forecast-item">
+          <p class="forecast-date">{{ item.date }}</p>
+          <p class="forecast-weather">{{ item.dayweather }}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -112,7 +118,7 @@ function updateChart(forecastData) {
     justify-content: center;
     align-items: center;
     height: 40vh;
-    background-color:rgba(172, 188, 162, 0.609);
+    background-color: rgba(251, 251, 251, 0.686);
   }
   
   .weather-forecast {
@@ -127,5 +133,37 @@ function updateChart(forecastData) {
     width: 100%;
     height: 100%;
   }
+
+  .weather-description {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  /* background-color: #fff; */
+  border-radius: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-item {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(251, 251, 251, 0.609);
+  margin: 5px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.forecast-date {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.forecast-weather {
+  font-size: 14px;
+  color: #555;
+}
   </style>
   

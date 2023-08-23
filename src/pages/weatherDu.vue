@@ -5,8 +5,10 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;">
-          <weatherTopDu :todayWeather="todayWeather" @getLocationWeather="getLocationWeather" @getPointWeather="getPointWeather"></weatherTopDu>
-          <weatherUnderDu :forecastData="forecastData"></weatherUnderDu>
+          <el-loading :text="loadingText" :fullscreen="true" :visible="isLoading">
+            <weatherTopDu :todayWeather="todayWeather" @getLocationWeather="getLocationWeather" @getPointWeather="getPointWeather"></weatherTopDu>
+            <weatherUnderDu :forecastData="forecastData"></weatherUnderDu>
+          </el-loading>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -17,7 +19,7 @@
 
 <script>
 
-import { computed,ref } from 'vue';
+import { computed,ref, onMounted } from 'vue';
 import axios from 'axios';
 import mainDu from '@/components/mainDu.vue';
 import weatherUnderDu from '@/components/weatherUnderDu.vue';
@@ -33,9 +35,23 @@ export default {
   setup() {
     let todayWeather = ref({address:'',weather:{}})
     let forecastData = ref([])
+    const MyKey = 'c8e2aba05a3e979ef85476ec92388c44'
+    let isLoading = ref(false); // 控制 loading 状态
+    let loadingText = ref("正在加载中..."); // loading 文字提示
+
+    onMounted(async () => {
+        try {
+          // 初始化加载文章和留言数据
+          getLocationWeather()
+        } catch (error) {
+          console.error('未能获取指定地点天气');
+          getPointWeather('河北省唐山市')
+        }
+      });
 
 
     const getLocationWeather = async () => {
+      isLoading.value = true
       if ('geolocation' in navigator) {
         try {
           const position = await new Promise((resolve, reject) => {
@@ -44,21 +60,31 @@ export default {
 
           const { latitude, longitude } = position.coords;
 
-          const GaoDeReGeoApi = `https://restapi.amap.com/v3/geocode/regeo?key=c8e2aba05a3e979ef85476ec92388c44&location=${longitude},${latitude}`;
+          const GaoDeReGeoApi = `https://restapi.amap.com/v3/geocode/regeo?key=${MyKey}&location=${longitude},${latitude}`;
           const response = await axios.get(GaoDeReGeoApi);
           const data = response.data;
 
           const adcode = data.regeocode.addressComponent.adcode;
           todayWeather.value.address = data.regeocode.formatted_address;
 
-          const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
+
+          const GaoDeWeatherExactApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=${MyKey}&city=${adcode}`
+          const weatherExactResponse = await axios.get(GaoDeWeatherExactApi)
+          const weatherExactData = weatherExactResponse.data
+          todayWeather.value.weather = weatherExactData.lives[0];
+
+
+
+          const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=${MyKey}&city=${adcode}&extensions=all`;
           const weatherResponse = await axios.get(GaoDeWeatherApi);
           const weatherData = weatherResponse.data;
 
-          todayWeather.value.weather = weatherData.forecasts[0];
-          forecastData = weatherData.forecasts[0].casts;
+          forecastData.value = weatherData.forecasts[0].casts;
+          console.log(forecastData.value,todayWeather.value);
+          isLoading.value = false
         } catch (error) {
           console.error(error);
+          isLoading.value = false
         }
       } else {
         console.log('地理位置获取失败');
@@ -66,8 +92,9 @@ export default {
     };
 
     const getPointWeather = async (location) => {
-      const GaoDeGeoApi = `https://restapi.amap.com/v3/geocode/geo?key=c8e2aba05a3e979ef85476ec92388c44&address=${location}`;
+      const GaoDeGeoApi = `https://restapi.amap.com/v3/geocode/geo?key=${MyKey}&address=${location}`;
       try {
+        isLoading.value = true
         const response = await axios.get(GaoDeGeoApi);
         const data = response.data;
 
@@ -75,21 +102,30 @@ export default {
           const adcode = data.geocodes[0].adcode;
           todayWeather.value.address = data.geocodes[0].formatted_address;
 
-          const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=c8e2aba05a3e979ef85476ec92388c44&city=${adcode}&extensions=all`;
+          const GaoDeWeatherExactApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=${MyKey}&city=${adcode}`
+          const weatherExactResponse = await axios.get(GaoDeWeatherExactApi)
+          const weatherExactData = weatherExactResponse.data
+          todayWeather.value.weather = weatherExactData.lives[0];
+
+
+          const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=${MyKey}&city=${adcode}&extensions=all`;
           const weatherResponse = await axios.get(GaoDeWeatherApi);
           const weatherData = weatherResponse.data;
 
-          todayWeather.value.weather = weatherData.forecasts[0];
           forecastData.value = weatherData.forecasts[0].casts;
           console.log(forecastData.value)
+          isLoading.value = false
+
         } else {
           console.error('未找到指定地区');
         }
       } catch (error) {
+        isLoading.value = false
         console.error(error);
       }
     };
 
+    
 
 
 
@@ -115,7 +151,9 @@ export default {
       getLocationWeather,
       getPointWeather,
       todayWeather,
-      forecastData
+      forecastData,
+      loadingText,
+      isLoading
     };
   },
 };
