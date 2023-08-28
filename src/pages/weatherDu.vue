@@ -19,7 +19,7 @@
 
 <script>
 
-import { computed,ref, onMounted } from 'vue';
+import { computed,ref } from 'vue';
 import axios from 'axios';
 import mainDu from '@/components/mainDu.vue';
 import weatherUnderDu from '@/components/weatherUnderDu.vue';
@@ -39,15 +39,15 @@ export default {
     let isLoading = ref(false); // 控制 loading 状态
     let loadingText = ref("正在加载中..."); // loading 文字提示
 
-    onMounted(async () => {
-        try {
-          // 初始化加载文章和留言数据
-          getLocationWeather()
-        } catch (error) {
-          console.error('未能获取指定地点天气');
-          getPointWeather('河北省唐山市')
-        }
-      });
+    // onMounted(async () => {
+    //     try {
+    //       // 初始化加载文章和留言数据
+    //       getLocationWeather()
+    //     } catch (error) {
+    //       console.error('未能获取指定地点天气');
+    //       getPointWeather('河北省唐山市')
+    //     }
+    //   });
 
 
     const getLocationWeather = async () => {
