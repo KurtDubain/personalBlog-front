@@ -1,4 +1,12 @@
 const { defineConfig } = require('@vue/cli-service')
+
 module.exports = defineConfig({
-  transpileDependencies: true
+  css: {
+    loaderOptions: {
+      sass: {
+        implementation: require('sass'),
+      },
+    },
+  },
+  transpileDependencies: ['vue'], // 添加需要转译的依赖
 })
