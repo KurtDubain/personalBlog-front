@@ -120,7 +120,7 @@
   }
   </script>
   
-  <style scoped>
+  <style lang="scss" scoped>
   .el-main {
     padding-top: 0px;
   }
@@ -144,12 +144,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    img{
+      max-width: 100%; /* 图片最大宽度为容器宽度 */
+      height: auto; /* 高度自适应，按比例展示 */
+    }
   }
-  .image-container img {
-  max-width: 100%; /* 图片最大宽度为容器宽度 */
-  height: auto; /* 高度自适应，按比例展示 */
-}
-  
+
+
   /* 表单容器样式 */
   .form-container {
     width: 80%; /* 表单容器宽度 */

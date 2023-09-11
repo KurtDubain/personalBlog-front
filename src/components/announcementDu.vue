@@ -67,7 +67,7 @@ export default {
 
 
 
-<style>
+<style lang="scss" scoped>
 .announcement-dialog {
   border-radius: 10px;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);

@@ -45,7 +45,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .comment-list {
   width: 100%;
   display: flex;

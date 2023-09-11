@@ -41,16 +41,16 @@ export default{
 
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 /* .show{
     display: flex;
 } */
-
-  .el-carousel__item img{
-    max-height: 100%;
-    object-fit: cover;
-    width: 100%;
+  .el-carousel__item{
+    img {
+        max-height: 100%;
+        object-fit: cover;
+        width: 100%;
+    }
   }
  
   </style>
-  

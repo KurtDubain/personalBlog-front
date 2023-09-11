@@ -59,7 +59,7 @@
   };
   </script>
   
-  <style scoped>
+  <style lang="scss" scoped>
   .notice-container {
     width: 100%;
     height: 4vh; /* Increase the height for better visibility */

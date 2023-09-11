@@ -112,7 +112,7 @@ function updateChart(forecastData) {
 }
 </script>
   
-  <style scoped>
+  <style scoped lang="scss">
   .weather-page {
     display: flex;
     justify-content: center;

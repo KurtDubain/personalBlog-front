@@ -99,7 +99,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-main{
   padding-top:0px ;
 }

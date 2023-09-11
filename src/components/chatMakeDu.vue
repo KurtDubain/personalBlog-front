@@ -146,7 +146,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .upload-demo {
   margin-top: 10px;
 }

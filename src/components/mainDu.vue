@@ -12,7 +12,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .background-maker {
   position: relative;
   width: 100%;

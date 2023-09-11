@@ -42,7 +42,7 @@
   </script>
   
  
-<style scoped>
+<style lang="scss" scoped>
 .selected-comment {
   width: 80%;
   margin: 20px;

@@ -270,7 +270,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* 隐藏左侧和右侧的aside部分，并让el-main占据屏幕的全部宽度 */
 @media (max-width: 768px) {
   .mobile-aside {
@@ -325,11 +325,14 @@ export default {
   right: 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s;
+  &:hover{
+    background-color: #0056b3;
+  }
 }
 
-.share-button:hover {
-  background-color: #0056b3;
-}
+// .share-button:hover {
+//   background-color: 
+// }
 
 .tools_button{
   display: flex;

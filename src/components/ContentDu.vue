@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .article-content {
   margin: 20px;
   padding: 20px;
@@ -69,69 +69,53 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: 100%;
-}
-
-h1 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
-}
-
-.metadata {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-}
-
-.markdown-content {
-  line-height: 1.6;
-  font-size: 16px;
-  color: #555;
-  max-width: 100%; /* 设置最大宽度为100%，防止内容过宽 */
-  overflow-wrap: break-word; /* 当内容过长时，自动换行 */
-  /* overflow-x: hidden; */
-}
-
-.metadata span {
-  margin-right: 10px;
-}
-
-.date {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.views {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: large;
-}
-
-/* .likes::before {
-  content: "点赞数：";
-} */
-
-.comments {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: large;
-}
-pre {
-  overflow-x: auto; /* 设置水平方向的滑动条 */
-  background-color: #9d3737; /* 设置代码块背景色 */
-  padding: 10px; /* 设置代码块内边距 */
-}
-
-pre code {
-  font-size: 16px;
-  background-color: #e36363;
-  padding: 8px;
-  border-radius: 4px;
+  
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .metadata {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    
+    span {
+      margin-right: 10px;
+    }
+    
+    .date, .views, .comments {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: large;
+    }
+  }
+  
+  .markdown-content {
+    line-height: 1.6;
+    font-size: 16px;
+    color: #555;
+    max-width: 100%; /* 设置最大宽度为100%，防止内容过宽 */
+    overflow-wrap: break-word; /* 当内容过长时，自动换行 */
+    /* overflow-x: hidden; */
+  }
+  
+  pre {
+    overflow-x: auto; /* 设置水平方向的滑动条 */
+    background-color: #9d3737; /* 设置代码块背景色 */
+    padding: 10px; /* 设置代码块内边距 */
+    
+    code {
+      font-size: 16px;
+      background-color: #e36363;
+      padding: 8px;
+      border-radius: 4px;
+    }
+  }
 }
 </style>

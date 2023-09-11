@@ -73,7 +73,7 @@
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .chatlittle-container {
   display: flex;
   flex-direction: column;

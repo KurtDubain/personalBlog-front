@@ -160,19 +160,19 @@ export default {
 
 </script>
 
-<style scoped>
-.el-main{
-  padding-top:0px ;
+<style lang="scss" scoped>
+
+.el-main {
+  padding-top: 0;
 }
+
 .el-aside {
   transition: all 0.3s;
 }
 
 @media (max-width: 768px) {
-  /* 当屏幕宽度小于等于 768px 时，隐藏 el-aside */
   .el-aside {
     display: none;
   }
 }
-
 </style>

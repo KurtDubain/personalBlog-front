@@ -109,52 +109,28 @@
   }
   </script>
   
-  <style scoped>
-  .ctrl_button_all {
-      /* position: fixed; */
-      /* left: 50%; */
-      /* transform: translateX(-50%); */
-      /* display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center; */
-      /* position: fixed; */
-      position: fixed;
-      top: 90%;
-      right: 0%;
-      /* left: 60%; */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-  
+  <style lang="scss" scoped>
+.ctrl_button_all {
+  position: fixed;
+  top: 90%;
+  right: 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn1,
+.btn2 {
+  min-width: 22vh;
+  color: #409eff;
+  background: #ecf5ff;
+  border-color: #b3d8ff;
+
+  &:hover {
+    background-color: #3f9eff;
+    color: #fff;
+    border-color: #3f9eff;
   }
-  
-  /* .ctrl_button {
-    min-width: 200px;
-  } */
-  
-  .btn1{
-      min-width: 22vh;
-      color: #409eff;
-      background: #ecf5ff;
-      border-color: #b3d8ff;
-  }
-  .btn1:hover{
-      background-color: #3f9eff;
-      color: #fff;
-      border-color: #3f9eff;
-  }
-  .btn2{
-      min-width: 22vh;
-      color: #409eff;
-      background: #ecf5ff;
-      border-color: #b3d8ff;
-  }
-  .btn2:hover{
-      background-color: #3f9eff;
-      color: #fff;
-      border-color: #3f9eff;
-  }
-  
+}
   </style>

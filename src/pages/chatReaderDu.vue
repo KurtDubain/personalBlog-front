@@ -106,7 +106,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 /* 使用媒体查询判断是否需要隐藏两侧 */
 @media screen and (max-width: 768px) {
   .el-aside {

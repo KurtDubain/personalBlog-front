@@ -27,7 +27,7 @@ export default{
 
 </script>
 
-  <style scoped>
+  <style lang="scss" scoped>
 
 .footer-container {
     background-color: #f2f2f2;

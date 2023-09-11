@@ -146,38 +146,31 @@ import axios from 'axios';
 };
   </script>
   
-  <style scoped>
-  /* 自定义按钮样式 */
-  .like-btn {
-    background-color: transparent;
-    border: none;
-    color: rgb(255, 132, 0);
-    padding: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    
-  }
-  
-  /* .like-pos{
-    position: relative;
-    top: auto;
-  } */
-  .like-btn span {
+  <style lang="scss" scoped>
+/* 自定义按钮样式 */
+.like-btn {
+  background-color: transparent;
+  border: none;
+  color: rgb(255, 132, 0);
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  span {
     margin-left: 4px;
   }
-  
-  .like-btn i {
-    
+
+  i {
     font-size: 25px;
     transition: color 0.3s;
   }
-  
-  /* 点赞数量样式 */
-  .like-count {
-    margin-left: 8px;
-    font-size: 14px;
-    color: rgb(85, 85, 85);
-  }
-  </style>
-  
+}
+
+/* 点赞数量样式 */
+.like-count {
+  margin-left: 8px;
+  font-size: 14px;
+  color: rgb(85, 85, 85);
+}
+</style>

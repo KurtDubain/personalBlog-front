@@ -60,17 +60,15 @@ export default {
 }
 </script>
 
-  <style scoped>
+  <style lang="scss" scoped>
+.article-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  flex-basis: 0;
+  width: 80%;
+  padding-top: 5%;
 
-  .article-container {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    flex-basis: 0;
-    width: 80%;
-    padding-top: 5%;
-  }
-  
   .article-card {
     margin: 10px;
     border-radius: 10px;
@@ -79,28 +77,33 @@ export default {
     padding: 15px;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
+
+    &:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .article-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .article-tags {
+      margin-top: 10px;
+
+      .article-tag {
+        display: inline-block;
+        font-size: 14px;
+        padding: 5px 10px;
+        margin-right: 5px;
+      }
+    }
+
+    // .article-link {
+    //   text-decoration: none;
+    // }
   }
-  
-  .article-card:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .article-title {
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .article-tags {
-    margin-top: 10px;
-  }
-  
-  .article-tag {
-    display: inline-block;
-    font-size: 14px;
-    padding: 5px 10px;
-    margin-right: 5px;
-  }
+} 
   
   .article-link {
     text-decoration: none;

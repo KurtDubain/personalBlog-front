@@ -213,110 +213,155 @@ export default {
 };
 </script>
 
-<style>
-.markdown-editor {
-  display: flex;
+<style scoped lang="scss">
+$primary-color: #007bff;
+$secondary-color: #ccc;
+
+.articleMake {
+  .markdown-editor {
+    display: flex;
+
+    .editor,
+    .preview {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid $secondary-color;
+      border-radius: 5px;
+      height: 600px;
+      overflow: auto;
+    }
+
+    .editor {
+      margin-right: 10px;
+
+      textarea {
+        width: 100%;
+        height: 100%;
+        resize: none;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+        padding: 5px;
+      }
+    }
+
+    .preview {
+      background-color: #f9f9f9;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3 {
+      margin: 16px 0;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+
+    ul, ol {
+      margin: 8px 0;
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 5px 0;
+    }
+
+    a {
+      color: $primary-color;
+    }
+
+    blockquote {
+      border-left: 3px solid $secondary-color;
+      padding-left: 10px;
+      margin: 8px 0;
+    }
+
+    pre {
+      background-color: #f1f1f1;
+      padding: 5px;
+      border-radius: 5px;
+      overflow: auto;
+    }
+
+    code {
+      font-family: Consolas, monospace;
+      background-color: #f1f1f1;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+  }
+
+  .upload-section {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+
+    .image-upload {
+      input[type="text"] {
+        margin-left: 10px;
+      }
+    }
+
+    .upload-result {
+      margin-left: 10px;
+
+      p {
+        margin: 5px 0;
+
+        &:last-child {
+          color: red;
+        }
+      }
+    }
+  }
 }
 
-.editor,
-.preview {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  height: 600px;
-  overflow: auto;
-}
+.announceMake {
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+  }
 
-.editor {
-  margin-right: 10px;
-}
+  .announce-content {
+    textarea {
+      width: 100%;
+      height: 100px;
+      resize: none;
+      border: 1px solid $secondary-color;
+      border-radius: 5px;
+      padding: 10px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      margin: 10px 0;
+    }
 
-.editor textarea {
-  width: 100%;
-  height: 100%;
-  resize: none;
-  border: none;
-  outline: none;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-  line-height: 1.5;
-  padding: 5px;
-}
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid $secondary-color;
+      border-radius: 5px;
+      padding: 5px;
+      font-size: 16px;
+      font-family: Arial, sans-serif;
+      margin: 10px 0;
+    }
+  }
 
-.preview {
-  background-color: #f9f9f9;
-  font-size: 16px;
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-}
-
-/* 添加一些Markdown渲染后的样式 */
-.preview h1,
-.preview h2,
-.preview h3 {
-  margin: 16px 0;
-  font-weight: bold;
-}
-
-.preview p {
-  margin: 8px 0;
-}
-
-.preview ul,
-.preview ol {
-  margin: 8px 0;
-  padding-left: 20px;
-}
-
-.preview li {
-  margin: 5px 0;
-}
-
-.preview a {
-  color: #007bff;
-}
-
-.preview blockquote {
-  border-left: 3px solid #ccc;
-  padding-left: 10px;
-  margin: 8px 0;
-}
-
-.preview pre {
-  background-color: #f1f1f1;
-  padding: 5px;
-  border-radius: 5px;
-  overflow: auto;
-}
-
-.preview code {
-  font-family: Consolas, monospace;
-  background-color: #f1f1f1;
-  padding: 2px 5px;
-  border-radius: 3px;
-}
-
-.upload-section {
-  display: flex;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.image-upload input[type="text"] {
-  margin-left: 10px;
-}
-
-.upload-result {
-  margin-left: 10px;
-}
-
-.upload-result p {
-  margin: 5px 0;
-  color: green;
-}
-
-.upload-result p:last-child {
-  color: red;
+  .announce-upload {
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
 }
 </style>

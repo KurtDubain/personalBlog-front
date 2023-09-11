@@ -250,7 +250,7 @@
   }
   </script>
   
-  <style scoped>
+  <style lang="scss" scoped>
   .midForm {
     display: flex;
     flex-direction: column;
