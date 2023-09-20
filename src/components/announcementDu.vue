@@ -67,29 +67,23 @@ export default {
 
 
 
-<style lang="scss" scoped>
+<style lang="scss">
 .announcement-dialog {
-  border-radius: 10px;
+  border-radius: 20px;
   box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.1);
-  background-color: #ebdfdf;
-
-}
-
-/* 内容区域的样式保持不变 */
-.announcement-dialog-content {
-  padding: 20px;
+  background-color: #c7c297ba; /* 使用暖色调的背景色 */
 }
 
 .announcement-dialog-content {
-  padding: 20px;
+  padding: 10px;
 }
 
 .announcement-item {
-  border: 1px solid #D4AC0D;
+  // border: 1px solid #e6b8b8; /* 使用暖色调的边框颜色 */
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 20px;
-  background-color: #EAEAEA;
+  background-color: #87af7aa6; /* 使用暖色调的背景色 */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -103,25 +97,28 @@ export default {
 .announcement-title {
   font-size: 18px;
   font-weight: bold;
-  color: #333;
+  color: #8c5656; /* 使用暖色调的标题颜色 */
 }
 
 .top-label {
   margin-right: 5px;
-  color: #f90;
+  color: rgb(177, 156, 123);
 }
 
 .announcement-date {
-  color: #999;
+  color: #585858; /* 使用暖色调的日期颜色 */
 }
 
 .announcement-body {
   line-height: 1.6;
-  color: #666;
+  color: rgb(82, 82, 82); /* 使用暖色调的正文颜色 */
 }
 
-/* 添加公告容器的样式 */
 .el-dialog__wrapper {
-  padding: 20px; /* 添加内边距 */
+  padding: 20px;
 }
+// .el-dialog{
+//   background: #9c8787;
+// }
+
 </style>
