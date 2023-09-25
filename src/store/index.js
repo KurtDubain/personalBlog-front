@@ -7,6 +7,7 @@ import chatsModule from './modules/chats'
 import articlesModule from './modules/articles';
 import usersModule from './modules/users'
 import announceModule from './modules/announce';
+import themeModule from './modules/theme';
 
 const store = createStore({
     modules:{
@@ -14,8 +15,8 @@ const store = createStore({
         // chatReader:chatReaderModule,
         articles:articlesModule,
         users:usersModule,
-        announce:announceModule
-
+        announce:announceModule,
+        theme:themeModule
     }
 })
 

@@ -1,6 +1,6 @@
-<!-- 主页面 -->
 <template>
-  <div class="common-layout">
+  <div :class="themeClass" class="common-layout">
+    <div class="overlay" v-if="!isLight"></div>
     <el-container>
       <el-header><navDu></navDu></el-header>
       <el-container>
@@ -17,9 +17,8 @@
       </el-container>
     </el-container>
     <topAnnounceDu></topAnnounceDu>
-   <announcementDu v-if="showAnnouncement"></announcementDu>
+    <announcementDu v-if="showAnnouncement"></announcementDu>
   </div>
-  
 </template>
 
 <script>
@@ -43,22 +42,46 @@ export default {
   setup(){
     const store = useStore()
     const showAnnouncement = computed(() => store.state.announce.visible)
-    
+    const isLight = computed(()=>store.state.theme.isLight)
+    const themeClass = computed(()=>{
+      return isLight.value?'light-theme':'dark-theme'
+    })
+
     return{
-      showAnnouncement
+      showAnnouncement,
+      isLight,
+      themeClass
     }
   }
 }
 </script>
 
 <style lang="scss">
-.el-main{
+.el-main {
   padding: 0;
 }
-.el-header{
+.el-header {
   padding: 0;
 }
-.el-footer{
+.el-footer {
   padding: 0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.light-theme {
+  background-color: #f0f2f5;
+}
+
+.dark-theme {
+  background-color: #1f2937;
 }
 </style>

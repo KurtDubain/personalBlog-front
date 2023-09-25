@@ -79,7 +79,7 @@ export default {
 }
 
 .announcement-item {
-  // border: 1px solid #e6b8b8; /* 使用暖色调的边框颜色 */
+  border: 1px solid #e6b8b8; /* 使用暖色调的边框颜色 */
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 20px;
