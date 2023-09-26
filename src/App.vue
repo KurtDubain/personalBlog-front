@@ -56,6 +56,27 @@ export default {
 }
 </script>
 
+<style lang="scss" scoped>
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.249);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.light-theme {
+  background-color: rgb(255, 255, 255);
+}
+
+.dark-theme {
+  background-color: #090909ad;
+}
+</style>
 <style lang="scss">
 .el-main {
   padding: 0;
@@ -67,21 +88,4 @@ export default {
   padding: 0;
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-}
-
-.light-theme {
-  background-color: #f0f2f5;
-}
-
-.dark-theme {
-  background-color: #1f2937;
-}
 </style>

@@ -1,6 +1,6 @@
 <!-- 文章栏组件 -->
 <template>
-  <div class="article-container">
+  <div :class="['article-container',themeClass]">
     <!-- <el-timeline> -->
       <!-- 根据articles的类型，需要使用键值对来实现逐一显示 -->
         <el-item v-for="article in Object.keys(articles)" :key="articles[article].id"
@@ -9,7 +9,7 @@
           <el-card class="article-card">
             <span>
               <h2 class="article-title">{{ articles[article].title }}</h2>
-              <h4 style="font-weight:lighter ">{{ articles[article].date }}</h4>
+              <h4 class="article-date" style="font-weight:lighter ">{{ articles[article].date }}</h4>
 
             </span>
             <div class="article-tags">
@@ -27,8 +27,8 @@
 
 <script>
 import { useRouter } from 'vue-router'
-// import {useStore} from 'vuex'
-// import {computed} from 'vue'
+import {useStore} from 'vuex'
+import {computed} from 'vue'
 
 export default {
   name: 'articleDu',
@@ -40,6 +40,7 @@ export default {
   },
   setup() {
     const router = useRouter();
+    const store = useStore()
     // 传递路由参数
 
     // console.log(articles)
@@ -51,10 +52,13 @@ export default {
         }
       });
     };
+    const themeClass = computed(()=>{
+      return store.state.theme.isLight?'light-theme':'dark-theme'
+    })
 
     return {
       goToArticle,
-      
+      themeClass
     };
   }
 }
@@ -68,6 +72,7 @@ export default {
   flex-basis: 0;
   width: 80%;
   padding-top: 5%;
+  // background-color: none;
 
   .article-card {
     margin: 10px;
@@ -87,6 +92,9 @@ export default {
       font-weight: bold;
       margin-bottom: 10px;
     }
+    // .article-date{
+      
+    // }
 
     .article-tags {
       margin-top: 10px;
@@ -105,6 +113,29 @@ export default {
   }
 } 
   
+.dark-theme {
+  .article-container {
+    // background-color: #1f2937; /* 夜间模式下的背景颜色 */
+  }
+
+  .article-card {
+    background-color: rgba(0, 0, 0, 0.575); /* 夜间模式下的卡片底色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    .article-title {
+      color: #fff; /* 文章标题颜色 */
+    }
+    .article-date{
+      color:#fff
+    }
+
+    .article-tags {
+      .article-tag {
+        color: rgb(37, 36, 36); /* 标签文字颜色 */
+      }
+    }
+  }
+}
   .article-link {
     text-decoration: none;
   }

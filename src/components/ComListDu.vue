@@ -1,6 +1,6 @@
 <!-- 文章评论展示小组件 -->
 <template>
-  <div class="list-container">
+  <div :class="['list-container',themeClass]">
     <el-item v-for="comment in Object.values(comments)" :key="comment.id" center :timestamp="comment.created_Date" placement="top">
       <div class="comment-card">
         <div class="header-chat">
@@ -21,6 +21,8 @@
 
 <script>
 import likesDu from './likesDu.vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
   name: "ComListDu",
   props: {
@@ -32,6 +34,15 @@ export default {
   },
   components:{
     likesDu
+  },
+  setup(){
+    const store = useStore()
+    const themeClass = computed(()=>{
+      return store.state.theme.isLight?'light-theme':'dark-theme'
+    })
+    return{
+      themeClass
+    }
   }
 };
 </script>
@@ -97,5 +108,35 @@ export default {
 
 .likes-count {
   margin-left: 5px;
+}
+.dark-theme {
+  .list-container {
+    color: #fff; /* 夜间模式下的文字颜色 */
+  }
+
+  .comment-card {
+    background-color: #1f2937; /* 夜间模式下的评论卡片背景色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .el-icon {
+    color: #fff; /* 夜间模式下的图标颜色 */
+  }
+
+  .comment-name {
+    color: #fff; /* 夜间模式下的评论者名称颜色 */
+  }
+
+  .comment-contact {
+    color: #999; /* 夜间模式下的评论者联系方式颜色 */
+  }
+
+  .comment-content {
+    color: #ccc; /* 夜间模式下的评论内容颜色 */
+  }
+
+  .created-date {
+    color: #999; /* 夜间模式下的评论日期颜色 */
+  }
 }
 </style>

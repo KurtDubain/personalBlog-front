@@ -16,7 +16,7 @@
                 <!-- <el-icon> <Star color="red"/></el-icon> -->
         <!-- 点赞 -->
       </span>
-      <span class="like-count">{{ likeCount }}</span>
+      <span :class="['like-count',themeClass]">{{ likeCount }}</span>
     </button>
   </template>
   
@@ -24,8 +24,9 @@
   <script>
   import { StarFilled } from '@element-plus/icons-vue';
   import { ElMessage } from 'element-plus';
-  import { ref, onMounted,watch } from 'vue';
+  import { ref, onMounted,watch , computed} from 'vue';
   import {throttle} from 'lodash'
+  import { useStore } from 'vuex';
   
 import axios from 'axios';
 
@@ -56,6 +57,10 @@ import axios from 'axios';
         const likeCount = ref(0);
         // 定义用户id
         const userId = ref(null)
+        const store = useStore()
+        const themeClass = computed(()=>{
+            return store.state.theme.isLight?'light-theme':'dark-theme'
+        })
 
         onMounted(async () => {
             checkLoginStatus()
@@ -140,7 +145,8 @@ import axios from 'axios';
             liked,
             likeCount,
             toggleLike,
-            throttledToggleLike
+            throttledToggleLike,
+            themeClass
         };
     },
 };
@@ -172,5 +178,10 @@ import axios from 'axios';
   margin-left: 8px;
   font-size: 14px;
   color: rgb(85, 85, 85);
+}
+.dark-theme{
+    .like-count{
+        color: aliceblue;
+    }
 }
 </style>

@@ -70,7 +70,7 @@ export default {
 }
 
 .el-main {
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 .about-section {

@@ -1,6 +1,6 @@
 <!-- 指定留言下的留言头部展示 -->
 <template>
-    <div class="selected-comment">
+    <div :class="['selected-comment',themeClass]">
       <h2 class="comment-username">{{ chatInfo.username }}</h2>
       <p class="comment-content">{{ chatInfo.content }}</p>
       <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
@@ -32,9 +32,12 @@
       const store = useStore()
       // 获取指定的留言信息
       const chatInfo = computed(()=> store.state.chats.chatInfo)
-      
+      const themeClass = computed(()=>{
+        return store.state.theme.isLight?'light-theme':'dark-theme'
+      })
       return{
-        chatInfo
+        chatInfo,
+        themeClass
       }
     }
     
@@ -102,5 +105,25 @@
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
+}
+.dark-theme {
+  .selected-comment {
+    background-color: #1f2937; /* 夜间模式下的背景颜色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    border-color: #485363; /* 夜间模式下的边框颜色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    .comment-username {
+      color: #fff; /* 用户名颜色 */
+    }
+
+    .comment-content {
+      color: #fff; /* 内容颜色 */
+    }
+
+    .comment-details {
+      color: #999; /* 日期、浏览量、回复数颜色 */
+    }
+  }
 }
 </style>

@@ -1,6 +1,6 @@
 <!-- 指定留言下的评论卡片组件 -->
 <template>
-  <div class="comment-list">
+  <div :class="['comment-list',themeClass]">
     <div v-for="comment in chatCommentInfo" :key="comment.id" class="comment-item">
       <div class="comment-info">
         <span class="comment-username"><el-icon><User /></el-icon>&nbsp;{{ comment.username }}</span>
@@ -36,10 +36,13 @@ export default {
     const store = useStore()
     // 获取更新后的留言下的评论信息
     const chatCommentInfo = computed(()=> store.state.chats.chatCommentInfo )
-    
+    const themeClass = computed(()=>{
+      return store.state.theme.isLight?'light-theme':'dark-theme'
+    })
 
     return {
-      chatCommentInfo
+      chatCommentInfo,
+      themeClass
     };
   },
 };
@@ -105,5 +108,38 @@ export default {
 .comment-likes {
   font-size: 14px;
   color: #007bff;
+}
+.dark-theme {
+  .comment-item {
+    background-color: #252b33; /* 夜间模式下的背景颜色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    border-color: #485363; /* 夜间模式下的边框颜色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .comment-content {
+    color: #fff; /* 夜间模式下的内容颜色 */
+  }
+
+  .comment-info {
+    color: #999; /* 夜间模式下的评论信息颜色 */
+  }
+
+  .comment-username {
+    color: #007bff; /* 夜间模式下的用户名颜色 */
+  }
+
+  .comment-date {
+    color: #999; /* 夜间模式下的日期颜色 */
+  }
+
+  .like-button {
+    background-color: #007bff; /* 夜间模式下的点赞按钮背景颜色 */
+    color: #fff; /* 夜间模式下的点赞按钮文字颜色 */
+  }
+
+  .comment-likes {
+    color: #007bff; /* 夜间模式下的点赞数颜色 */
+  }
 }
 </style>

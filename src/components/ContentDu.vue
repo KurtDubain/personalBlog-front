@@ -1,6 +1,6 @@
 d<!-- 文章内容组件 -->
 <template>
-  <div class="article-content">
+  <div :class="['article-content',themeClass]">
     <h1>{{ article.title }}</h1>
     
     <!-- 解析的内容 -->
@@ -30,6 +30,7 @@ d<!-- 文章内容组件 -->
 <script>
 import { marked } from 'marked';
 import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   name: 'ContentDu',
@@ -49,11 +50,16 @@ export default {
         return '';
       }
     });
+    const store = useStore()
+    const themeClass = computed(()=>{
+      return store.state.theme.isLight?'light-theme':'dark-theme'
+    })
 
 
 
     return {
-      parsedContent
+      parsedContent,
+      themeClass
     };
   }
 };
@@ -116,6 +122,39 @@ export default {
       padding: 8px;
       border-radius: 4px;
     }
+  }
+}
+.dark-theme {
+  .article-content {
+    background-color: #252b33; /* 夜间模式下的背景颜色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  h1 {
+    color: #fff; /* 夜间模式下的标题颜色 */
+  }
+
+  .metadata {
+    color: #999; /* 夜间模式下的元数据颜色 */
+  }
+
+  .date,
+  .views,
+  .comments {
+    color: #999; /* 夜间模式下的日期、浏览量、评论数颜色 */
+  }
+
+  .markdown-content {
+    color: #ccc; /* 夜间模式下的内容颜色 */
+  }
+
+  pre {
+    background-color: #1f2937; /* 夜间模式下的代码块背景色 */
+  }
+
+  code {
+    background-color: #485363; /* 夜间模式下的代码背景色 */
   }
 }
 </style>

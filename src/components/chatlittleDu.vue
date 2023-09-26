@@ -1,6 +1,6 @@
 <!-- 留言卡片组件 -->
 <template>
-  <div class="chatlittle-container">
+  <div :class="['chatlittle-container',themeClass]">
     <!-- <el-timeline> -->
       <el-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
         <el-card class="chat-card">
@@ -33,9 +33,9 @@
 
 <script>
   import { useRouter } from 'vue-router'
-  // import {useStore} from 'vuex'
+  import {useStore} from 'vuex'
   import likesDu from './likesDu.vue';
-  // import { computed } from 'vue';
+  import { computed } from 'vue';
 
   export default {
   name: "ChatLittleDu",
@@ -54,7 +54,7 @@
     // const chats = computed(()=> store.getters['chats/sortedChats'] )
 
     // const chats = store.getters['chats/sortedChats']
-    
+      const store = useStore()
       const router = useRouter();
       // 传递路由参数
       const goToChat = (chatId) => {
@@ -65,9 +65,14 @@
           }
         });
       };
+
+      const themeClass = computed(()=>{
+        return store.state.theme.isLight?'light-theme':'dark-theme'
+      })
   
       return {
-        goToChat
+        goToChat,
+        themeClass
       };
     }
 };
@@ -132,6 +137,35 @@
   margin-right: 10px;
   font-size: 14px;
   color: #999;
+}
+.dark-theme {
+  // .chatlittle-container {
+  //   background-color: #1f2937; /* 夜间模式下的背景颜色 */
+  // }
+
+  .chat-card {
+    background-color: #000; /* 夜间模式下的卡片底色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    .chat-username {
+      color: #fff; /* 用户名颜色 */
+    }
+
+    .chat-account {
+      color: #999; /* 账号颜色 */
+    }
+
+    .chat-content {
+      color: #fff; /* 内容颜色 */
+    }
+
+    .chat-likes,
+    .chat-views,
+    .chat-reply {
+      color: #999; /* 点赞、浏览量、回复数颜色 */
+    }
+  }
 }
 
 
