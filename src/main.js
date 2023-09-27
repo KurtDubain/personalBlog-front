@@ -13,11 +13,13 @@ import App from './App.vue'
 import router from './utils/router'
 
 import store from './store'
+import slide from './detectives/slideDirective'
 // 创建Vue实例
 const app = createApp(App)
 
 app.use(router)
 app.use(store)
+app.directive('slide',slide)
 // app.use(ElementPlus, { size: 'small' });
 // 注册使用element Plus的icon
 for(const[key,component] of Object.entries(ElementPlusIconsVue)){
