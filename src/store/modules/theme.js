@@ -2,7 +2,7 @@
 
 const state = {
   // themeMain:'light',
-  isLight:localStorage.getItem('theme') === 'light'||true,
+  isLight:localStorage.getItem('theme') !== 'dark',
 }
   
 const mutations = {
