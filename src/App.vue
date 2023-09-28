@@ -55,11 +55,11 @@ export default {
       
       if(currentIndex < swipeableRoutes.length-1){
         animatedClass.value = 'slide-left-animation';
-        setTimeout(() => {
-          const targetRoute = swipeableRoutes[currentIndex + 1]
+        const targetRoute = swipeableRoutes[currentIndex + 1]
           router.push({name:targetRoute})
+        setTimeout(() => {
           animatedClass.value = '';
-        }, 1000);
+        }, 500);
         
       }
       
@@ -67,14 +67,18 @@ export default {
       // 在动画结束后移除类名，以便下次使用
       
     };
-
+    animatedClass.value = 'slide-left-animation';
     const handleRightSwipe = () => {
       const currentRoute = router.currentRoute.value.name;
       const currentIndex = swipeableRoutes.indexOf(currentRoute);
       
       if(currentIndex > 0){
+        animatedClass.value = 'slide-right-animation'
         const targetRoute = swipeableRoutes[currentIndex - 1]
         router.push({name:targetRoute})
+        setTimeout(()=>{
+          animatedClass.value=''
+        },500)
       }
     };
 
@@ -112,7 +116,7 @@ export default {
 }
 .slide-left-animation {
   // 修改动画时长为0.5秒
-  animation: slide-left 1s;
+  animation: slide-left 0.3s;
 }
 
 @keyframes slide-left {
@@ -120,13 +124,27 @@ export default {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-100px);
+    transform: translateX(-400px);
+  }
+}
+.slide-right-animation{
+  animation: slide-right 0.5s;
+}
+@keyframes slide-right {
+  0%{
+    transform: translateX(0);
+  }
+  100%{
+    transform: translateX(400px);
   }
 }
 
 
 </style>
 <style lang="scss">
+*{
+  transition: 0.5s;
+}
 .el-main {
   padding: 0;
 }
