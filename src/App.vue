@@ -41,7 +41,7 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
-    const animatedClass = ref('slide-left-animation');
+    const animatedClass = ref('');
 
     const showAnnouncement = computed(() => store.state.announce.visible);
     const isLight = computed(() => store.state.theme.isLight);
@@ -52,29 +52,24 @@ export default {
     const handleLeftSwipe = () => {
       const currentRoute = router.currentRoute.value.name;
       const currentIndex = swipeableRoutes.indexOf(currentRoute);
-      
-      if(currentIndex < swipeableRoutes.length-1){
+      const targetRoute = swipeableRoutes[currentIndex + 1]
+      if(currentIndex < swipeableRoutes.length-1 && currentIndex!==-1){
         animatedClass.value = 'slide-left-animation';
-        const targetRoute = swipeableRoutes[currentIndex + 1]
-          router.push({name:targetRoute})
+        router.push({name:targetRoute})
         setTimeout(() => {
           animatedClass.value = '';
-        }, 500);
-        
+        }, 500); 
       }
-      
 
       // 在动画结束后移除类名，以便下次使用
       
     };
-    animatedClass.value = 'slide-left-animation';
     const handleRightSwipe = () => {
       const currentRoute = router.currentRoute.value.name;
       const currentIndex = swipeableRoutes.indexOf(currentRoute);
-      
-      if(currentIndex > 0){
+      const targetRoute = swipeableRoutes[currentIndex - 1]
+      if(currentIndex > 0 || swipeableRoutes.includes(targetRoute)){
         animatedClass.value = 'slide-right-animation'
-        const targetRoute = swipeableRoutes[currentIndex - 1]
         router.push({name:targetRoute})
         setTimeout(()=>{
           animatedClass.value=''
