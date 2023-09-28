@@ -80,21 +80,45 @@ export default {
   opacity: 0;
   animation: fadeIn 1s ease forwards;
 
+
   .about-title {
     font-size: 36px;
     font-weight: bold;
     color: #333;
     margin-bottom: 10px;
+    transform: translateY(-50%);
+    animation: slideInTitle 1s ease forwards;
+      
+    
+    
   }
+  @keyframes slideInTitle {
+      to {
+        transform: translateY(0);
+      }
+    }
+  
 
   .about-description {
     font-size: 18px;
     color: #666;
     margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fadeInDescription 1s ease forwards;
+  }
+  @keyframes fadeInDescription {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .about-item {
     margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fadeInItem 1s ease forwards;
 
     h2 {
       font-size: 24px;
@@ -102,6 +126,12 @@ export default {
       color: #333;
       margin-bottom: 10px;
     }
+    @keyframes fadeInItem {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
     p {
       font-size: 16px;

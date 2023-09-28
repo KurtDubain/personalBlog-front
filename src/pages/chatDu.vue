@@ -238,4 +238,11 @@
 .search_button{
   flex: 1;
 }
+.el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
   </style>
