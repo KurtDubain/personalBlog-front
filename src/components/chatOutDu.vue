@@ -74,7 +74,7 @@
       // 定义是否记住登陆状态
       const remBtn = ref(true)
       // 获取用户信息
-      const userInfo = computed(() => store.getters['users/getUserInfo']);
+      const userInfo = computed(() => store.getters['users/getUserAllInfo']);
       // 获取登陆状态
       const isLog = computed(() => store.getters['users/isLoggedIn']);
       
@@ -148,27 +148,30 @@
       watch(isLog, (newValue) => {
         if (newValue) {
           // 登录状态，保存用户信息和登录状态
-          const storedUserInfo = JSON.stringify({ 
-            username: userInfo.value.username,
-            account: userInfo.value.account,
-            likes:userInfo.value.likes,
-            comments:userInfo.value.comments,
-            level:userInfo.value.level,
+          // const storedUserInfo = JSON.stringify({ 
+          //   username: userInfo.value.username,
+          //   account: userInfo.value.account,
+          //   likes:userInfo.value.likes,
+          //   comments:userInfo.value.comments,
+          //   level:userInfo.value.level,
+          //   id:userInfo.value.id
+          // })
+          const storedUserID = JSON.stringify({
             id:userInfo.value.id
           })
           // 通过判断不同的登录状态来用不同方式获取数据
           if(localStorage.getItem('rememberedLogin') === true){
-            localStorage.setItem('userInfo', storedUserInfo)
+            localStorage.setItem('userID', storedUserID)
           }else{
-            sessionStorage.setItem('userInfo',storedUserInfo)
+            sessionStorage.setItem('userID',storedUserID)
           }
           
           
         } else {
           // 未登录状态，清除保存的用户信息和登录状态
-          localStorage.removeItem('userInfo')
+          localStorage.removeItem('userID')
           localStorage.removeItem('rememberedLogin')
-          sessionStorage.removeItem('userInfo')
+          sessionStorage.removeItem('userID')
 
         }
       })
