@@ -16,6 +16,8 @@ import chatReader from '../pages/chatReaderDu.vue'
 import subscription from '../pages/subscriptionDu.vue'
 import weather from '../pages/weatherDu.vue'
 
+import axios from '../utils/axios';
+
 // 创建 Vue Router 实例
 const router = createRouter({
   history: createWebHistory(),
@@ -64,23 +66,24 @@ const router = createRouter({
         path:'/write',
         name:'write',
         component:writer,
-        beforeEnter: (to, from, next) => {
-            const Login = localStorage.getItem('rememberedLogin')
-            const storedUserInfo = localStorage.getItem('userInfo')
-            let username
-          if (storedUserInfo) {
-            // userInfo.id = JSON.parse(storedUserInfo).id
-            username = JSON.parse(storedUserInfo).username
-            // userInfo.account = JSON.parse(storedUserInfo).account
-            // userInfo.comments = JSON.parse(storedUserInfo).comments
-            // userInfo.likes = JSON.parse(storedUserInfo).likes
-            // userInfo.level = JSON.parse(storedUserInfo).level
-          }
-          if(Login&&username==='哈哈'){
-            next()
-          }else{
-            next('/')
-          }
+        beforeEnter: async (to, from, next)=>{
+            const token = localStorage.getItem('token')
+            if(token){
+                try{
+                    const res = await axios.get('http://localhost:3000/users/verifyToken')
+                    const {message} = res.data
+                    if(message){
+                        next()
+                    }else{
+                        next('/')
+                    }   
+                }catch(error){
+                    console.error('路由验证失败',error);
+                    next('/')
+                }
+            }else{
+                next('/')
+            }
         }
     },
     {

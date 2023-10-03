@@ -1,24 +1,7 @@
 // store/modules/user.js
-import axios from "axios";
-// 设置默认用户信息
-// const getDefaultState = () => {
-//     // 读取本地存储的用户信息
-//     const storedUserInfo = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo');
-//     return {
-//       // 判断是否有用户信息，否则初始化为空信息
-//       userInfo: storedUserInfo ? JSON.parse(storedUserInfo) : {
-//         username: '',
-//         account: '',
-//         likes: 0,
-//         comments: 0,
-//         level: 1,
-//         id: 0,
-//         created_at: ''
-//       },
-//     //   根据有无用户信息来判断是否已经登陆
-//       isLoggedIn: !!storedUserInfo, 
-//     };
-//   };
+import axios from '../../utils/axios';
+// import axios from "axios";
+
 
 //   将数据默认状态设置为这样
   const state = {
@@ -95,6 +78,7 @@ import axios from "axios";
             // 将用户信息存储在 Web Storage 中
             
             localStorage.setItem('rememberedLogin',remBtn)
+            localStorage.setItem('rememberedLoginTime', Date.now());
 
             // 根据传入的remBtn的值来判断用何种方式进行用户信息的存储
             const storage = remBtn ? localStorage : sessionStorage;
@@ -126,6 +110,7 @@ import axios from "axios";
                 console.error('用户信息更新失败',error);
               })
             // 将用户信息存储在 Web Storage 中
+            localStorage.setItem('rememberedLoginTime', Date.now());
             localStorage.setItem('rememberedLogin',remBtn)
             // 根据传入的remBtn的值来判断用何种方式进行用户信息的存储
             const storage = remBtn ? localStorage : sessionStorage;
@@ -168,6 +153,7 @@ import axios from "axios";
               })
         
             // 将用户信息存储在 Web Storage 中
+            localStorage.setItem('rememberedLoginTime', Date.now());
             localStorage.setItem('rememberedLogin',remBtn)
             // 根据传入的remBtn的值来判断用何种方式进行用户信息的存储
             const storage = remBtn ? localStorage : sessionStorage;
@@ -187,9 +173,25 @@ import axios from "axios";
         localStorage.removeItem('rememberedLogin');
         localStorage.removeItem('userID');
         sessionStorage.removeItem('userID');
+        localStorage.removeItem('token')
     },
     // 检查用户是否已登陆
     checkRememberedLogin({ dispatch,commit }) {
+        
+        const rememberedLoginTime = localStorage.getItem('rememberedLoginTime');
+        const currentTime = Date.now();
+        const sevenDaysInMillis = 7 * 24 * 60 * 60 * 1000; // 7天的毫秒数
+
+        if (rememberedLoginTime && currentTime - rememberedLoginTime > sevenDaysInMillis) {
+          // 如果超过7天，执行清除操作
+          localStorage.removeItem('rememberedLogin');
+          localStorage.removeItem('userID');
+          localStorage.removeItem('token');
+          localStorage.removeItem('rememberedLoginTime');
+          sessionStorage.removeItem('userID');
+          
+        }
+
         const storedUserID = localStorage.getItem('userID') || sessionStorage.getItem('userID');
         if (storedUserID) {
 
@@ -207,17 +209,17 @@ import axios from "axios";
     async getUserInfo({commit},userID){
       try{
         const res = await axios.get(`http://localhost:3000/users/getUserInfo/${userID}`)
-        const user = res.data[0]
-        
+        const user = res.data.userData
         const userInfo = {
           username: user.username,
           account: user.account,
           likes: user.like_count,
           comments: user.comment_count,
           level: user.level,
-          id: user.id,
+          id: userID,
           created_at: user.created_at
         }
+        // console.log(user)
         commit('SET_USER_INFO',userInfo)
       }catch(error){
         console.error('用户信息获取失败',error)

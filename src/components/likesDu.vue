@@ -61,6 +61,7 @@ import axios from 'axios';
         const themeClass = computed(()=>{
             return store.state.theme.isLight?'light-theme':'dark-theme'
         })
+        // const 
 
         onMounted(async () => {
             checkLoginStatus()
@@ -112,20 +113,12 @@ import axios from 'axios';
         };
         // 获取用户登陆情况，如果未登录，则禁止点赞
         const checkLoginStatus = ()=>{
-            let userInfo = null
-            // 判断用户数据存储方式
-            const localUserInfo = localStorage.getItem('userInfo')
-            if(localUserInfo){
-                userInfo = JSON.parse(localUserInfo)
-            }else{
-                const sessionUserInfo = sessionStorage.getItem('userInfo')
-                userInfo = JSON.parse(sessionUserInfo)
-            }
-
+            const userInfo = computed(() => store.getters['users/getUserAllInfo'])
+            // console.log(userInfo.value)
             // 如果用户登陆，则获取用户id信息
-            if(userInfo){
-                const {id} = userInfo
-                userId.value = id
+            if(userInfo.value.id!==null){
+                userId.value = userInfo.value.id
+                
                 // console.log(JSON.parse(userInfo))
             }else{
                 console.error('未登录');
