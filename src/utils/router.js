@@ -68,6 +68,7 @@ const router = createRouter({
         component:writer,
         beforeEnter: async (to, from, next)=>{
             const token = localStorage.getItem('token')
+            // 利用token来验证用户信息是否放行
             if(token){
                 try{
                     const res = await axios.get('http://localhost:3000/users/verifyToken')

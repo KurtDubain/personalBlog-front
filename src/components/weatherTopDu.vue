@@ -1,3 +1,4 @@
+<!-- 天气头部组件 -->
 <template>
     <div class="weather-description">
       <el-input
@@ -87,7 +88,7 @@ import { ref, watch } from 'vue';
     },
     emit:['getPointWeather','getLocationWeather'],
     setup(props,{emit}) {
-    
+    // 引入全部数据
     let cityName = ref(props.todayWeather.address || '');
     // let weatherCasts = props.todayWeather.weather?.casts || [];
     let temperature = ref(props.todayWeather.weather?.temperature_float || '');
@@ -97,18 +98,19 @@ import { ref, watch } from 'vue';
     let currentDate = ref(props.todayWeather.weather?.reporttime || '')
     let humidity = ref(props.todayWeather.weather?.humidity_float || '')
     // let temperature_float = ref(props.todayWeather.weather?.temperature_float)
-
-    let pointWeather = ref('')
     
+    let pointWeather = ref('')
+    // 获取当前本地天气信息
     const getLocationWeather = ()=>{
       emit('getLocationWeather')
     }
-    console.log(props.todayWeather)
+    // console.log(props.todayWeather)
+    // 获取指定天气
     const getPointWeather = ()=>{
       const location = pointWeather.value
       emit('getPointWeather',location)
     }
-
+    // 当天气发生变化，更新天气信息
     watch(
       () => props.todayWeather, 
       (newVal) => {

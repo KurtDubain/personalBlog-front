@@ -36,6 +36,7 @@ export default {
     const store = useStore()
     // 获取更新后的留言下的评论信息
     const chatCommentInfo = computed(()=> store.state.chats.chatCommentInfo )
+    // 处理主题
     const themeClass = computed(()=>{
       return store.state.theme.isLight?'light-theme':'dark-theme'
     })

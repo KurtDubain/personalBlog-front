@@ -37,6 +37,7 @@ export default {
   },
   setup(){
     const store = useStore()
+    // 主题处理
     const themeClass = computed(()=>{
       return store.state.theme.isLight?'light-theme':'dark-theme'
     })

@@ -92,10 +92,12 @@ export default {
     },
     setup() {
         const store = useStore();
+        // 初始化判断是要显示公告栏
         const showAnnouncement = () => {
             store.commit('announce/SHOW_ANNOUNCEMENT');
-            console.log(store.state.announce.visible);
+            // console.log(store.state.announce.visible);
         };
+        // 切换样式
         const isLight = computed(()=>store.state.theme.isLight)
         const theme_change = ()=>store.commit('theme/CHANGE_THEME')
         return {

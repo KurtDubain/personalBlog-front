@@ -1,3 +1,4 @@
+<!-- 公告栏组件 -->
 <template>
   <el-dialog v-model="dialogVisible" title="公告" width="80%" 
     :before-close="beforeClose"
@@ -30,9 +31,10 @@ export default {
     const announceData = ref([])
     const dialogVisible = ref(store.state.announce.visible);
     onMounted(async()=>{
+      // 首次加载公告数据
       await store.dispatch('announce/loadAnnouncement')
       announceData.value = store.state.announce.announcement
-      console.log(announceData.value);
+      // console.log(announceData.value);
 
     })
     // 获取公告内容

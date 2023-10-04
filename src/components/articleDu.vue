@@ -52,6 +52,7 @@ export default {
         }
       });
     };
+    // 根据夜间模式处理样式
     const themeClass = computed(()=>{
       return store.state.theme.isLight?'light-theme':'dark-theme'
     })

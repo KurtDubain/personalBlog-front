@@ -1,3 +1,4 @@
+// 对用户信息进行管理
 // store/modules/user.js
 import axios from '../../utils/axios';
 // import axios from "axios";
@@ -177,7 +178,7 @@ import axios from '../../utils/axios';
     },
     // 检查用户是否已登陆
     checkRememberedLogin({ dispatch,commit }) {
-        
+        // 对记住登陆功能进行处理，7天有效
         const rememberedLoginTime = localStorage.getItem('rememberedLoginTime');
         const currentTime = Date.now();
         const sevenDaysInMillis = 7 * 24 * 60 * 60 * 1000; // 7天的毫秒数
@@ -206,6 +207,7 @@ import axios from '../../utils/axios';
           
         }
       },
+      // 根据用户id获取用户信息
     async getUserInfo({commit},userID){
       try{
         const res = await axios.get(`http://localhost:3000/users/getUserInfo/${userID}`)

@@ -1,4 +1,4 @@
-d<!-- 文章内容组件 -->
+<!-- 文章内容组件 -->
 <template>
   <div :class="['article-content',themeClass]">
     <h1>{{ article.title }}</h1>
@@ -51,6 +51,7 @@ export default {
       }
     });
     const store = useStore()
+    // 主题切换
     const themeClass = computed(()=>{
       return store.state.theme.isLight?'light-theme':'dark-theme'
     })

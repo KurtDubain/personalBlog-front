@@ -32,6 +32,7 @@
       const store = useStore()
       // 获取指定的留言信息
       const chatInfo = computed(()=> store.state.chats.chatInfo)
+      // 主题切换
       const themeClass = computed(()=>{
         return store.state.theme.isLight?'light-theme':'dark-theme'
       })

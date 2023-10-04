@@ -1,3 +1,4 @@
+<!-- 天气组件 -->
 <template>
   <div class="common-layout">
     <el-container>
@@ -35,6 +36,7 @@ export default {
   setup() {
     let todayWeather = ref({address:'',weather:{}})
     let forecastData = ref([])
+    // 高德地图秘钥
     const MyKey = 'c8e2aba05a3e979ef85476ec92388c44'
     let isLoading = ref(false); // 控制 loading 状态
     let loadingText = ref("正在加载中..."); // loading 文字提示
@@ -50,9 +52,10 @@ export default {
         }
       });
 
-
+      // 获取本地天气
     const getLocationWeather = async () => {
       isLoading.value = true
+      // 使用geoAPI获取当前维度信息
       if ('geolocation' in navigator) {
         try {
           const position = await new Promise((resolve, reject) => {
@@ -60,7 +63,7 @@ export default {
           });
 
           const { latitude, longitude } = position.coords;
-
+          // 利用当前纬度信息和高德地图API获取当前地区信息
           const GaoDeReGeoApi = `https://restapi.amap.com/v3/geocode/regeo?key=${MyKey}&location=${longitude},${latitude}`;
           const response = await axios.get(GaoDeReGeoApi);
           const data = response.data;
@@ -68,14 +71,14 @@ export default {
           const adcode = data.regeocode.addressComponent.adcode;
           todayWeather.value.address = data.regeocode.formatted_address;
 
-
+          // 根据当前地区信息获取当前天气情况
           const GaoDeWeatherExactApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=${MyKey}&city=${adcode}`
           const weatherExactResponse = await axios.get(GaoDeWeatherExactApi)
           const weatherExactData = weatherExactResponse.data
           todayWeather.value.weather = weatherExactData.lives[0];
 
 
-
+          // 根据当前地区信息获取天气预报，天气信息数组
           const GaoDeWeatherApi = `https://restapi.amap.com/v3/weather/weatherInfo?key=${MyKey}&city=${adcode}&extensions=all`;
           const weatherResponse = await axios.get(GaoDeWeatherApi);
           const weatherData = weatherResponse.data;
@@ -91,14 +94,15 @@ export default {
         console.log('地理位置获取失败');
       }
     };
-
+    // 获取指定地区的天气情况
     const getPointWeather = async (location) => {
+      // 根据指定地区获取对应的地区编码
       const GaoDeGeoApi = `https://restapi.amap.com/v3/geocode/geo?key=${MyKey}&address=${location}`;
       try {
         isLoading.value = true
         const response = await axios.get(GaoDeGeoApi);
         const data = response.data;
-
+        // 在获取到地区编码之后分别获取当前的天气情况和未来几天的天气预报
         if (data.geocodes.length > 0) {
           const adcode = data.geocodes[0].adcode;
           todayWeather.value.address = data.geocodes[0].formatted_address;
@@ -129,7 +133,7 @@ export default {
     
 
 
-
+    // 响应式设计
     const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
         return window.innerWidth > 768;

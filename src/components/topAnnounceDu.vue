@@ -1,3 +1,4 @@
+<!-- 顶部滑动公告栏组件 -->
 <template>
     <div class="notice-container" v-if="showNotice">
       <transition name="notice-slide">
@@ -21,20 +22,23 @@
     name: 'topAnnounceDu',
     setup() {
       const store = useStore();
+      // 是否展示
       const showNotice = ref(false);
+      // 展示的当前索引
       const currentNoticeIndex = ref(0);
-  
+      // 展示内容的处理和获取
       const noticeList = computed(() => store.state.announce.announcement.map(item => item.content));
-  
+      // 要展示的当前索引的公告内容
       const currentNotice = computed(() => noticeList.value[currentNoticeIndex.value]);
-  
+      
+      // 随机处理公告栏显示索引
       const startScrolling = () => {
         if (noticeList.value.length > 0 && showNotice.value === true) {
           const randomIndex = Math.floor(Math.random() * noticeList.value.length);
           currentNoticeIndex.value = randomIndex;
         }
       };
-  
+      // 处理是否要展示公告栏
       const controlShowScrolling = () => {
         const randomInterval = Math.random() * (20000 - 5000) + 5000;
         showNotice.value = Math.random() < 0.3;
@@ -45,7 +49,7 @@
         }
         setTimeout(controlShowScrolling, randomInterval);
       };
-  
+      // 初始化，随机加载公告栏
       onMounted(async () => {
         await store.dispatch('announce/loadAnnouncement');
         controlShowScrolling();

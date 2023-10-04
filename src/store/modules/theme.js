@@ -1,7 +1,8 @@
-
+// 对全局主题信息的处理
 
 const state = {
   // themeMain:'light',
+  // 初始化全局样式主题
   isLight:localStorage.getItem('theme') !== 'dark',
 }
   
@@ -15,6 +16,7 @@ const mutations = {
 }
 
 const actions ={
+  // 更新切换主题
   async loadAnnouncement({ commit }) {
     commit('CHANGE_THEME');
   }

@@ -1,8 +1,10 @@
+// 对公告栏数据的处理
 import axios from "axios";
 
+
 const state = {
-  announcement:[],
-  visible:false
+  announcement:[], //公告栏信息数组
+  visible:false //公告栏是否可见
 }
   
 const mutations = {
@@ -18,6 +20,7 @@ const mutations = {
 }
 
 const actions ={
+  // 获取一系列公告内容
   async loadAnnouncement({ commit }) {
     let res = await axios.get('http://localhost:3000/announce/GetAnnounceFormByNum')
     const { announceData } = res.data

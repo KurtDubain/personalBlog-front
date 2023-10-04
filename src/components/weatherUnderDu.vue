@@ -1,3 +1,4 @@
+<!-- 天气底部组件 -->
 <template>
   <div class="weather-page">
     <div class="weather-forecast">
