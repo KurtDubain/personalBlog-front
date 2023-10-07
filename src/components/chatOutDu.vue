@@ -157,9 +157,7 @@
           //   level:userInfo.value.level,
           //   id:userInfo.value.id
           // })
-          const storedUserID = JSON.stringify({
-            id:userInfo.value.id
-          })
+          const storedUserID = userInfo.value.id
           // 通过判断不同的登录状态来用不同方式获取数据
           if(localStorage.getItem('rememberedLogin') === true){
             localStorage.setItem('userID', storedUserID)

@@ -157,7 +157,7 @@ import axios from '../../utils/axios';
             localStorage.setItem('rememberedLoginTime', Date.now());
             localStorage.setItem('rememberedLogin',remBtn)
             // 根据传入的remBtn的值来判断用何种方式进行用户信息的存储
-            const storage = remBtn ? localStorage : sessionStorage;
+            let storage = remBtn ? localStorage : sessionStorage;
             storage.setItem('userID', JSON.stringify(userID));
             storage.setItem('token',token)
         }catch(error){

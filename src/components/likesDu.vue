@@ -114,11 +114,10 @@ import axios from 'axios';
         };
         // 获取用户登陆情况，如果未登录，则禁止点赞
         const checkLoginStatus = ()=>{
-            const userInfo = computed(() => store.getters['users/getUserAllInfo'])
-            // console.log(userInfo.value)
+            // const userInfo = computed(() => store.getters['users/getUserAllInfo'])
             // 如果用户登陆，则获取用户id信息
-            if(userInfo.value.id!==null){
-                userId.value = userInfo.value.id
+            if(localStorage.getItem('userID')!==null){
+                userId.value = localStorage.getItem('userID')
                 
                 // console.log(JSON.parse(userInfo))
             }else{
