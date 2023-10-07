@@ -27,7 +27,7 @@
       </el-form-item>
       <div v-if="form.uploadUrl">
         <img v-if="isImage(form.uploadUrl)" :src="form.uploadUrl" alt="已上传图片" style="max-width:200px;max-height:200px">
-        <video v-else :src="form.uploadUrl" controls style="max-width:200px;max-height:200px"></video>
+        <video v-else :src="form.uploadUrl" controls style="max-width:200px;max-height:200px" preload="none"></video>
         (最多上传一张照片或一个视频)
       </div>
 
@@ -63,8 +63,11 @@ export default {
     // 定义表单是否显示
     const dialogVisible = ref(true);
     const chunkSize = 2*1024*1024
-    const chunks = ref([])
+    // const chunks = ref([])
+    let currentChunk = 0
     let totalChunks = 0
+    let uploadChunks = 0
+    // let fileMD5 = ''
     // let fileMD5 = ref('')
     const form = ref({
       content: '',
@@ -111,122 +114,93 @@ export default {
         ElMessage.error('只能上传图片或视频文件');
         return false
       }
-      if(isImage||isVideo){
-        totalChunks = Math.ceil(file.size / chunkSize);
-        for (let i = 0; i < totalChunks; i++) {
-          const start = i * chunkSize;
-          const end = Math.min((i + 1) * chunkSize, file.size);
-          const chunk = file.slice(start, end);
-          chunks.value.push(chunk);
-        } 
-        
-      }
       
       return true;
     };
     
-    const fileChange = (file) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const sparkFile = new sparkMD5.ArrayBuffer();
-        sparkFile.append(e.target.result);
-        const md5 = sparkFile.end(); // 获取文件的 MD5 值
-        form.value.filename = md5; // 将文件名设置为 MD5 值
+    const fileChange = async (file) => {
+      // 重置分片相关变量
+      currentChunk = 0;
 
-        if (chunks.value.length > 0) {
-          uploadChunks();
-        }
-      };
+      uploadChunks = 0;
+      // 计算源文件的 MD5 值
+      form.value.filename = await calculateMD5(file);
 
-      reader.readAsArrayBuffer(file.raw);
+      totalChunks = Math.ceil(file.size / chunkSize);
+
+      // 开始分片上传
+      uploadChunk(file.raw, currentChunk);
     };
-    const uploadChunks = async () => {
-      try {
-        for (let i = 0; i < chunks.value.length; i++) {
-          const chunk = chunks.value[i];
-          const formData = new FormData();
+
+    // 计算文件MD5的函数
+    const calculateMD5 = (file, index) => {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        const blob = index !== undefined ? file.slice(index * chunkSize, (index + 1) * chunkSize) : file;
+        
+        reader.onload = () => {
           const spark = new sparkMD5.ArrayBuffer();
-          spark.append(chunk);
-          formData.append('file', chunk);
-          formData.append('totalChunks', totalChunks);
-          formData.append('chunkIndex', i + 1);
-          formData.append('fileMD5', spark.end());
-          formData.append('fileType', form.value.fileType);
-          formData.append('filename', form.value.filename);
-          formData.append('fileExtension', form.value.fileExtension);
-          
-          try {
-            
-            const res = await axios.post('http://localhost:3000/chats/uploadChunk', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            });
-
-            if (!res.data.success) {
-              console.error('分片上传失败', res.data.message);
-              return; // 上传失败，结束上传流程
-            }
-          } catch (error) {
-            console.error('分片上传异常', error);
-            return; // 上传异常，结束上传流程
-          }
+          spark.append(reader.result);
+          const md5 = spark.end();
+          resolve(md5);
+        };
+        reader.onerror = (error) => reject(error);
+        if (index !== undefined) {
+          reader.readAsArrayBuffer(blob);
+        } else {
+          reader.readAsArrayBuffer(file.raw);
         }
+      });
+    };
 
-        // 所有分片上传完成
-        chunks.value = [];
+    const uploadChunk = async (file, index) => {
+      const start = index * chunkSize;
+      const end = Math.min((index + 1) * chunkSize, file.size);
+
+      const blob = file.slice(start, end);
+      const formData = new FormData();
+      formData.append('file', blob);
+      formData.append('index', index);
+      formData.append('totalChunks', totalChunks);
+      formData.append('filename',form.value.filename)
+      formData.append('fileExtension',form.value.fileExtension)
+      formData.append('fileType',form.value.fileType)
+
+      // 计算当前分片的 MD5 值
+      const chunkMD5 = await calculateMD5(file, index);
+      formData.append('fileMD5', chunkMD5);
+
+      try {
+          if(index === 0){
+            const res = await axios.post('http://localhost:3000/chats/uploadChunk',formData)
+            if(res.data.needUpload){
+              uploadChunks = res.data.uploadedChunks
+              currentChunk = uploadChunks
+              console.log('触发了断点续传')
+            }else if(res.data.message==='成功实现秒传'){
+              form.value.uploadUrl=res.data.url
+              return
+            }
+          }else{
+            const res = await axios.post('http://localhost:3000/chats/uploadChunk',formData)
+            if(res.data.isOk){
+              form.value.uploadUrl=res.data.url
+            }
+          }
+          currentChunk++
+          if(currentChunk<totalChunks){
+            uploadChunk(file,currentChunk)
+          }else{
+            console.log(`当前文件全部上传成功!`)
+          }
+
       } catch (error) {
-        console.error('分片上传异常', error);
+        console.error('Error uploading chunk:', error);
       }
     };
 
-    // const MAX_CONCURRENT_UPLOADS = 3; // 最大并发上传数量
-    // let concurrentUploads = 0; // 当前并发上传数量
 
-    // const uploadChunks = async () => {
-    //   try {
-    //     const uploadPromises = chunks.value.map(async (chunk, i) => {
-    //       if (concurrentUploads >= MAX_CONCURRENT_UPLOADS) {
-    //         // 达到最大并发上传数量，等待一段时间再继续上传
-    //         await new Promise(resolve => setTimeout(resolve, 100));
-    //       }
-
-    //       concurrentUploads++; // 增加并发上传数量
-
-    //       try {
-    //         const formData = new FormData();
-    //         const spark = new sparkMD5.ArrayBuffer();
-    //         spark.append(chunk);
-    //         formData.append('file', chunk);
-    //         formData.append('totalChunks', totalChunks);
-    //         formData.append('chunkIndex', i + 1);
-    //         formData.append('fileMD5', spark.end());
-    //         formData.append('fileType', form.value.fileType);
-    //         formData.append('filename', form.value.filename);
-    //         formData.append('fileExtension', form.value.fileExtension);
-
-    //         const res = await axios.post('http://localhost:3000/chats/uploadChunk', formData, {
-    //           headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //           }
-    //         });
-
-    //         if (!res.data.success) {
-    //           console.error('分片上传失败', res.data.message);
-    //         }
-    //       } finally {
-    //         concurrentUploads--; // 完成上传，减少并发上传数量
-    //       }
-    //     });
-
-    //     await Promise.all(uploadPromises);
-    //     chunks.value = [];
-    //   } catch (error) {
-    //     console.error('分片异常', error);
-    //   }
-    // };
     
-
 
     // // 当成功处理数据的时候，获取返回的图片URL，用于显示
     // const handleUploadSuccess = (response) => {
@@ -298,7 +272,6 @@ export default {
       throttledSubmitForm,
       isVideo,
       isImage,
-      uploadChunks,
       fileChange
     };
   }

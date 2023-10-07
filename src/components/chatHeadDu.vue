@@ -3,7 +3,11 @@
     <div :class="['selected-comment',themeClass]">
       <h2 class="comment-username">{{ chatInfo.username }}</h2>
       <p class="comment-content">{{ chatInfo.content }}</p>
-      <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
+      <!-- <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" /> -->
+      <template v-if="chatInfo.imgUrl">
+          <img v-if="isImage(chatInfo.imgUrl)" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
+          <video v-else :src="chatInfo.imgUrl" controls class="comment-video"></video>
+      </template>
       <div class="comment-details">
         <span class="comment-date">{{ chatInfo.date }}</span>
         &nbsp;
@@ -36,9 +40,15 @@
       const themeClass = computed(()=>{
         return store.state.theme.isLight?'light-theme':'dark-theme'
       })
+      const isImage = (url) => {
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        const extension = url.split('.').pop().toLowerCase();
+        return imageExtensions.includes(extension);
+      };
       return{
         chatInfo,
-        themeClass
+        themeClass,
+        isImage
       }
     }
     
@@ -72,6 +82,12 @@
 }
 
 .comment-image {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.comment-video{
   max-width: 100%;
   margin-top: 20px;
   border-radius: 4px;

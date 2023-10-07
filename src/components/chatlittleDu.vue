@@ -14,7 +14,10 @@
           <router-link :to="`/chatComment/${chats[chat].id}`" class="chat-link">
             <div class="chat-content">
               <p>{{ chats[chat].content }}</p>
-              <img v-if="chats[chat].imgUrl" :src="chats[chat].imgUrl" alt="留言图片" class="chat-image" />
+              <template v-if="chats[chat].imgUrl">
+                  <img v-if="isImage(chats[chat].imgUrl)" :src="chats[chat].imgUrl" alt="留言图片" class="chat-image" />
+                  <video v-else :src="chats[chat].imgUrl" controls class="chat-video"></video>
+              </template>
             </div>
           </router-link>
           <div class="chat-details">
@@ -69,10 +72,16 @@
       const themeClass = computed(()=>{
         return store.state.theme.isLight?'light-theme':'dark-theme'
       })
+      const isImage = (url) => {
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        const extension = url.split('.').pop().toLowerCase();
+        return imageExtensions.includes(extension);
+      };
   
       return {
         goToChat,
-        themeClass
+        themeClass,
+        isImage
       };
     }
 };
@@ -123,6 +132,10 @@
 }
 
 .chat-image {
+  max-width: 100%;
+  margin-top: 10px;
+}
+.chat-video{
   max-width: 100%;
   margin-top: 10px;
 }
