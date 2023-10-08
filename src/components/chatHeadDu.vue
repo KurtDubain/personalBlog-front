@@ -40,6 +40,7 @@
       const themeClass = computed(()=>{
         return store.state.theme.isLight?'light-theme':'dark-theme'
       })
+      // 判断是否是图片数据类型
       const isImage = (url) => {
         const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
         const extension = url.split('.').pop().toLowerCase();

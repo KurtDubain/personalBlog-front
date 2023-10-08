@@ -62,13 +62,13 @@ export default {
   setup(props, { emit }) {
     // 定义表单是否显示
     const dialogVisible = ref(true);
+    // 定义一个块的大小
     const chunkSize = 2*1024*1024
-    // const chunks = ref([])
+    // 定义当前块、总的块数、上传到的序号
     let currentChunk = 0
     let totalChunks = 0
     let uploadChunks = 0
-    // let fileMD5 = ''
-    // let fileMD5 = ref('')
+    // 表单的数据
     const form = ref({
       content: '',
       uploadUrl: null,
@@ -98,6 +98,7 @@ export default {
         return false
       }
       // console.log(file.type)
+      // 判断文件类型
       const isImage = file.type.startsWith('image/');
       const isVideo = file.type.startsWith('video/')
       form.value.fileType = isImage ? 'image' : 'video';
@@ -117,7 +118,7 @@ export default {
       
       return true;
     };
-    
+    // 当文件上传处有了文件进行处理
     const fileChange = async (file) => {
       // 重置分片相关变量
       currentChunk = 0;
@@ -125,7 +126,7 @@ export default {
       uploadChunks = 0;
       // 计算源文件的 MD5 值
       form.value.filename = await calculateMD5(file);
-
+      // 分块计算块的数量
       totalChunks = Math.ceil(file.size / chunkSize);
 
       // 开始分片上传
@@ -152,12 +153,14 @@ export default {
         }
       });
     };
-
+    // 上传分片操作
     const uploadChunk = async (file, index) => {
+      // 分块
       const start = index * chunkSize;
       const end = Math.min((index + 1) * chunkSize, file.size);
 
       const blob = file.slice(start, end);
+      // 设计表单数据
       const formData = new FormData();
       formData.append('file', blob);
       formData.append('index', index);
@@ -173,6 +176,7 @@ export default {
       try {
           if(index === 0){
             const res = await axios.post('http://localhost:3000/chats/uploadChunk',formData)
+            // 判断是否需要断点续传
             if(res.data.needUpload){
               uploadChunks = res.data.uploadedChunks
               currentChunk = uploadChunks
@@ -188,6 +192,7 @@ export default {
             }
           }
           currentChunk++
+          // 持续处理分块数据，直到全部上传完毕为止
           if(currentChunk<totalChunks){
             uploadChunk(file,currentChunk)
           }else{
@@ -209,13 +214,13 @@ export default {
     // };
       
     
-
+      // 判断是否是图片数据类型
     const isImage = (url) => {
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
       const extension = url.split('.').pop().toLowerCase();
       return imageExtensions.includes(extension);
     };
-
+    // 判断是否是视频数据类型
     const isVideo = (url) => {
       const videoExtensions = ['mp4'];
       const extension = url.split('.').pop().toLowerCase();
