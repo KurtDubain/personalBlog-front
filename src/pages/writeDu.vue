@@ -57,6 +57,7 @@ import { reactive, computed, ref } from 'vue';
 import { marked } from 'marked';
 import { ElMessage } from 'element-plus'
 import axios from 'axios';
+import Compressor from 'compressorjs'
 
 // import { el } from 'element-plus/es/locale';
 
@@ -90,12 +91,27 @@ export default {
     const handleInput = () => {
       // 在这里可以添加其他处理逻辑，如果需要
     };
+    const compressorImage = (file)=>{
+      return new Promise((resolve,reject)=>{
+        new Compressor(file,{
+          quality:0.6,
+          success(result){
+            resolve(result)
+          },
+          error(error){
+            console.log('压缩异常',error)
+            reject(error)
+          }
+        })
+      })
+    }
 
     // 上传图片
-    const handleImageUpload = (event) => {
+    const handleImageUpload = async(event) => {
       const file = event.target.files[0];
       if (file) {
-        MDFile.imageFile = file;
+        const compressedFile = await compressorImage(file)
+        MDFile.imageFile = compressedFile;
       }
     };
 // 以二进制的形式上传图片

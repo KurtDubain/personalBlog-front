@@ -16,7 +16,7 @@
 import { reactive } from 'vue';
 import sy1 from '@/assets/首页1.png';
 import sy from '@/assets/首页.jpg';
-import jingse from '@/assets/jingse.png'
+import jingse from '@/assets/jingse.jpg'
 import sm from '@/assets/saoma.jpg'
 
 export default{

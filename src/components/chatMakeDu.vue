@@ -48,6 +48,7 @@ import { throttle} from 'lodash'
 import axios from 'axios';
 // import spark from 'spark-md5';
 import sparkMD5 from 'spark-md5';
+import Compressor from 'compressorjs'
 
 export default {
   name: 'CommentFormDialog',
@@ -118,6 +119,27 @@ export default {
       
       return true;
     };
+    const compressorImage = (file) => {
+      return new Promise((resolve, reject) => {
+        const isImage = file.type.startsWith('image/');
+        
+        if (isImage) {
+          new Compressor(file, {
+            quality: 0.6,
+            success(result) {
+              resolve(result);
+            },
+            error(error) {
+              console.log('压缩出错', error);
+              reject(error);
+            }
+          });
+        } else {
+          // 如果不是图片类型，直接返回原文件
+          resolve(file);
+        }
+      });
+    };
     // 当文件上传处有了文件进行处理
     const fileChange = async (file) => {
       // 重置分片相关变量
@@ -125,12 +147,17 @@ export default {
 
       uploadChunks = 0;
       // 计算源文件的 MD5 值
-      form.value.filename = await calculateMD5(file);
+      // form.value.filename = await calculateMD5(file);
+      const compressedFile = await compressorImage(file.raw);
+      // 计算压缩后文件的 MD5 值
+      const compressedMD5 = await calculateMD5(compressedFile);
+      form.value.filename = compressedMD5
+      
       // 分块计算块的数量
-      totalChunks = Math.ceil(file.size / chunkSize);
+      totalChunks = Math.ceil(compressedFile.size / chunkSize);
 
       // 开始分片上传
-      uploadChunk(file.raw, currentChunk);
+      uploadChunk(compressedFile, currentChunk);
     };
 
     // 计算文件MD5的函数
@@ -149,7 +176,7 @@ export default {
         if (index !== undefined) {
           reader.readAsArrayBuffer(blob);
         } else {
-          reader.readAsArrayBuffer(file.raw);
+          reader.readAsArrayBuffer(file);
         }
       });
     };
