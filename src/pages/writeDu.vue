@@ -91,6 +91,7 @@ export default {
     const handleInput = () => {
       // 在这里可以添加其他处理逻辑，如果需要
     };
+    // 调用compressorjs中的方法，创建实例压缩文件
     const compressorImage = (file)=>{
       return new Promise((resolve,reject)=>{
         new Compressor(file,{
@@ -110,6 +111,7 @@ export default {
     const handleImageUpload = async(event) => {
       const file = event.target.files[0];
       if (file) {
+        // 先进行压缩处理进行文件添加
         const compressedFile = await compressorImage(file)
         MDFile.imageFile = compressedFile;
       }

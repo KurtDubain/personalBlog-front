@@ -119,10 +119,11 @@ export default {
       
       return true;
     };
+    // 调用compressorjs库，创建实例来进行文件压缩
     const compressorImage = (file) => {
       return new Promise((resolve, reject) => {
         const isImage = file.type.startsWith('image/');
-        
+        // 对于image格式的文件进行压缩，其余不处理
         if (isImage) {
           new Compressor(file, {
             quality: 0.6,
@@ -146,8 +147,8 @@ export default {
       currentChunk = 0;
 
       uploadChunks = 0;
-      // 计算源文件的 MD5 值
-      // form.value.filename = await calculateMD5(file);
+      
+      // 对文件进行压缩处理
       const compressedFile = await compressorImage(file.raw);
       // 计算压缩后文件的 MD5 值
       const compressedMD5 = await calculateMD5(compressedFile);
