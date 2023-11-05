@@ -104,6 +104,22 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   background-color: #fff;
   padding: 15px;
+  border: 2px solid #ccc; /* 添加边框样式 */
+  position: relative;
+  overflow: hidden;
+  &::before{
+      content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        // border: 4px groove rgba(153, 156, 121, 0.575); /* 添加装饰性的边框 */
+        border: 4px dotted rgba(141, 145, 111, 0.575);
+        box-sizing: border-box;
+        pointer-events: none;
+    }
+
 }
 
 .header-chat {
@@ -158,7 +174,7 @@
   // }
 
   .chat-card {
-    background-color: #000; /* 夜间模式下的卡片底色 */
+    background-color: rgba(0, 0, 0, 0.703); /* 夜间模式下的卡片底色 */
     color: #fff; /* 夜间模式下的文字颜色 */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 

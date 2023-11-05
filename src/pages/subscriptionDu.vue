@@ -147,6 +147,7 @@
     img{
       max-width: 100%; /* 图片最大宽度为容器宽度 */
       height: auto; /* 高度自适应，按比例展示 */
+      border-radius: 8px;
     }
   }
 

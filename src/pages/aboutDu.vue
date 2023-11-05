@@ -226,5 +226,22 @@ export default {
   .el-main {
     padding-top: 0;
   }
+  .about-image {
+    max-width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fadeInImage 1s ease forwards;
+  }
+
+  @keyframes fadeInImage {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
 }
 </style>

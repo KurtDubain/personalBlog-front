@@ -50,7 +50,18 @@ export default{
         max-height: 100%;
         object-fit: cover;
         width: 100%;
+        border-radius: 8px;
     }
+
+  }
+  .el-carousel__item:not(.is-active) img {
+        opacity: 0.05; /* 非激活状态的图片降低透明度 */
+    }
+  .show{
+    max-width: 100%; /* 设置最大宽度，根据需要调整 */
+    margin: 0 auto; /* 居中显示 */
+    border-radius: 8px; /* 添加圆角 */
+    max-height: 90%;
   }
  
   </style>

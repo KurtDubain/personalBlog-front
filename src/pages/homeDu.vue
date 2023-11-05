@@ -3,7 +3,7 @@
   <div class="common-layout">
     <el-container>
       <!-- 左侧 el-aside -->
-      <el-aside class="left-aside" width="30%" >
+      <el-aside class="left-aside" width="25%" >
         <chatlittleDu :chats="sortedChats"></chatlittleDu>
       </el-aside>
       <el-main>
@@ -30,7 +30,7 @@
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
-      <el-aside class="right-aside" width="10%" ></el-aside>
+      <el-aside class="right-aside" width="25%" ></el-aside>
     </el-container>
   </div>
 </template>
@@ -155,12 +155,23 @@ export default {
 .el-aside {
   transition: all 0.3s;
 }
-
+.left-aside{
+  display: flex;
+}
 @media (max-width: 768px) {
   /* 当屏幕宽度小于等于 768px 时，隐藏 el-aside */
   .el-aside {
     display: none;
   }
+  .left-aside{
+    display: none;
+  }
+}
+
+.left-aside, .right-aside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
 }
 .search_content{
   display: flex;
@@ -184,5 +195,6 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
 
 </style>

@@ -83,6 +83,22 @@ export default {
     padding: 15px;
     cursor: pointer;
     transition: box-shadow 0.3s ease;
+    border: 2px solid #ccc; /* 添加边框样式 */
+    position: relative;
+    overflow: hidden;
+
+    &::before{
+      content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        // border: 4px groove rgba(153, 156, 121, 0.575); /* 添加装饰性的边框 */
+        border: 4px groove rgba(255, 255, 255, 0.575);
+        box-sizing: border-box;
+        pointer-events: none;
+    }
 
     &:hover {
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -93,9 +109,9 @@ export default {
       font-weight: bold;
       margin-bottom: 10px;
     }
-    // .article-date{
-      
-    // }
+    .article-date{
+      font-weight: lighter;
+    } 
 
     .article-tags {
       margin-top: 10px;

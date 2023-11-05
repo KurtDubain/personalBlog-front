@@ -81,11 +81,11 @@ export default {
 }
 
 .announcement-item {
-  border: 1px solid #e6b8b8; /* 使用暖色调的边框颜色 */
+  border: 1px solid #d9e6b8; /* 使用暖色调的边框颜色 */
   border-radius: 5px;
   padding: 15px;
   margin-bottom: 20px;
-  background-color: #87af7aa6; /* 使用暖色调的背景色 */
+  background-color: #d2d291d1; /* 使用暖色调的背景色 */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -122,5 +122,6 @@ export default {
 // .el-dialog{
 //   background: #9c8787;
 // }
+
 
 </style>

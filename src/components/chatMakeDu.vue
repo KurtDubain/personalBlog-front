@@ -311,7 +311,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .upload-demo {
   margin-top: 10px;
 }
@@ -334,5 +334,13 @@ export default {
 
 .el-button {
   margin-right: 10px;
+}
+.el-dialog{
+  --el-dialog-width:60%;
+}
+@media (max-width:768px) {
+  .el-dialog{
+    --el-dialog-width:90%;
+  }
 }
 </style>

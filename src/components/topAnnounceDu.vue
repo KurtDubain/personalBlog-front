@@ -1,6 +1,6 @@
 <!-- 顶部滑动公告栏组件 -->
 <template>
-    <div class="notice-container" v-if="showNotice">
+    <div class="notice-container" v-show="showNotice">
       <transition name="notice-slide">
         <div class="notice-content">
           <div class="header">
