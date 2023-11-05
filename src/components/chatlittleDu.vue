@@ -2,8 +2,8 @@
 <template>
   <div :class="['chatlittle-container',themeClass]">
     <!-- <el-timeline> -->
-      <el-item v-for="chat in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
-        <el-card class="chat-card">
+      <el-item v-for="(chat,index) in Object.keys(chats)" :key="chats[chat].id" center :timestamp="chats[chat].date" placement="top">
+        <el-card class="chat-card animated fadeIn" :style="{'animation-delay':animationDelay(Number(index))}">
           <div class="header-chat">
             <el-icon><Avatar /></el-icon>&nbsp;
             <h2 class="chat-username">{{ chats[chat].username }}</h2>
@@ -78,11 +78,16 @@
         const extension = url.split('.').pop().toLowerCase();
         return imageExtensions.includes(extension);
       };
+      const animationDelay = (index) => {
+        // console.log(index)
+        return `${index * 0.2}s`
+      }
   
       return {
         goToChat,
         themeClass,
-        isImage
+        isImage,
+        animationDelay
       };
     }
 };
@@ -197,6 +202,23 @@
     }
   }
 }
+.animated {
+    animation-duration: 1s;
+  }
 
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fadeIn {
+    animation-name: fadeIn;
+  }
 
 </style>

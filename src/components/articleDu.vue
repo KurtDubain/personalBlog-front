@@ -3,10 +3,11 @@
   <div :class="['article-container',themeClass]">
     <!-- <el-timeline> -->
       <!-- 根据articles的类型，需要使用键值对来实现逐一显示 -->
-        <el-item v-for="article in Object.keys(articles)" :key="articles[article].id"
-        center :timestamp="articles[article].date" placement="top" size="large" @click="goToArticle(articles[article].id)">
+        <el-item v-for="(article,index) in Object.keys(articles)" :key="articles[article].id"
+        center :timestamp="articles[article].date" placement="top" size="large" @click="goToArticle(articles[article].id)"
+        >
         <router-link :to="`/reader/${articles[article].id}`" class="article-link">
-          <el-card class="article-card">
+          <el-card class="article-card animated fadeIn" :style="{'animation-delay':animationDelay(Number(index))}">
             <span>
               <h2 class="article-title">{{ articles[article].title }}</h2>
               <h4 class="article-date" style="font-weight:lighter ">{{ articles[article].date }}</h4>
@@ -41,6 +42,7 @@ export default {
   setup() {
     const router = useRouter();
     const store = useStore()
+    
     // 传递路由参数
 
     // console.log(articles)
@@ -57,9 +59,15 @@ export default {
       return store.state.theme.isLight?'light-theme':'dark-theme'
     })
 
+    const animationDelay = (index) => {
+      // console.log(index)
+      return `${index * 0.2}s`
+    }
+
     return {
       goToArticle,
-      themeClass
+      themeClass,
+      animationDelay
     };
   }
 }
@@ -155,6 +163,24 @@ export default {
 }
   .article-link {
     text-decoration: none;
+  }
+  .animated {
+    animation-duration: 1s;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fadeIn {
+    animation-name: fadeIn;
   }
   </style>
   
