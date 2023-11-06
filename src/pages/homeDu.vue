@@ -3,7 +3,7 @@
   <div class="common-layout">
     <el-container>
       <!-- 左侧 el-aside -->
-      <el-aside class="left-aside" width="25%" >
+      <el-aside class="left-aside" width="20%" >
         <chatlittleDu :chats="sortedChats"></chatlittleDu>
       </el-aside>
       <el-main>
@@ -30,7 +30,7 @@
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
-      <el-aside class="right-aside" width="25%" ></el-aside>
+      <el-aside class="right-aside" width="20%" ></el-aside>
     </el-container>
   </div>
 </template>
