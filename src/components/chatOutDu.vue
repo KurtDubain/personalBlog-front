@@ -131,10 +131,39 @@
         }
       }
       // 展示个人信息卡片
+      // const showUserInfoCard = () => {
+      //   ElMessageBox.alert(`用户id:${userInfo.value.id}\n用户名: ${userInfo.value.username}\n账号: ${userInfo.value.account}\n被喜欢数:${userInfo.value.likes}\n回复数:${userInfo.value.comments}`, '个人信息', {
+      //     confirmButtonText: '确定'
+      //   })
+      // }
       const showUserInfoCard = () => {
-        ElMessageBox.alert(`用户id:${userInfo.value.id}\n用户名: ${userInfo.value.username}\n账号: ${userInfo.value.account}\n被喜欢数:${userInfo.value.likes}\n回复数:${userInfo.value.comments}`, '个人信息', {
-          confirmButtonText: '确定'
-        })
+      ElMessageBox.alert(`
+          <div class="user-info-card">
+            <div class="info-row">
+              <span class="label">用户ID:</span>
+              <span class="value">${userInfo.value.id}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">用户名:</span>
+              <span class="value">${userInfo.value.username}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">账号:</span>
+              <span class="value">${userInfo.value.account}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">被喜欢数:</span>
+              <span class="value">${userInfo.value.likes}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">回复数:</span>
+              <span class="value">${userInfo.value.comments}</span>
+            </div>
+          </div>
+        `, '个人信息', {
+          confirmButtonText: '确定',
+          dangerouslyUseHTMLString: true
+        });
       }
   
       // 退出登录
@@ -233,7 +262,27 @@
     width: 80%;
   }
   
+  .user-info-card {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+  }
 
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .value {
+    color: #333;
+  }
   
   </style>
   

@@ -83,7 +83,7 @@ export default {
 
 .comment-username {
   font-weight: bold;
-  color: #007bff;
+  color: #000000;
   margin-right: 10px;
 }
 
@@ -127,7 +127,7 @@ export default {
   }
 
   .comment-username {
-    color: #007bff; /* 夜间模式下的用户名颜色 */
+    color: #eaeaea; /* 夜间模式下的用户名颜色 */
   }
 
   .comment-date {

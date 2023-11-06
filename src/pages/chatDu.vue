@@ -245,4 +245,11 @@
   align-items: center;
   justify-content: center;
 }
+
+
+.contentAside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
+}
   </style>

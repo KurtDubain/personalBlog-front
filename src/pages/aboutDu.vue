@@ -2,7 +2,7 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="20%"></el-aside>
+      <el-aside class="left-aside" width="20%"></el-aside>
       <el-main>
         <mainDu
           style="display:flex;flex-direction: column;align-items: center;"
@@ -47,7 +47,7 @@
           </div>
         </mainDu>
       </el-main>
-      <el-aside width="20%"></el-aside>
+      <el-aside class="right-aside" width="20%"></el-aside>
     </el-container>
   </div>
 </template>
@@ -243,5 +243,11 @@ export default {
     }
   }
   
+}
+
+.left-aside, .right-aside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
 }
 </style>
