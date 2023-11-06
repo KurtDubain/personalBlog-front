@@ -25,6 +25,9 @@
           <div class="upload-help">(支持上传图片或视频)</div>
         </el-upload>
       </el-form-item>
+      <div v-show="showDownLoad(currentDownLoad)">
+        <el-progress :percentage="currentDownLoad" />
+      </div>
       <div v-if="form.uploadUrl">
         <img v-if="isImage(form.uploadUrl)" :src="form.uploadUrl" alt="已上传图片" style="max-width:200px;max-height:200px">
         <video v-else :src="form.uploadUrl" controls style="max-width:200px;max-height:200px" preload="none"></video>
@@ -69,6 +72,16 @@ export default {
     let currentChunk = 0
     let totalChunks = 0
     let uploadChunks = 0
+
+    let currentDownLoad = ref(0)
+    let showDownLoad = (currentDownLoad)=>{
+      if(currentDownLoad===0||currentDownLoad===100){
+        console.log('cuocuo')
+        return false
+      }
+      console.log('the value is',currentDownLoad)
+      return true
+    }
     // 表单的数据
     const form = ref({
       content: '',
@@ -201,6 +214,8 @@ export default {
       const chunkMD5 = await calculateMD5(file, index);
       formData.append('fileMD5', chunkMD5);
 
+      currentDownLoad.value = Math.floor(100*((index+1)/totalChunks))
+
       try {
           if(index === 0){
             const res = await axios.post('http://localhost:3000/chats/uploadChunk',formData)
@@ -305,7 +320,9 @@ export default {
       throttledSubmitForm,
       isVideo,
       isImage,
-      fileChange
+      fileChange,
+      currentDownLoad,
+      showDownLoad
     };
   }
 };
