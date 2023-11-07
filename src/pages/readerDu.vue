@@ -9,8 +9,8 @@
         
       </el-aside>
       <el-main>
-        <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <ContentDu :article="articles">
+        <mainDu>
+          <ContentDu :article="articles" >
             <div class="tools_button">
               <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
               <div class="share-button" @click="shareArticle">
@@ -20,8 +20,11 @@
            
           
          </ContentDu>
+         <div style="display:flex;flex-direction: column;align-items: center;">
           <el-divider border-style="double" />
           <ComListDu :comments="comments"></ComListDu>
+         </div>
+          
         </mainDu>
       </el-main>
       <!-- 右侧是切换按钮和登陆表 -->
