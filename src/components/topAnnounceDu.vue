@@ -96,6 +96,8 @@
     align-items: center;
     margin-right: 10px;
     min-width: 80px;
+    z-index: 99;
+    background-color: #ff9800;
   }
   
   .notice-item {
