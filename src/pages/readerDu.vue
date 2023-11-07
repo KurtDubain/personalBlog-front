@@ -9,7 +9,7 @@
         
       </el-aside>
       <el-main>
-        <mainDu>
+        <mainDu  style="display:flex;flex-direction: column;">
           <ContentDu :article="articles" >
             <div class="tools_button">
               <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
@@ -274,6 +274,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 /* 隐藏左侧和右侧的aside部分，并让el-main占据屏幕的全部宽度 */
 @media (max-width: 768px) {
   .mobile-aside {

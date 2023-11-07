@@ -253,3 +253,11 @@
   background-color: #f0f0f0;
 }
   </style>
+  <style lang="scss">
+  .el-pager li.is-active{
+    color: #a2bd63;
+  }
+  .el-pager li:hover{
+    color: #a2bd63;
+  }
+</style>
