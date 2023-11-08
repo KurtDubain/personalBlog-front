@@ -110,6 +110,7 @@ export default {
   font-size: 14px;
   color: #007bff;
 }
+// 夜间模式样式处理
 .dark-theme {
   .comment-item {
     background-color: #252b33; /* 夜间模式下的背景颜色 */

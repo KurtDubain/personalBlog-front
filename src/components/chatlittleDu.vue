@@ -11,6 +11,7 @@
 
             <!-- <h3 class="chat-account">{{ chats[chat].account }}</h3> -->
           </div>
+          <!-- 留言跳转处理 -->
           <router-link :to="`/chatComment/${chats[chat].id}`" class="chat-link">
             <div class="chat-content">
               <p>{{ chats[chat].content }}</p>
@@ -78,6 +79,7 @@
         const extension = url.split('.').pop().toLowerCase();
         return imageExtensions.includes(extension);
       };
+      // 初始化动画效果
       const animationDelay = (index) => {
         // console.log(index)
         return `${index * 0.2}s`
@@ -94,6 +96,7 @@
 </script>
 
 <style lang="scss" scoped>
+// 整体容器
 .chatlittle-container {
   display: flex;
   flex-direction: column;
@@ -102,7 +105,7 @@
   width: 80%;
   padding-top: 5%;
 }
-
+// 卡片样式
 .chat-card {
   margin: 10px;
   border-radius: 10px;
@@ -173,6 +176,7 @@
   font-size: 14px;
   color: #999;
 }
+// 夜间模式处理
 .dark-theme {
   // .chatlittle-container {
   //   background-color: #1f2937; /* 夜间模式下的背景颜色 */

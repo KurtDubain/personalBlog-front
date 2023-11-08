@@ -1,6 +1,7 @@
 <!-- 指定留言下评论表单的组件 -->
 <template>
     <div class="midForm">
+      <!-- 未登录样式 -->
       <div v-if="!isLog">
         <el-card>
         <el-form :inline="true" :model="formInline" class="demo-form-inline" label-position="top">
@@ -254,6 +255,7 @@
   </script>
   
   <style lang="scss" scoped>
+  // 表单样式
   .midForm {
     display: flex;
     flex-direction: column;

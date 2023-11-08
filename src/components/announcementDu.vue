@@ -1,10 +1,12 @@
 <!-- 公告栏组件 -->
 <template>
+  <!-- 公告栏Element配置 -->
   <el-dialog v-model="dialogVisible" title="公告" width="80%" 
     :before-close="beforeClose"
     :close-on-click-modal="false"
     class="announcement-dialog"
   >
+  <!-- 展示公告栏具体信息 -->
     <div class="announcement-dialog-content">
       <div v-for="(item) in announceData" :key="item.id" class="announcement-item">
         <div class="announcement-header">
@@ -29,6 +31,7 @@ export default {
   setup() {
     const store = useStore();
     const announceData = ref([])
+    // 管理公告栏是否可视
     const dialogVisible = ref(store.state.announce.visible);
     onMounted(async()=>{
       // 首次加载公告数据

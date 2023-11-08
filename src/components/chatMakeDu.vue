@@ -72,8 +72,9 @@ export default {
     let currentChunk = 0
     let totalChunks = 0
     let uploadChunks = 0
-
+    // 处理当前上传的情况（百分比）
     let currentDownLoad = ref(0)
+    // 处理当前上传进度
     let showDownLoad = (currentDownLoad)=>{
       if(currentDownLoad===0||currentDownLoad===100){
         console.log('cuocuo')
@@ -214,6 +215,7 @@ export default {
       const chunkMD5 = await calculateMD5(file, index);
       formData.append('fileMD5', chunkMD5);
 
+      // 更新进度条
       currentDownLoad.value = Math.floor(100*((index+1)/totalChunks))
 
       try {
@@ -355,6 +357,7 @@ export default {
 .el-dialog{
   --el-dialog-width:60%;
 }
+// 媒体查询处理不同设备的表单大小
 @media (max-width:768px) {
   .el-dialog{
     --el-dialog-width:90%;

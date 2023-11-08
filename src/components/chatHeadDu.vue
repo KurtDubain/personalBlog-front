@@ -4,6 +4,7 @@
       <h2 class="comment-username">{{ chatInfo.username }}</h2>
       <p class="comment-content">{{ chatInfo.content }}</p>
       <!-- <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" /> -->
+      <!-- 图片或者视频的展示 -->
       <template v-if="chatInfo.imgUrl">
           <img v-if="isImage(chatInfo.imgUrl)" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
           <video v-else :src="chatInfo.imgUrl" controls class="comment-video"></video>
@@ -124,6 +125,7 @@
   border-radius: 4px;
   cursor: pointer;
 }
+// 夜间模式样式
 .dark-theme {
   .selected-comment {
     background-color: #1f2937; /* 夜间模式下的背景颜色 */

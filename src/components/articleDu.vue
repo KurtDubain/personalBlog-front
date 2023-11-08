@@ -6,6 +6,7 @@
         <el-item v-for="(article,index) in Object.keys(articles)" :key="articles[article].id"
         center :timestamp="articles[article].date" placement="top" size="large" @click="goToArticle(articles[article].id)"
         >
+        <!-- 路由跳转操作 -->
         <router-link :to="`/reader/${articles[article].id}`" class="article-link">
           <el-card class="article-card animated fadeIn" :style="{'animation-delay':animationDelay(Number(index))}">
             <span>
@@ -59,6 +60,7 @@ export default {
       return store.state.theme.isLight?'light-theme':'dark-theme'
     })
 
+    // 初始化动画设计
     const animationDelay = (index) => {
       // console.log(index)
       return `${index * 0.2}s`
@@ -94,7 +96,8 @@ export default {
     border: 2px solid #ccc; /* 添加边框样式 */
     position: relative;
     overflow: hidden;
-
+    
+    //处理边框效果 
     &::before{
       content: "";
         position: absolute;
@@ -138,6 +141,7 @@ export default {
   }
 } 
   
+// 夜间模式处理
 .dark-theme {
   .article-container {
     // background-color: #1f2937; /* 夜间模式下的背景颜色 */
@@ -161,9 +165,12 @@ export default {
     }
   }
 }
+
+// 链接样式处理
   .article-link {
     text-decoration: none;
   }
+  // 初始化动画处理
   .animated {
     animation-duration: 1s;
   }
