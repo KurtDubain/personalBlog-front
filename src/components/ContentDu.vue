@@ -67,6 +67,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+// 文章大小的处理
 .article-content {
   margin: 20px;
   padding: 20px;

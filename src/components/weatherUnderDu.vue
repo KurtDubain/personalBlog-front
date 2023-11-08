@@ -36,7 +36,7 @@ export default {
     onMounted(() => {
       initWeatherForecast(echartsChart); // 初始化ECharts图表
     });
-
+    // 当位置数据发生变化时更新数据
     watch(
       () => props.forecastData, 
       (newVal) => {

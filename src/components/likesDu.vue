@@ -63,7 +63,7 @@ import axios from 'axios';
             return store.state.theme.isLight?'light-theme':'dark-theme'
         })
         // const 
-
+        // 初始化点赞情况
         onMounted(async () => {
             checkLoginStatus()
             await fetchLikeInfo(props.itemType,props.itemId,userId);

@@ -90,7 +90,7 @@
     align-items: center;
     flex-direction: row;
   }
-  
+  // 配置“公告”的样式，避免遮挡
   .header {
     display: flex;
     align-items: center;
