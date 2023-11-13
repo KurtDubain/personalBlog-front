@@ -1,6 +1,6 @@
 <!-- 留言发表表单，包含文字发表和图片上传 -->
 <template>
-  <el-dialog v-model="dialogVisible" title="发表留言" :close-on-click-modal="false">
+  <el-dialog v-model="dialogVisible" title="发表留言" :close-on-click-modal="false" :lock-scroll="false">
     <el-form :model="form" ref="commentForm" label-position="top">
       <el-form-item label="内容">
         <el-input v-model="form.content" type="textarea" rows="4" placeholder="请输入留言内容"></el-input>

@@ -5,7 +5,7 @@
       <el-aside class="left-aside" width="20%"></el-aside>
       <el-main>
         <mainDu
-          style="display:flex;flex-direction: column;align-items: center;"
+          style="display:flex;flex-direction: column;align-items: center;overflow: hidden;"
         >
           <div class="about-section">
             <h1 class="about-title">雪碧的小屋</h1>
