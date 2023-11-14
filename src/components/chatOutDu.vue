@@ -1,3 +1,4 @@
+<!-- 留言首页的登录表单 -->
 <template>
   <div class="midForm">
     <!-- 未登录表单样式 -->
@@ -50,13 +51,12 @@
 </template>
   
   <script>
-  import { reactive, computed,ref,watch } from 'vue'
-  import axios from 'axios'
+  import { reactive, computed,ref,watch,onMounted } from 'vue'
 //   import EventBus from '../utils/eventBus'
   import { ElMessage,ElMessageBox } from 'element-plus'
   import chatMakeDu from './chatMakeDu.vue'
   import DOMPurify from 'dompurify'
-
+  import { useStore } from 'vuex'
 
   export default {
     name: 'chatOutDu',
@@ -70,10 +70,15 @@
       }
     },
     setup() {
-      // 判断是否记住登陆状态
+      // 定义按钮以及其他计算属性
+      const store = useStore()
+      // 定义是否记住登陆状态
       const remBtn = ref(true)
-      // 判断是否已经登陆
-      const isLog = ref(false)
+      // 获取用户信息
+      const userInfo = computed(() => store.getters['users/getUserAllInfo']);
+      // 获取登陆状态
+      const isLog = computed(() => store.getters['users/isLoggedIn']);
+      
       // 判断发表留言的表单是否可见
       const chatFormVisible = ref(false)
       // 定义表单内容
@@ -81,15 +86,11 @@
         username: '',
         account: '',
       })
-      // 定义用户信息
-      const userInfo = reactive({
-        username:'',
-        account:'',
-        likes:0,
-        comments:0,
-        level:1,
-        id :0
+      // 挂载检查用户登陆情况
+      onMounted(()=>{
+        store.dispatch('users/checkRememberedLogin')
       })
+      
       // 利用正则表达式判断表单是否为空且是否为正确邮箱格式
       const isFormInvalid = computed(() => {
         const username = formInline.username.trim()
@@ -109,7 +110,7 @@
         const cleanUsername = DOMPurify.sanitize(username);
         return cleanUsername === username;
       }
-
+      
       function isValidAccount(email) {
         const cleanEmail = DOMPurify.sanitize(email);
         return /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(cleanEmail);
@@ -122,109 +123,88 @@
             username: formInline.username,
             account: formInline.account
           }
-          // 将表单内数据由axios发送提交，并由后端补充id、日期等信息
-          const res = await axios.post('http://localhost:3000/users/FromChatLogin', formData)
-          console.log('表单数据成功提交', res.data)
-          
-          // 获取用户信息
-          const resUser = await axios.get(`http://localhost:3000/users/FromComments/${formInline.username}`)
-          const user = resUser.data[0];
-            userInfo.id = user.id
-            userInfo.username = user.username;
-            userInfo.account = user.account;
-            userInfo.likes = user.like_count;
-            userInfo.comments = user.comment_count;
-            userInfo.level = user.level;
-            userInfo.created_at = user.created_at
-
-            // 根据是否记住登陆状态，来使用不同方式存储用户信息
-          if(remBtn.value){
-            isLog.value = true            
-            localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            localStorage.setItem('rememberedLogin','true')
-          }else{
-            isLog.value = true
-            sessionStorage.setItem('userInfo',JSON.stringify(userInfo))
-            localStorage.setItem('rememberedLogin','false')
-
-          }
+          // 执行用户登陆操作
+          await store.dispatch('users/loginUserWithoutForm',{formData,remBtn:remBtn.value})
         } catch (err) {
           console.error('表单数据提交失败', err)
           ElMessage.error('您的账户或昵称输入有误')
         }
       }
       // 展示个人信息卡片
+      // const showUserInfoCard = () => {
+      //   ElMessageBox.alert(`用户id:${userInfo.value.id}\n用户名: ${userInfo.value.username}\n账号: ${userInfo.value.account}\n被喜欢数:${userInfo.value.likes}\n回复数:${userInfo.value.comments}`, '个人信息', {
+      //     confirmButtonText: '确定'
+      //   })
+      // }
       const showUserInfoCard = () => {
-        ElMessageBox.alert(`用户id:${userInfo.id}\n用户名: ${userInfo.username}\n账号: ${userInfo.account}\n被喜欢数:${userInfo.likes}\n回复数:${userInfo.comments}`, '个人信息', {
-          confirmButtonText: '确定'
-        })
+      ElMessageBox.alert(`
+          <div class="user-info-card">
+            <div class="info-row">
+              <span class="label">用户ID:</span>
+              <span class="value">${userInfo.value.id}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">用户名:</span>
+              <span class="value">${userInfo.value.username}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">账号:</span>
+              <span class="value">${userInfo.value.account}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">被喜欢数:</span>
+              <span class="value">${userInfo.value.likes}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">回复数:</span>
+              <span class="value">${userInfo.value.comments}</span>
+            </div>
+          </div>
+        `, '个人信息', {
+          confirmButtonText: '确定',
+          dangerouslyUseHTMLString: true
+        });
       }
   
       // 退出登录
       const logout = () => {
         // 清空用户信息
-        userInfo.username = ''
-        userInfo.account = ''
-        userInfo.likes = 0
-        userInfo.comments =0
-        userInfo.level = 0
-        userInfo.id =0
-        // 切换回未登录状态
-        isLog.value = false
+        store.dispatch('users/logoutUser')
       }
   
-      //确保用户在登录状态下保持登录状态
-      const checkRememberedLogin = () => {
-        // 检查是否记住登录状态
-        // 根据登陆状态来判断用什么方式读取数据
-        const rememberedLogin = localStorage.getItem('rememberedLogin')
-        const storedUserInfo = rememberedLogin === 'true'?localStorage.getItem('userInfo'):sessionStorage.getItem('userInfo')
-
-        if (storedUserInfo) {
-          isLog.value = true
-          // 获取用户信息
-          userInfo.id = JSON.parse(storedUserInfo).id
-          userInfo.username = JSON.parse(storedUserInfo).username
-          userInfo.account = JSON.parse(storedUserInfo).account
-          userInfo.comments = JSON.parse(storedUserInfo).comments
-          userInfo.likes = JSON.parse(storedUserInfo).likes
-          userInfo.level = JSON.parse(storedUserInfo).level
-          
-        }
-        
-      }
+      
   
       // 监听登录状态的变化
       watch(isLog, (newValue) => {
         if (newValue) {
           // 登录状态，保存用户信息和登录状态
-          const storedUserInfo = JSON.stringify({ 
-            username: userInfo.username,
-            account: userInfo.account,
-            likes:userInfo.likes,
-            comments:userInfo.comments,
-            level:userInfo.level,
-            id:userInfo.id
-          })
+          // const storedUserInfo = JSON.stringify({ 
+          //   username: userInfo.value.username,
+          //   account: userInfo.value.account,
+          //   likes:userInfo.value.likes,
+          //   comments:userInfo.value.comments,
+          //   level:userInfo.value.level,
+          //   id:userInfo.value.id
+          // })
+          const storedUserID = userInfo.value.id
           // 通过判断不同的登录状态来用不同方式获取数据
           if(localStorage.getItem('rememberedLogin') === true){
-            localStorage.setItem('userInfo', storedUserInfo)
+            localStorage.setItem('userID', storedUserID)
           }else{
-            sessionStorage.setItem('userInfo',storedUserInfo)
+            sessionStorage.setItem('userID',storedUserID)
           }
           
           
         } else {
           // 未登录状态，清除保存的用户信息和登录状态
-          localStorage.removeItem('userInfo')
+          localStorage.removeItem('userID')
           localStorage.removeItem('rememberedLogin')
-          sessionStorage.removeItem('userInfo')
+          sessionStorage.removeItem('userID')
 
         }
       })
   
-      // 初始化检查是否记住登录状态
-      checkRememberedLogin()
+      
       
       // 显示留言表单
       const submitChat = async () => {
@@ -257,7 +237,7 @@
   }
   </script>
   
-  <style scoped>
+  <style lang="scss" scoped>
   .midForm {
     display: flex;
     flex-direction: column;
@@ -282,7 +262,27 @@
     width: 80%;
   }
   
+  .user-info-card {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-radius: 4px;
+  }
 
+  .info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .label {
+    font-weight: bold;
+    margin-right: 10px;
+  }
+
+  .value {
+    color: #333;
+  }
   
   </style>
   

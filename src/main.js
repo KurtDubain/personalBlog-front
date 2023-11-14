@@ -6,17 +6,22 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 // 导入element Plus图标库
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-
 // 导入根组件
 import App from './App.vue'
 // 导入路由实例
 import router from './utils/router'
+
+import store from './store'
+import slide from './detectives/slideDirective'
 // 创建Vue实例
 const app = createApp(App)
 
 app.use(router)
+app.use(store)
+app.directive('slide',slide)
 // app.use(ElementPlus, { size: 'small' });
 // 注册使用element Plus的icon
+
 for(const[key,component] of Object.entries(ElementPlusIconsVue)){
     app.component(key,component)
 }

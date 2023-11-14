@@ -16,7 +16,7 @@
                 <!-- <el-icon> <Star color="red"/></el-icon> -->
         <!-- 点赞 -->
       </span>
-      <span class="like-count">{{ likeCount }}</span>
+      <span :class="['like-count',themeClass]">{{ likeCount }}</span>
     </button>
   </template>
   
@@ -24,9 +24,12 @@
   <script>
   import { StarFilled } from '@element-plus/icons-vue';
   import { ElMessage } from 'element-plus';
-  import { ref, onMounted,watch } from 'vue';
-  import axios from 'axios';
+  import { ref, onMounted,watch , computed} from 'vue';
   import {throttle} from 'lodash'
+  import { useStore } from 'vuex';
+  
+import axios from 'axios';
+
   
   export default {
     name: "likesDu",
@@ -54,6 +57,13 @@
         const likeCount = ref(0);
         // 定义用户id
         const userId = ref(null)
+        const store = useStore()
+        // 切换主题
+        const themeClass = computed(()=>{
+            return store.state.theme.isLight?'light-theme':'dark-theme'
+        })
+        // const 
+        // 初始化点赞情况
         onMounted(async () => {
             checkLoginStatus()
             await fetchLikeInfo(props.itemType,props.itemId,userId);
@@ -64,7 +74,6 @@
                 // console.log(userId.value);
                 // 根据 itemType 和 itemId 发送请求，获取点赞信息
                 const response = await axios.get(`http://localhost:3000/likes/${type}/${itemId}/${userId.value}/getlikes`);
-                console.log(response.data)
                 likeCount.value = response.data.likeCount
                 liked.value = response.data.userLiked
             }
@@ -79,6 +88,7 @@
                     ElMessage('请先登录')
                     return
                 }else{
+                    // 切换点赞状态
                     if (!liked.value) {
                     // 根据 itemType 和 itemId 发送请求，切换点赞状态
                         await axios.post(`http://localhost:3000/likes/${props.itemType}/liked`, {
@@ -104,23 +114,14 @@
         };
         // 获取用户登陆情况，如果未登录，则禁止点赞
         const checkLoginStatus = ()=>{
-            let userInfo = null
-            // 判断用户数据存储方式
-            const localUserInfo = localStorage.getItem('userInfo')
-            if(localUserInfo){
-                userInfo = JSON.parse(localUserInfo)
-            }else{
-                const sessionUserInfo = sessionStorage.getItem('userInfo')
-                userInfo = JSON.parse(sessionUserInfo)
-            }
-
-
-            if(userInfo){
-                const {id} = userInfo
-                userId.value = id
+            // const userInfo = computed(() => store.getters['users/getUserAllInfo'])
+            // 如果用户登陆，则获取用户id信息
+            if(localStorage.getItem('userID')!==null){
+                userId.value = localStorage.getItem('userID')
+                
                 // console.log(JSON.parse(userInfo))
             }else{
-                console.log('未登录');
+                console.error('未登录');
             }
         }
 
@@ -137,44 +138,43 @@
             liked,
             likeCount,
             toggleLike,
-            throttledToggleLike
+            throttledToggleLike,
+            themeClass
         };
     },
 };
   </script>
   
-  <style scoped>
-  /* 自定义按钮样式 */
-  .like-btn {
-    background-color: transparent;
-    border: none;
-    color: rgb(255, 132, 0);
-    padding: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    
-  }
-  
-  /* .like-pos{
-    position: relative;
-    top: auto;
-  } */
-  .like-btn span {
+  <style lang="scss" scoped>
+/* 自定义按钮样式 */
+.like-btn {
+  background-color: transparent;
+  border: none;
+  color: rgb(255, 132, 0);
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  span {
     margin-left: 4px;
   }
-  
-  .like-btn i {
-    
+
+  i {
     font-size: 25px;
     transition: color 0.3s;
   }
-  
-  /* 点赞数量样式 */
-  .like-count {
-    margin-left: 8px;
-    font-size: 14px;
-    color: rgb(85, 85, 85);
-  }
-  </style>
-  
+}
+
+/* 点赞数量样式 */
+.like-count {
+  margin-left: 8px;
+  font-size: 14px;
+  color: rgb(85, 85, 85);
+}
+.dark-theme{
+    .like-count{
+        color: aliceblue;
+    }
+}
+</style>

@@ -1,6 +1,6 @@
 <!-- 指定留言下的评论卡片组件 -->
 <template>
-  <div class="comment-list">
+  <div :class="['comment-list',themeClass]">
     <div v-for="comment in chatCommentInfo" :key="comment.id" class="comment-item">
       <div class="comment-info">
         <span class="comment-username"><el-icon><User /></el-icon>&nbsp;{{ comment.username }}</span>
@@ -16,16 +16,13 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { computed } from 'vue';
 import likesDu from './likesDu.vue';
+import {useStore} from 'vuex'
 
 export default {
   name: 'ChatCommentDu',
   props: {
-    chatCommentInfo: {
-      type: Array,
-      required: true,
-    },
     chatId: {
       type: String,
       required: true,
@@ -35,33 +32,24 @@ export default {
     likesDu
   },
   setup() {
-    const likedComments = ref([]);
-
-    // 处理点赞按钮点击事件
-    const handleLike = (commentId) => {
-      const index = likedComments.value.indexOf(commentId);
-      if (index !== -1) {
-        likedComments.value.splice(index, 1);
-      } else {
-        likedComments.value.push(commentId);
-      }
-    };
-
-    // 判断是否已点赞
-    const isLiked = (commentId) => {
-      return likedComments.value.includes(commentId);
-    };
+    // 集中管理获取指定留言下的评论信息
+    const store = useStore()
+    // 获取更新后的留言下的评论信息
+    const chatCommentInfo = computed(()=> store.state.chats.chatCommentInfo )
+    // 处理主题
+    const themeClass = computed(()=>{
+      return store.state.theme.isLight?'light-theme':'dark-theme'
+    })
 
     return {
-      likedComments,
-      handleLike,
-      isLiked,
+      chatCommentInfo,
+      themeClass
     };
   },
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .comment-list {
   width: 100%;
   display: flex;
@@ -95,7 +83,7 @@ export default {
 
 .comment-username {
   font-weight: bold;
-  color: #007bff;
+  color: #000000;
   margin-right: 10px;
 }
 
@@ -121,5 +109,39 @@ export default {
 .comment-likes {
   font-size: 14px;
   color: #007bff;
+}
+// 夜间模式样式处理
+.dark-theme {
+  .comment-item {
+    background-color: #252b33; /* 夜间模式下的背景颜色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    border-color: #485363; /* 夜间模式下的边框颜色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  .comment-content {
+    color: #fff; /* 夜间模式下的内容颜色 */
+  }
+
+  .comment-info {
+    color: #999; /* 夜间模式下的评论信息颜色 */
+  }
+
+  .comment-username {
+    color: #eaeaea; /* 夜间模式下的用户名颜色 */
+  }
+
+  .comment-date {
+    color: #999; /* 夜间模式下的日期颜色 */
+  }
+
+  .like-button {
+    background-color: #007bff; /* 夜间模式下的点赞按钮背景颜色 */
+    color: #fff; /* 夜间模式下的点赞按钮文字颜色 */
+  }
+
+  .comment-likes {
+    color: #007bff; /* 夜间模式下的点赞数颜色 */
+  }
 }
 </style>

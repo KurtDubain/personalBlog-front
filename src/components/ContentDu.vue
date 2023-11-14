@@ -1,6 +1,6 @@
-d<!-- 文章内容组件 -->
+<!-- 文章内容组件 -->
 <template>
-  <div class="article-content">
+  <div :class="['article-content',themeClass]">
     <h1>{{ article.title }}</h1>
     
     <!-- 解析的内容 -->
@@ -30,6 +30,7 @@ d<!-- 文章内容组件 -->
 <script>
 import { marked } from 'marked';
 import { computed } from 'vue';
+import { useStore } from 'vuex';
 
 export default {
   name: 'ContentDu',
@@ -49,17 +50,24 @@ export default {
         return '';
       }
     });
+    const store = useStore()
+    // 主题切换
+    const themeClass = computed(()=>{
+      return store.state.theme.isLight?'light-theme':'dark-theme'
+    })
 
 
 
     return {
-      parsedContent
+      parsedContent,
+      themeClass
     };
   }
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+// 文章大小的处理
 .article-content {
   margin: 20px;
   padding: 20px;
@@ -69,69 +77,86 @@ export default {
   display: flex;
   flex-direction: column;
   max-width: 100%;
+  
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .metadata {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    
+    span {
+      margin-right: 10px;
+    }
+    
+    .date, .views, .comments {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: large;
+    }
+  }
+  
+  .markdown-content {
+    line-height: 1.6;
+    font-size: 16px;
+    color: #555;
+    max-width: 100%; /* 设置最大宽度为100%，防止内容过宽 */
+    overflow-wrap: break-word; /* 当内容过长时，自动换行 */
+    /* overflow-x: hidden; */
+  }
+  
+  pre {
+    overflow-x: auto; /* 设置水平方向的滑动条 */
+    background-color: #9d3737; /* 设置代码块背景色 */
+    padding: 10px; /* 设置代码块内边距 */
+    
+    code {
+      font-size: 16px;
+      background-color: #e36363;
+      padding: 8px;
+      border-radius: 4px;
+    }
+  }
 }
+.dark-theme {
+  .article-content {
+    background-color: #252b33; /* 夜间模式下的背景颜色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
 
-h1 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 10px;
-  color: #333;
-}
+  h1 {
+    color: #fff; /* 夜间模式下的标题颜色 */
+  }
 
-.metadata {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 10px;
-  display: flex;
-  flex-direction: row;
-}
+  .metadata {
+    color: #999; /* 夜间模式下的元数据颜色 */
+  }
 
-.markdown-content {
-  line-height: 1.6;
-  font-size: 16px;
-  color: #555;
-  max-width: 100%; /* 设置最大宽度为100%，防止内容过宽 */
-  overflow-wrap: break-word; /* 当内容过长时，自动换行 */
-  /* overflow-x: hidden; */
-}
+  .date,
+  .views,
+  .comments {
+    color: #999; /* 夜间模式下的日期、浏览量、评论数颜色 */
+  }
 
-.metadata span {
-  margin-right: 10px;
-}
+  .markdown-content {
+    color: #ccc; /* 夜间模式下的内容颜色 */
+  }
 
-.date {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+  pre {
+    background-color: #1f2937; /* 夜间模式下的代码块背景色 */
+  }
 
-.views {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: large;
-}
-
-/* .likes::before {
-  content: "点赞数：";
-} */
-
-.comments {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: large;
-}
-pre {
-  overflow-x: auto; /* 设置水平方向的滑动条 */
-  background-color: #9d3737; /* 设置代码块背景色 */
-  padding: 10px; /* 设置代码块内边距 */
-}
-
-pre code {
-  font-size: 16px;
-  background-color: #e36363;
-  padding: 8px;
-  border-radius: 4px;
+  code {
+    background-color: #485363; /* 夜间模式下的代码背景色 */
+  }
 }
 </style>
