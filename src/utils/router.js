@@ -13,7 +13,10 @@ import chatMaker from '../pages/chatDu.vue'
 import read from '../pages/readerDu.vue'
 import writer from '../pages/writeDu.vue'
 import chatReader from '../pages/chatReaderDu.vue'
+import subscription from '../pages/subscriptionDu.vue'
+import weather from '../pages/weatherDu.vue'
 
+import axios from '../utils/axios';
 
 // 创建 Vue Router 实例
 const router = createRouter({
@@ -63,23 +66,25 @@ const router = createRouter({
         path:'/write',
         name:'write',
         component:writer,
-        beforeEnter: (to, from, next) => {
-            const Login = localStorage.getItem('rememberedLogin')
-            const storedUserInfo = localStorage.getItem('userInfo')
-            let username
-          if (storedUserInfo) {
-            // userInfo.id = JSON.parse(storedUserInfo).id
-            username = JSON.parse(storedUserInfo).username
-            // userInfo.account = JSON.parse(storedUserInfo).account
-            // userInfo.comments = JSON.parse(storedUserInfo).comments
-            // userInfo.likes = JSON.parse(storedUserInfo).likes
-            // userInfo.level = JSON.parse(storedUserInfo).level
-          }
-          if(Login&&username==='哈哈'){
-            next()
-          }else{
-            next('/')
-          }
+        beforeEnter: async (to, from, next)=>{
+            const token = localStorage.getItem('token')
+            // 利用token来验证用户信息是否放行
+            if(token){
+                try{
+                    const res = await axios.get('http://localhost:3000/users/verifyToken')
+                    const {message} = res.data
+                    if(message){
+                        next()
+                    }else{
+                        next('/')
+                    }   
+                }catch(error){
+                    console.error('路由验证失败',error);
+                    next('/')
+                }
+            }else{
+                next('/')
+            }
         }
     },
     {
@@ -87,55 +92,19 @@ const router = createRouter({
         name:'chatComment',
         component:chatReader,
         props:true                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      
-    }  ]
+    },
+    {
+        path:'/subscription',
+        name:'subscription',
+        component:subscription,
+    },
+    {
+        path:'/weather',
+        name:'weather',
+        component:weather
+    }
+    ]
 });
-/*
-// 定义全局前置守卫
-router.beforeEach((to, from, next) => {
-  // 检查是否记住登录状态
-  const rememberedLogin = localStorage.getItem('rememberedLogin');
-  const userInfoFromStorage = localStorage.getItem('userInfo');
-  
-  if (rememberedLogin === 'true' && userInfoFromStorage) {
-    const userInfo = JSON.parse(userInfoFromStorage);
-    // 更新用户信息
-    updateUserInfo(userInfo);
-  } else {
-    // 清除用户信息
-    clearUserInfo(JSON.parse(userInfoFromStorage));
-  }
-  
-  // 继续导航
-  next();
-});
-
-// 更新用户信息
-const updateUserInfo = (data) => {
-  // 更新 Vue 应用的状态
-  // 注意：这里需要在 Vue 实例中定义一个 ref 或 reactive 来保存用户信息，并在此处进行更新
-  const userInfo = reactive({
-    username: '',
-    account: '',
-    likes: 0,
-    comments: 0,
-    level: 1,
-    id: 0
-  });
-  Object.assign(userInfo, data);
-};
-
-// 清除用户信息
-const clearUserInfo = (userInfo) => {
-  // 清除 Vue 应用的状态
-  
-  userInfo.username = '';
-  userInfo.account = '';
-  userInfo.likes = 0;
-  userInfo.comments = 0;
-  userInfo.level = 0;
-  userInfo.id = 0;
-};
-*/
 
 
 export default router;

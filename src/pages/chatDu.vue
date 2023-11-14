@@ -6,8 +6,22 @@
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <chatlittleDu :chats="trueChats"></chatlittleDu>
-          
+          <div class="search_content">
+            <el-input class="search_input" v-model="searchKeyword" placeholder="搜索留言内容或用户名" clearable />
+            <el-button class="search_button" @click="throttledhandleSearch" :disabled="isInvalid">
+              <el-icon><Search/></el-icon>
+            </el-button>
+          </div>
+          <chatlittleDu :chats="sortedChats"></chatlittleDu>
+          <div class="page_ctrl">
+             <el-pagination
+              :page-size="pageSize"
+              :pager-count="5"
+              layout="prev, pager, next"
+              :total="totalChats"
+              @current-change="handlePageChange">
+            </el-pagination>
+          </div>
         </mainDu>
         
       </el-main>
@@ -20,7 +34,7 @@
           <div class="loginDirect" @click="toggleLoginForm">
             <el-icon><HomeFilled /></el-icon>
           </div>
-          <chatOutDu :chats="trueChats" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatOutDu>
+          <chatOutDu :chats="sortedChats" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatOutDu>
         </div>
       </div>
       
@@ -32,10 +46,13 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
-  import {reactive,onMounted, computed,ref,onUnmounted} from 'vue'
-  import axios from 'axios'
+  import {onMounted,ref,onUnmounted,computed,watch} from 'vue'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
+  import {useStore} from 'vuex'
+  import DOMPurify from 'dompurify'
+  import { throttle } from 'lodash';
+
 
   export default {
       name:"chatDu",
@@ -45,43 +62,80 @@
           chatOutDu
       },
       setup(){
-        let chats = reactive({})
         
+        const store = useStore()
+        // 定义当前页码
+        const currentPage = ref(1)
+        // 定义每页显示的留言数量
+        const perPage = 3
+        // 获取排序好的留言
+        const sortedChats = computed(()=> store.getters['chats/sortedChats'])
+        // 获取留言总量，根据总量计算共需多少页码
+        const totalChats = computed(()=> store.getters['chats/totalChats'])
+        // 初始化关键字
+        const searchKeyword = ref('')
+
         onMounted(async()=>{
-          await loadChats()
+          // 初始化加载留言数据
+          await store.dispatch('chats/loadChats')
+          // 更新留言数据
           EventBus.on('NeedRefreshChats',()=>{
-            loadChats()
+            store.dispatch('chats/loadChats')
           })
           // 监听事件
           document.addEventListener('click', handleClickOutside);
         })
+        // 获取计算属性，倒序显示留言
 
         onUnmounted(() => {
           // 解绑事件
           document.removeEventListener('click', handleClickOutside);
         });
-
         
-    //     let filterChat = computed(()=>{
-    //       const chatsArray = Object.values(chats)
-    //       return chatsArray.slice()
-    //     })
-        const loadChats = async()=>{
-          try{
-            // 获取留言全部内容
-            let res = await axios('http://localhost:3000/chats')
-            chats.value = res.data
-            
-          }catch(error){
-            console.error('留言数据获取失败');
+        const handleSearch = () => {
+          // 触发搜索事件，更新搜索结果
+          // 更新关键字
+          store.commit('chats/SET_SEARCH_KEYWORD', searchKeyword.value);
+          store.commit('chats/SET_CURRENT_PAGE', 1); // 将当前页重置为1，以便从第一页开始加载搜索结果
+          // 重新加载事件
+          store.dispatch('chats/loadChats');
+        };
+
+        // 触发页面切换事件
+        const handlePageChange = (newPage) => {
+          // 获取当前的页码值
+          currentPage.value = newPage;
+          // 更新当前的页码
+          store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
+          // 根据页码值重新更新数据
+          store.dispatch('chats/loadChats'); // 重新加载留言数据
+        };
+        // 监视数据的变化，用于重新加载留言数据
+        watch(currentPage, (newPage) => {
+          
+          store.commit('chats/SET_CURRENT_PAGE', newPage);
+          store.dispatch('chats/loadChats');
+
+        },
+        {
+          immediate:true
+        });
+        
+        // 判断搜索框输入的数据是否合法
+        const isInvalid = computed(()=>{
+          const content = searchKeyword.value
+          if(!isValidContent(content)){
+            return true
           }
-        }
-                
-        //通过使用计算属性，确保trueChats是最新的数据，并且传递给子组件 
-        let trueChats = computed(()=>{
-          const chatsArray = chats.value?Object.values(chats.value):[]
-          return chatsArray.slice().sort((a,b)=>new Date(b.date)-new Date(a.date))
+          return false
         })
+        // 检验内容的方法
+        function isValidContent(content){
+          const cleanContent = DOMPurify.sanitize(content)
+          return cleanContent === content
+        }        
+        // 节流防止多次加载搜索事件
+        const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
 
         // 响应式设计操作
         // 判断视窗大小
@@ -99,7 +153,7 @@
           showLoginForm.value = !showLoginForm.value;
         };
 
-        // 隐藏表单时间
+        // 隐藏表单
         const handleClickOutside = (event) => {
           // !event.target表示目标之外的元素，closest('.loginFormContainer')是指定选择器的祖先元素
           if (showLoginForm.value && !event.target.closest('.loginFormContainer')) {
@@ -108,18 +162,23 @@
         };
 
         return {
-          chats,
-          trueChats,
-          loadChats,
+          sortedChats,
           isMobile,
           showLoginForm,
           toggleLoginForm,
-          handleClickOutside
+          handleClickOutside,
+          handlePageChange,
+          totalChats,
+          pageSize:perPage,
+          handleSearch,
+          searchKeyword,
+          isInvalid,
+          throttledhandleSearch
         }
       }
   }
   </script>
-  <style scoped>
+  <style lang="scss" scoped>
   .el-main{
     padding-top:0px ;
   }
@@ -158,4 +217,47 @@
 .loginForm{
   transition: left 0.5s ease-in-out;
 }
+/* .el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+} */
+.search_content{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 80%;
+  padding-top: 5%;
+
+}
+.search_input{
+  flex: 4;
+}
+.search_button{
+  flex: 1;
+}
+.el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.contentAside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
+}
   </style>
+  <style lang="scss">
+  .el-pager li.is-active{
+    color: #a2bd63;
+  }
+  .el-pager li:hover{
+    color: #a2bd63;
+  }
+</style>

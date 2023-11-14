@@ -6,7 +6,14 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <articleDu :articles="filterArticle"></articleDu>
+          <articleDu :articles="filteredArticlesByTag"></articleDu>
+          <el-pagination
+              :page-size="pageSize"
+              :pager-count="5"
+              layout="prev, pager, next"
+              :total="totalArticlesByTag"
+              @current-change="handlePageChange">
+            </el-pagination>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,8 +25,8 @@
 <script>
 import mainDu from '@/components/mainDu.vue'
 import articleDu from '@/components/articleDu.vue';
-import {reactive,computed,onMounted} from 'vue'
-import axios from 'axios';
+import {computed,onMounted,watch,ref} from 'vue'
+import {useStore} from 'vuex'
 export default {
     name:"pyhDu",
     components:{
@@ -27,23 +34,42 @@ export default {
         articleDu
     },
     setup(){
-      let articles = reactive({})
+      const store = useStore()
+      // 初始化一个页面的文章栏容纳量以及当前的页码
+      const pageSize = 4
+      const currentPage = ref(1);
       onMounted(async()=>{
           try{
-            // 获取所有文章信息
-            let res = await axios.get('http://localhost:3000/articles')
-            articles.value = res.data
+            // 获取指定标签的文章数据
+            await store.dispatch('articles/loadFilteredArticlesByTag', '技术')
+
           }
           catch(error){
             console.error('未能获取到文章内容');
 
           }
         })
-        // 使用计算属性，过滤出标签中含有“技术”的文章
-      let filterArticle = computed(()=>{
-        const articlesArray = articles.value? Object.values(articles.value):[]
-        return articlesArray.filter((article)=>article.tags &&article.tags.tags.includes('技术'))
-      })
+        // 获取指定标签的文章数据
+      const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
+      // 获取指定标签的文章总数,用于计算页码
+      const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
+      // 处理页面跳转的方法
+      const handlePageChange = (newPage) => {
+        currentPage.value = newPage;
+
+        store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
+        store.dispatch('articles/loadFilteredArticlesByTag', '技术'); // 重新加载文章数据
+      };
+      // 监视页面跳转情况,并根据页面的情况更新数据
+      watch(currentPage, (newPage) => {
+        // 重新加载文章和留言数据
+        store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);
+        store.dispatch('articles/loadFilteredArticlesByTag', '技术');
+      },
+      {
+        immediate:true
+      });
+
       // 响应式设计相关
       const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -61,16 +87,19 @@ export default {
         showRightAside.value = window.innerWidth > 768;
       });
       return {
-        articles,
-        filterArticle,
+        filteredArticlesByTag,
+        
         showLeftAside,
-        showRightAside
+        showRightAside,
+        totalArticlesByTag,
+        pageSize,
+        handlePageChange
       }
     }
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-main{
   padding-top:0px ;
 }
@@ -84,4 +113,26 @@ export default {
     display: none;
   }
 }
+.el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+.left-aside, .right-aside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
+}
+</style>
+<style lang="scss">
+  .el-pager li.is-active{
+    color: #a2bd63;
+  }
+  .el-pager li:hover{
+    color: #a2bd63;
+  }
 </style>

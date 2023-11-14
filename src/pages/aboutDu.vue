@@ -2,13 +2,13 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside width="20%"></el-aside>
+      <el-aside class="left-aside" width="20%"></el-aside>
       <el-main>
         <mainDu
-          style="display:flex;flex-direction: column;align-items: center;"
+          style="display:flex;flex-direction: column;align-items: center;overflow: hidden;"
         >
           <div class="about-section">
-            <h1 class="about-title">关于我</h1>
+            <h1 class="about-title">雪碧的小屋</h1>
             <p class="about-description">我是雪碧，一个喜欢编程和音乐的程序员。</p>
             <img
               src="../assets/个人照.jpg"
@@ -47,7 +47,7 @@
           </div>
         </mainDu>
       </el-main>
-      <el-aside width="20%"></el-aside>
+      <el-aside class="right-aside" width="20%"></el-aside>
     </el-container>
   </div>
 </template>
@@ -62,139 +62,192 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 @media (max-width: 768px) {
-  /* 当屏幕宽度小于等于 768px 时，隐藏 el-aside */
   .el-aside {
     display: none;
   }
 }
+
 .el-main {
-  padding-top: 20px;
+  padding-top: 0px;
 }
 
 .about-section {
   max-width: 800px;
   margin: 0 auto;
   text-align: center;
-  /* Add animation properties to the "关于我" section */
   opacity: 0;
   animation: fadeIn 1s ease forwards;
-}
 
-.about-title {
-  font-size: 36px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
 
-.about-description {
-  font-size: 18px;
-  color: #666;
-  margin-bottom: 20px;
-}
-
-.about-item {
-  margin-bottom: 30px;
-}
-
-.about-item h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.about-item p {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 5px;
-}
-
-.about-item ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.about-item li {
-  font-size: 16px;
-  color: #333;
-  margin-bottom: 5px;
-}
-
-/* Add animation properties to the "关于我" section */
-@keyframes fadeIn {
-  to {
-    opacity: 1;
+  .about-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    transform: translateY(-50%);
+    animation: slideInTitle 1s ease forwards;
+      
+    
+    
   }
-}
+  @keyframes slideInTitle {
+      to {
+        transform: translateY(0);
+      }
+    }
+  
 
-/* Add animation properties to the "技能" (Skills) list items with a delay */
-.about-item:nth-child(2) li {
-  opacity: 0;
-  transform: translateX(-100%);
-  animation: slideInSkills 1s ease forwards;
-}
-
-@keyframes slideInSkills {
-  to {
-    opacity: 1;
-    transform: translateX(0);
+  .about-description {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fadeInDescription 1s ease forwards;
   }
-}
-
-/* Add animation properties to the "兴趣爱好" (Hobbies and Interests) paragraph with a delay */
-.about-item:nth-child(3) p {
-  opacity: 0;
-  transform: translateY(50%);
-  animation: fadeInInterests 1s ease forwards;
-}
-
-@keyframes fadeInInterests {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  @keyframes fadeInDescription {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-}
 
-.about-item:nth-child(4) {
-  padding: 10%;
-  padding-top: 0%;
-  /* Add animation properties to the "网站介绍" (Website Introduction) paragraphs with a delay */
-}
+  .about-item {
+    margin-bottom: 30px;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fadeInItem 1s ease forwards;
 
-.about-item:nth-child(4) p {
-  opacity: 0;
-  transform: translateY(50%);
-  animation: fadeInWebsiteIntro 1s ease forwards;
-}
-
-@keyframes fadeInWebsiteIntro {
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    h2 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    @keyframes fadeInItem {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
+
+    p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        font-size: 16px;
+        color: #333;
+        margin-bottom: 5px;
+      }
+    }
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  .about-item:nth-child(2) {
+    li {
+      opacity: 0;
+      transform: translateX(-100%);
+      animation: slideInSkills 1s ease forwards;
+    }
+  }
+
+  @keyframes slideInSkills {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .about-item:nth-child(3) {
+    p {
+      opacity: 0;
+      transform: translateY(50%);
+      animation: fadeInInterests 1s ease forwards;
+    }
+  }
+
+  @keyframes fadeInInterests {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .about-item:nth-child(4) {
+    padding: 10%;
+    padding-top: 0%;
+
+    p {
+      opacity: 0;
+      transform: translateY(50%);
+      animation: fadeInWebsiteIntro 1s ease forwards;
+    }
+  }
+
+  @keyframes fadeInWebsiteIntro {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .about-item:nth-child(4) {
+    p {
+      font-size: 18px;
+    }
+
+    p:not(:first-child) {
+      margin-top: 15px;
+    }
+  }
+
+  img {
+    max-width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .el-main {
+    padding-top: 0;
+  }
+  .about-image {
+    max-width: 100%;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    opacity: 0;
+    transform: translateY(50%);
+    animation: fadeInImage 1s ease forwards;
+  }
+
+  @keyframes fadeInImage {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
 }
 
-/* Increase the font size of "网站介绍" (Website Introduction) paragraphs */
-.about-item:nth-child(4) p {
-  font-size: 18px;
-}
-
-/* Add some margin between "网站介绍" (Website Introduction) paragraphs */
-.about-item:nth-child(4) p:not(:first-child) {
-  margin-top: 15px;
-}
-
-.about-section img {
-  max-width: 100%;
-  border-radius: 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-.el-main {
-  padding-top: 0;
+.left-aside, .right-aside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
 }
 </style>

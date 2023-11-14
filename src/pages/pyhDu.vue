@@ -6,7 +6,14 @@
       <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
-          <articleDu :articles="filterArticle"></articleDu>
+          <articleDu :articles="filteredArticlesByTag"></articleDu>
+          <el-pagination
+              :page-size="pageSize"
+              :pager-count="5"
+              layout="prev, pager, next"
+              :total="totalArticlesByTag"
+              @current-change="handlePageChange">
+            </el-pagination>
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
@@ -18,8 +25,9 @@
 <script>
 import mainDu from '@/components/mainDu.vue'
 import articleDu from '@/components/articleDu.vue'
-import {reactive,computed,onMounted} from 'vue'
-import axios from 'axios'
+import {computed,onMounted,watch,ref} from 'vue'
+import {useStore} from 'vuex'
+
 export default {
     name:"pyhDu",
     components:{
@@ -27,24 +35,43 @@ export default {
         articleDu
     },
     setup(){
-      let articles = reactive({})
+      const store = useStore()
+      // 设置一个页面显示的文章栏的数量
+      const pageSize = 4
+      // 初始化当前页码
+      const currentPage = ref(1);
+
+
       // const category = 'pyh'
       onMounted(async()=>{
           try{
-            // 获取全部文章内容
-            let res = await axios.get('http://localhost:3000/articles')
-            articles.value = res.data
+            // 获取指定分类的文章数据
+            await store.dispatch('articles/loadFilteredArticlesByTag', '体育')
           }
           catch(error){
             console.error('未能获取到文章内容');
 
           }
         })
-        // 使用过滤计算属性，过滤出含有“体育”的标签的文章并传递给子组件
-      let filterArticle = computed(()=>{
-        const articlesArray = articles.value? Object.values(articles.value):[]
-        return articlesArray.filter((article)=>article.tags &&article.tags.tags.includes('体育'))
-      })
+        // 获取数据之后处理过滤数据
+      const filteredArticlesByTag = computed(() => store.getters['articles/filteredArticlesByTag']);
+      // 获取指定分类下的文章总数
+      const totalArticlesByTag = computed(()=> store.getters['articles/totalArticlesByTag'])
+      // 处理页面切换方法
+      const handlePageChange = (newPage) => {
+        currentPage.value = newPage;
+        store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage); // 更新articles模块的currentPage状态
+        store.dispatch('articles/loadFilteredArticlesByTag','体育'); // 重新加载文章数据
+      };
+      // 监视数据,实现更新
+      watch(currentPage, (newPage) => {
+        // 重新加载文章和留言数据
+        store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);
+        store.dispatch('articles/loadFilteredArticlesByTag','体育');
+      },
+      {
+        immediate:true
+      });
       // 响应式设计相关
       const showLeftAside = computed(() => {
       // 当屏幕宽度小于等于 768px 时，隐藏左侧 el-aside
@@ -63,15 +90,17 @@ export default {
       });
    
       return {
-        articles,
-        filterArticle,
+        filteredArticlesByTag,
         showLeftAside,
-        showRightAside
+        showRightAside,
+        totalArticlesByTag,
+        pageSize,
+        handlePageChange
       }
     }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .el-main{
   padding-top:0px ;
 }
@@ -85,4 +114,25 @@ export default {
     display: none;
   }
 }
+.el-pagination{
+  --el-pagination-button-disabled-bg-color: none;
+  --el-pagination-bg-color: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.left-aside, .right-aside {
+  border: 1px solid #ccc; /* 添加一个细边框 */
+  padding: 10px; /* 添加内边距 */
+  background-color: #f0f0f0;
+}
+</style>
+<style lang="scss">
+  .el-pager li.is-active{
+    color: #a2bd63;
+  }
+  .el-pager li:hover{
+    color: #a2bd63;
+  }
 </style>

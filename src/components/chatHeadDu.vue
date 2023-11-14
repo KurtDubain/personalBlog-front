@@ -1,9 +1,14 @@
 <!-- 指定留言下的留言头部展示 -->
 <template>
-    <div class="selected-comment">
+    <div :class="['selected-comment',themeClass]">
       <h2 class="comment-username">{{ chatInfo.username }}</h2>
       <p class="comment-content">{{ chatInfo.content }}</p>
-      <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
+      <!-- <img v-if="chatInfo.imgUrl" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" /> -->
+      <!-- 图片或者视频的展示 -->
+      <template v-if="chatInfo.imgUrl">
+          <img v-if="isImage(chatInfo.imgUrl)" :src="chatInfo.imgUrl" alt="留言图片" class="comment-image" />
+          <video v-else :src="chatInfo.imgUrl" controls class="comment-video"></video>
+      </template>
       <div class="comment-details">
         <span class="comment-date">{{ chatInfo.date }}</span>
         &nbsp;
@@ -18,26 +23,34 @@
   
   <script>
   // import { ref } from 'vue';
+  import {useStore} from 'vuex'
+  import {computed} from 'vue'
   import likesDu from './likesDu.vue';
   export default {
     name: 'ChatHeadDu',
-    props: {
-      chatInfo: {
-        type: Object,
-        default: () => ({}),
-      },
-    //   chatId: {
-    //     type: String,
-    //     required: true
-    //   }
-    },
+    
     components:{
       likesDu
     },  
     setup(){
-      
-      
+      // 集中管理了留言信息的显示
+      const store = useStore()
+      // 获取指定的留言信息
+      const chatInfo = computed(()=> store.state.chats.chatInfo)
+      // 主题切换
+      const themeClass = computed(()=>{
+        return store.state.theme.isLight?'light-theme':'dark-theme'
+      })
+      // 判断是否是图片数据类型
+      const isImage = (url) => {
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
+        const extension = url.split('.').pop().toLowerCase();
+        return imageExtensions.includes(extension);
+      };
       return{
+        chatInfo,
+        themeClass,
+        isImage
       }
     }
     
@@ -45,7 +58,7 @@
   </script>
   
  
-<style scoped>
+<style lang="scss" scoped>
 .selected-comment {
   width: 80%;
   margin: 20px;
@@ -71,6 +84,12 @@
 }
 
 .comment-image {
+  max-width: 100%;
+  margin-top: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.comment-video{
   max-width: 100%;
   margin-top: 20px;
   border-radius: 4px;
@@ -105,5 +124,26 @@
   padding: 5px 10px;
   border-radius: 4px;
   cursor: pointer;
+}
+// 夜间模式样式
+.dark-theme {
+  .selected-comment {
+    background-color: #1f2937; /* 夜间模式下的背景颜色 */
+    color: #fff; /* 夜间模式下的文字颜色 */
+    border-color: #485363; /* 夜间模式下的边框颜色 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+    .comment-username {
+      color: #fff; /* 用户名颜色 */
+    }
+
+    .comment-content {
+      color: #fff; /* 内容颜色 */
+    }
+
+    .comment-details {
+      color: #999; /* 日期、浏览量、回复数颜色 */
+    }
+  }
 }
 </style>
