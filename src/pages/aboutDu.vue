@@ -43,6 +43,20 @@
                 <p>通过登陆也能够实现大家之间的互动，诸如一些评论之类的简单功能，不过后续我也会不断优化更新网站中的内容，让网站内容更加丰富。</p>
                 <p>感兴趣的朋友可以加群，我们可以一起探讨很多东西，一起进步！</p>
               </div>
+              <div class="about-item">
+                <h2>个人链接</h2>
+                <ul>
+                  <li>
+                    <a href="https://github.com/KurtDubain?tab=repositories" target="_blank">我的GitHub仓库——Kurt.Dubain的仓库</a>
+                  </li>
+                  <li>
+                    <a href="https://blog.csdn.net/ppppsg?spm=1019.2139.3001.5343" target="_blank">木土木土的CSDN博客（不常用）</a>
+                  </li>
+                  <li>
+                    <a href="https://juejin.cn/user/1867417127226942" target="_blank">木土木土的掘金博客（不常用）</a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
         </mainDu>
@@ -148,6 +162,15 @@ export default {
         font-size: 16px;
         color: #333;
         margin-bottom: 5px;
+        a{
+          color:#666;
+          text-decoration: none;
+          transition: color 0.3s;
+          &:hover{
+            color: rgba(102, 102, 102, 0.453);
+          }
+        }
+
       }
     }
   }
@@ -189,7 +212,7 @@ export default {
   }
 
   .about-item:nth-child(4) {
-    padding: 10%;
+    padding: 0 10% 0 10%;
     padding-top: 0%;
 
     p {
