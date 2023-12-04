@@ -46,6 +46,7 @@ import {useStore} from 'vuex'
 import { Search } from '@element-plus/icons-vue';
 import DOMPurify from 'dompurify'
 import { throttle } from 'lodash';
+import axios from 'axios';
 
 export default {
     name:'homeDu',
@@ -80,6 +81,7 @@ export default {
           // 初始化加载文章和留言数据
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
+          trackVisitor()
         } catch (error) {
           console.error('未能获取文章内容或留言内容');
         }
@@ -127,6 +129,18 @@ export default {
       }
       // 使用节流防止多次提交搜索请求
       const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
+
+      // 埋点，获取用户登陆情况
+      function trackVisitor(){
+        const currentDate = new Date().toISOString().split('T')[0]
+        axios.post('http://localhost:3000/system/visited',currentDate)
+          .then(()=>{
+            console.log('欢迎来拜访雪碧的小屋！')
+          })
+          .catch(error=>{
+            console.error('访问失败咯',error)
+          })
+      }
 
 
       return {
