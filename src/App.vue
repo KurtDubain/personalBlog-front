@@ -26,9 +26,10 @@ import footDu from './components/footDu.vue';
 import navDu from './components/navDu.vue';
 import announcementDu from './components/announcementDu.vue';
 import topAnnounceDu from './components/topAnnounceDu.vue';
-import { computed, ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import axios from 'axios'
 
 export default {
   name: 'App',
@@ -48,6 +49,14 @@ export default {
     const themeClass = computed(() => (isLight.value ? 'light-theme' : 'dark-theme'));
 
     const swipeableRoutes = ['about', 'home', 'chatMaker', 'weather'];
+
+    onMounted(async ()=>{
+      try{
+        trackVisitor()
+      }catch(error){
+        console.error(error)
+      }
+    })
 
     const handleLeftSwipe = () => {
       const currentRoute = router.currentRoute.value.name;
@@ -76,6 +85,19 @@ export default {
         },500)
       }
     };
+
+    // 埋点，获取用户登陆情况
+    function trackVisitor(){
+        const currentDate = new Date().toISOString().split('T')[0]
+        console.log(currentDate)
+        axios.post('http://localhost:3000/system/visited',{currentDate})
+          .then(()=>{
+            console.log('欢迎来拜访雪碧的小屋！')
+          })
+          .catch(error=>{
+            console.error('访问失败咯',error)
+          })
+      }
 
     return {
       showAnnouncement,

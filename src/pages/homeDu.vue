@@ -30,7 +30,9 @@
         </mainDu>
       </el-main>
       <!-- 右侧 el-aside -->
-      <el-aside class="right-aside" width="20%" ></el-aside>
+      <el-aside class="right-aside" width="20%" >
+        <visitedDu :allNum="visitTotalData.allNum" :todayNum="visitTotalData.todayNum" :weekData="visitTotalData.weekData"></visitedDu>
+      </el-aside>
     </el-container>
   </div>
 </template>
@@ -41,6 +43,7 @@ import mainDu from '@/components/mainDu.vue';
 import carlightDu from '@/components/carlightDu.vue';
 import articleDu from '@/components/articleDu.vue';
 import chatlittleDu from '@/components/chatlittleDu.vue';
+import visitedDu from '@/components/visitedDu.vue'
 import {onMounted,computed,watch,ref} from 'vue'
 import {useStore} from 'vuex'
 import { Search } from '@element-plus/icons-vue';
@@ -55,12 +58,15 @@ export default {
     carlightDu,
     articleDu,
     chatlittleDu,
-    Search
+    Search,
+    visitedDu,
 },
     setup() {
       const store = useStore();
       const currentPage = ref(1);
       const perPage = 3;
+      let date = new Date().toISOString().split('T')[0]
+      let visitTotalData
 
       // 获取数据之后，通过计算属性显示排序之后的文章数据
       const sortedArticles = computed(()=> store.getters['articles/sortedArticles'])
@@ -81,7 +87,7 @@ export default {
           // 初始化加载文章和留言数据
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
-          trackVisitor()
+          await getVisitInfo(date)
         } catch (error) {
           console.error('未能获取文章内容或留言内容');
         }
@@ -103,6 +109,16 @@ export default {
         // store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
         // store.dispatch('chats/loadChats'); // 重新加载留言数据
       };
+
+      const getVisitInfo  = async(date)=>{
+        try{
+          const res = axios.get(`http://localhost:3000/system/getInfor?date=${date}`)
+          visitTotalData = res.data
+        }catch(error){
+          console.error('访问信息获取失败',error);
+        }
+      }
+
       // 监视页码变化,用于更新文章数据
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
@@ -130,18 +146,6 @@ export default {
       // 使用节流防止多次提交搜索请求
       const throttledhandleSearch = throttle(handleSearch, 5000, { leading: true, trailing: false });
 
-      // 埋点，获取用户登陆情况
-      function trackVisitor(){
-        const currentDate = new Date().toISOString().split('T')[0]
-        axios.post('http://localhost:3000/system/visited',currentDate)
-          .then(()=>{
-            console.log('欢迎来拜访雪碧的小屋！')
-          })
-          .catch(error=>{
-            console.error('访问失败咯',error)
-          })
-      }
-
 
       return {
         totalPages,
@@ -155,7 +159,8 @@ export default {
         searchKeyword,
         handleSearch,
         isInvalid,
-        throttledhandleSearch
+        throttledhandleSearch,
+        visitTotalData
       };
   },
 
