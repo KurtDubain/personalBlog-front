@@ -88,16 +88,16 @@ export default {
 
     // 埋点，获取用户登陆情况
     function trackVisitor(){
-        const currentDate = new Date().toISOString().split('T')[0]
-        console.log(currentDate)
-        axios.post('http://localhost:3000/system/visited',{currentDate})
-          .then(()=>{
-            console.log('欢迎来拜访雪碧的小屋！')
-          })
-          .catch(error=>{
-            console.error('访问失败咯',error)
-          })
-      }
+      const currentDate = new Date().toISOString().split('T')[0]
+      // 携带当前日期
+      axios.post('http://localhost:3000/system/visited',{currentDate,'ip':window.location.hostname,'userAgent':navigator.userAgent})
+        .then(()=>{
+          console.log('欢迎来拜访雪碧的小屋！')
+        })
+        .catch(error=>{
+          console.error('访问失败咯',error)
+        })
+    }
 
     return {
       showAnnouncement,

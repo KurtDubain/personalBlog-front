@@ -66,7 +66,45 @@ export default {
       const currentPage = ref(1);
       const perPage = 3;
       let date = new Date().toISOString().split('T')[0]
-      let visitTotalData
+      // let visitTotalData = {
+      //   allNum:3,
+      //   todayNum:9,
+      //   weekData:[
+      //     {
+      //       day:'2023-12-6',
+      //       count:3
+      //     },
+      //     {
+      //       day:'2023-12-5',
+      //       count:0
+      //     },
+      //     {
+      //       day:'2023-12-4',
+      //       count:0
+      //     },
+      //     {
+      //       day:'2023-12-3',
+      //       count:2
+      //     },
+      //     {
+      //       day:'2023-12-2',
+      //       count:1
+      //     },
+      //     {
+      //       day:'2023-12-1',
+      //       count:0
+      //     },
+      //     {
+      //       day:'2023-12-6',
+      //       count:3
+      //     }
+      //   ]
+      // }
+      let visitTotalData = ref({
+        allNum:0,
+        todayNum:0,
+        weekData:[]
+      })
 
       // 获取数据之后，通过计算属性显示排序之后的文章数据
       const sortedArticles = computed(()=> store.getters['articles/sortedArticles'])
@@ -85,9 +123,10 @@ export default {
       onMounted(async () => {
         try {
           // 初始化加载文章和留言数据
+          await getVisitInfo(date)
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
-          await getVisitInfo(date)
+          
         } catch (error) {
           console.error('未能获取文章内容或留言内容');
         }
@@ -112,8 +151,11 @@ export default {
 
       const getVisitInfo  = async(date)=>{
         try{
-          const res = axios.get(`http://localhost:3000/system/getInfor?date=${date}`)
-          visitTotalData = res.data
+          const res = await axios.get(`http://localhost:3000/system/getInfor?date=${date}`)
+          visitTotalData.value.allNum = res.data.totalNum
+          visitTotalData.value.todayNum = res.data.todayNum
+          visitTotalData.value.weekData = res.data.weekData
+          console.log(visitTotalData.value)
         }catch(error){
           console.error('访问信息获取失败',error);
         }
@@ -124,6 +166,8 @@ export default {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE', newPage);
         store.dispatch('articles/loadArticles');
+        getVisitInfo(date)
+
         // store.commit('chats/SET_CURRENT_PAGE', newPage);
         // store.dispatch('chats/loadChats');
       },

@@ -19,7 +19,7 @@
 
 <script>
 import * as echarts from 'echarts';
-import {ref,onMounted} from 'vue'
+import {ref,watchEffect} from 'vue'
 
 export default {
     name:'visitedDu',
@@ -39,34 +39,45 @@ export default {
     },
     setup(props){
         const echartsContainer = ref(null)
+        // console.log(props.weekData)
 
-        const initECharts = ()=>{
-            const myChart = echarts.init(echartsContainer.value)
-            const xAxisData = props.weekData.map(item=>item.day)
-            const seriesData = props.weekData.map(item=>item.visitor)
-
-            const option = {
-                title:{
-                    text:'一周访问量'
-                },
-                xAxis:{
-                    type:'category',
-                    data:xAxisData
-                },
-                yAxis:{
-                    type:"value"
-                },
-                series:[
-                    {
-                        data:seriesData,
-                        type:'line',
-                        smooth:true
+        const initECharts = (weekData)=>{
+            if(echartsContainer.value){
+                const myChart = echarts.init(echartsContainer.value)
+                const xAxisData = weekData.map(item=>item.day).reverse()
+                const seriesData = weekData.map(item=>item.count).reverse()
+                // console.log(props)
+                const option = {
+                    title:{
+                        text:'一周访问量'
+                    },
+                    xAxis:{
+                        type:'category',
+                        data:xAxisData
+                    },
+                    yAxis:{
+                        type:"value",
+                    },
+                    series:[
+                        {
+                            data:seriesData,
+                            type:'line',
+                            smooth:true
+                        }
+                    ],
+                    tooltip:{
+                        trigger:'axis',
+                        formatter:'{c0}人'
                     }
-                ]
+                }
+                myChart.setOption(option)
             }
-            myChart.setOption(option)
+            
         }
-        onMounted(initECharts)
+        
+        watchEffect(()=>{
+            initECharts(props.weekData)
+        })
         return{
             echartsContainer
         }
@@ -110,6 +121,6 @@ export default {
     color: #333;
 }
 .echarts-container{
-    height: 10rem;
+    height: 20rem;
 }
 </style>
