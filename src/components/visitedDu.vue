@@ -1,3 +1,4 @@
+<!-- 访客信息展示组件 -->
 <template>
   <div class="visitor-card">
     <div class="card-header">访客统计</div>
@@ -38,10 +39,12 @@ export default {
         }
     },
     setup(props){
+        // 初始化图表
         const echartsContainer = ref(null)
         // console.log(props.weekData)
 
         const initECharts = (weekData)=>{
+            // 使用判断语句，防止加载顺序出现问题
             if(echartsContainer.value){
                 const myChart = echarts.init(echartsContainer.value)
                 const xAxisData = weekData.map(item=>item.day).reverse()
@@ -74,7 +77,7 @@ export default {
             }
             
         }
-        
+        // 及时更新图表数据
         watchEffect(()=>{
             initECharts(props.weekData)
         })

@@ -66,40 +66,8 @@ export default {
       const currentPage = ref(1);
       const perPage = 3;
       let date = new Date().toISOString().split('T')[0]
-      // let visitTotalData = {
-      //   allNum:3,
-      //   todayNum:9,
-      //   weekData:[
-      //     {
-      //       day:'2023-12-6',
-      //       count:3
-      //     },
-      //     {
-      //       day:'2023-12-5',
-      //       count:0
-      //     },
-      //     {
-      //       day:'2023-12-4',
-      //       count:0
-      //     },
-      //     {
-      //       day:'2023-12-3',
-      //       count:2
-      //     },
-      //     {
-      //       day:'2023-12-2',
-      //       count:1
-      //     },
-      //     {
-      //       day:'2023-12-1',
-      //       count:0
-      //     },
-      //     {
-      //       day:'2023-12-6',
-      //       count:3
-      //     }
-      //   ]
-      // }
+      
+      // 初始化访客数据
       let visitTotalData = ref({
         allNum:0,
         todayNum:0,
@@ -148,7 +116,7 @@ export default {
         // store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
         // store.dispatch('chats/loadChats'); // 重新加载留言数据
       };
-
+      // 获取访客信息的方法
       const getVisitInfo  = async(date)=>{
         try{
           const res = await axios.get(`http://localhost:3000/system/getInfor?date=${date}`)
