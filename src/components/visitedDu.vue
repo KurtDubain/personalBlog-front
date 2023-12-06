@@ -1,6 +1,6 @@
 <!-- 访客信息展示组件 -->
 <template>
-  <div class="visitor-card">
+  <div class="visitor-card animated fadeIn">
     <div class="card-header">访客统计</div>
     <div class="card-body">
         <div class="visitor-info">
@@ -126,4 +126,22 @@ export default {
 .echarts-container{
     height: 20rem;
 }
+.animated {
+    animation-duration: 1s;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fadeIn {
+    animation-name: fadeIn;
+  }
 </style>

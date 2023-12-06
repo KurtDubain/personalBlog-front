@@ -3,7 +3,9 @@
   <div class="common-layout">
     <el-container>
       <!-- 左侧 el-aside -->
-      <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
+      <el-aside class="left-aside" width="20%" v-show="showLeftAside">
+        <visitedDu :allNum="visitTotalData.allNum" :todayNum="visitTotalData.todayNum" :weekData="visitTotalData.weekData"></visitedDu>
+      </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <articleDu :articles="filteredArticlesByTag"></articleDu>
@@ -25,13 +27,15 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import articleDu from '@/components/articleDu.vue';
+  import visitedDu from '@/components/visitedDu.vue'
   import {useStore} from 'vuex'
   import {computed, onMounted,watch,ref} from 'vue'
   export default {
       name:"pyhDu",
       components:{
           mainDu,
-          articleDu
+          articleDu,
+          visitedDu
       },
       setup(){
         const store = useStore()
@@ -40,11 +44,13 @@
         // 初始化当前页码
         const currentPage = ref(1);
 
+        const visitTotalData = computed(()=>store.getters['system/totalData'])
 
         onMounted(async()=>{
           try{
             // 加载指定标签的文章数据
             await store.dispatch('articles/loadFilteredArticlesByTag', '生活')
+            await store.dispatch('system/getVisitInfo')
 
           }
           catch(error){
@@ -69,6 +75,7 @@
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);
         store.dispatch('articles/loadFilteredArticlesByTag', '生活');
+        store.dispatch('system/getVisitInfo')
       },
       {
         immediate:true
@@ -100,7 +107,8 @@
         showRightAside,
         totalArticlesByTag,
         pageSize,
-        handlePageChange
+        handlePageChange,
+        visitTotalData
         // hasArticle
       }
   }

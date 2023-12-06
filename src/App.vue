@@ -29,7 +29,6 @@ import topAnnounceDu from './components/topAnnounceDu.vue';
 import { computed, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import axios from 'axios'
 
 export default {
   name: 'App',
@@ -52,7 +51,7 @@ export default {
 
     onMounted(async ()=>{
       try{
-        trackVisitor()
+        await store.dispatch('system/trackVisitor')
       }catch(error){
         console.error(error)
       }
@@ -85,19 +84,6 @@ export default {
         },500)
       }
     };
-
-    // 埋点，获取用户登陆情况
-    function trackVisitor(){
-      const currentDate = new Date().toISOString().split('T')[0]
-      // 携带当前日期
-      axios.post('http://localhost:3000/system/visited',{currentDate,'ip':window.location.hostname,'userAgent':navigator.userAgent})
-        .then(()=>{
-          console.log('欢迎来拜访雪碧的小屋！')
-        })
-        .catch(error=>{
-          console.error('访问失败咯',error)
-        })
-    }
 
     return {
       showAnnouncement,

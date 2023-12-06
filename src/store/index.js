@@ -8,6 +8,7 @@ import articlesModule from './modules/articles';
 import usersModule from './modules/users'
 import announceModule from './modules/announce';
 import themeModule from './modules/theme';
+import systemModule from './modules/system';
 
 const store = createStore({
     modules:{
@@ -16,7 +17,8 @@ const store = createStore({
         articles:articlesModule,
         users:usersModule,
         announce:announceModule,
-        theme:themeModule
+        theme:themeModule,
+        system:systemModule
     }
 })
 

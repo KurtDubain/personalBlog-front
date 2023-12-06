@@ -3,6 +3,7 @@
   <div class="common-layout">
     <el-container>
       <el-aside class="contentAside" width="20%">
+        <visitedDu :allNum="visitTotalData.allNum" :todayNum="visitTotalData.todayNum" :weekData="visitTotalData.weekData"></visitedDu>
       </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
@@ -46,6 +47,7 @@
   <script>
   import mainDu from '@/components/mainDu.vue'
   import chatlittleDu from '@/components/chatlittleDu.vue'
+  import visitedDu from '@/components/visitedDu.vue'
   import {onMounted,ref,onUnmounted,computed,watch} from 'vue'
   import chatOutDu from '@/components/chatOutDu.vue'
   import EventBus from '../utils/eventBus'
@@ -59,7 +61,8 @@
       components:{
           mainDu,
           chatlittleDu,
-          chatOutDu
+          chatOutDu,
+          visitedDu
       },
       setup(){
         
@@ -75,9 +78,12 @@
         // 初始化关键字
         const searchKeyword = ref('')
 
+        const visitTotalData = computed(()=>store.getters['system/totalData'])
+
         onMounted(async()=>{
           // 初始化加载留言数据
           await store.dispatch('chats/loadChats')
+          await store.dispatch('system/getVisitInfo')
           // 更新留言数据
           EventBus.on('NeedRefreshChats',()=>{
             store.dispatch('chats/loadChats')
@@ -115,7 +121,7 @@
           
           store.commit('chats/SET_CURRENT_PAGE', newPage);
           store.dispatch('chats/loadChats');
-
+          store.dispatch('system/getVisitInfo')
         },
         {
           immediate:true
@@ -173,7 +179,8 @@
           handleSearch,
           searchKeyword,
           isInvalid,
-          throttledhandleSearch
+          throttledhandleSearch,
+          visitTotalData
         }
       }
   }

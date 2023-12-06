@@ -4,7 +4,7 @@
     <el-container>
       <!-- 左侧 el-aside -->
       <el-aside class="left-aside" width="20%" >
-        <chatlittleDu :chats="sortedChats"></chatlittleDu>
+        <visitedDu :allNum="visitTotalData.allNum" :todayNum="visitTotalData.todayNum" :weekData="visitTotalData.weekData"></visitedDu>
       </el-aside>
       <el-main>
         <mainDu>
@@ -31,7 +31,7 @@
       </el-main>
       <!-- 右侧 el-aside -->
       <el-aside class="right-aside" width="20%" >
-        <visitedDu :allNum="visitTotalData.allNum" :todayNum="visitTotalData.todayNum" :weekData="visitTotalData.weekData"></visitedDu>
+        <chatlittleDu :chats="sortedChats"></chatlittleDu>
       </el-aside>
     </el-container>
   </div>
@@ -49,7 +49,6 @@ import {useStore} from 'vuex'
 import { Search } from '@element-plus/icons-vue';
 import DOMPurify from 'dompurify'
 import { throttle } from 'lodash';
-import axios from 'axios';
 
 export default {
     name:'homeDu',
@@ -65,14 +64,8 @@ export default {
       const store = useStore();
       const currentPage = ref(1);
       const perPage = 3;
-      let date = new Date().toISOString().split('T')[0]
-      
-      // 初始化访客数据
-      let visitTotalData = ref({
-        allNum:0,
-        todayNum:0,
-        weekData:[]
-      })
+
+      const visitTotalData = computed(()=>store.getters['system/totalData'])
 
       // 获取数据之后，通过计算属性显示排序之后的文章数据
       const sortedArticles = computed(()=> store.getters['articles/sortedArticles'])
@@ -91,7 +84,7 @@ export default {
       onMounted(async () => {
         try {
           // 初始化加载文章和留言数据
-          await getVisitInfo(date)
+          await store.dispatch('system/getVisitInfo')
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
           
@@ -116,25 +109,14 @@ export default {
         // store.commit('chats/SET_CURRENT_PAGE', newPage); // 更新chats模块的currentPage状态
         // store.dispatch('chats/loadChats'); // 重新加载留言数据
       };
-      // 获取访客信息的方法
-      const getVisitInfo  = async(date)=>{
-        try{
-          const res = await axios.get(`http://localhost:3000/system/getInfor?date=${date}`)
-          visitTotalData.value.allNum = res.data.totalNum
-          visitTotalData.value.todayNum = res.data.todayNum
-          visitTotalData.value.weekData = res.data.weekData
-          console.log(visitTotalData.value)
-        }catch(error){
-          console.error('访问信息获取失败',error);
-        }
-      }
+      
 
       // 监视页码变化,用于更新文章数据
       watch(currentPage, (newPage) => {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE', newPage);
         store.dispatch('articles/loadArticles');
-        getVisitInfo(date)
+        store.dispatch('system/getVisitInfo')
 
         // store.commit('chats/SET_CURRENT_PAGE', newPage);
         // store.dispatch('chats/loadChats');
@@ -186,7 +168,7 @@ export default {
 .el-aside {
   transition: all 0.3s;
 }
-.left-aside{
+.right-aside{
   display: flex;
 }
 @media (max-width: 768px) {
@@ -194,7 +176,7 @@ export default {
   .el-aside {
     display: none;
   }
-  .left-aside{
+  .right-aside{
     display: none;
   }
 }

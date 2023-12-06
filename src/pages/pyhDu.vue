@@ -3,7 +3,9 @@
   <div class="common-layout">
     <el-container>
       <!-- 左侧 el-aside -->
-      <el-aside class="left-aside" width="20%" v-show="showLeftAside"></el-aside>
+      <el-aside class="left-aside" width="20%" v-show="showLeftAside">
+        <visitedDu :allNum="visitTotalData.allNum" :todayNum="visitTotalData.todayNum" :weekData="visitTotalData.weekData"></visitedDu>
+      </el-aside>
       <el-main>
         <mainDu style="display:flex;flex-direction: column;align-items: center;">
           <articleDu :articles="filteredArticlesByTag"></articleDu>
@@ -25,6 +27,7 @@
 <script>
 import mainDu from '@/components/mainDu.vue'
 import articleDu from '@/components/articleDu.vue'
+import visitedDu from '@/components/visitedDu.vue'
 import {computed,onMounted,watch,ref} from 'vue'
 import {useStore} from 'vuex'
 
@@ -32,7 +35,8 @@ export default {
     name:"pyhDu",
     components:{
         mainDu,
-        articleDu
+        articleDu,
+        visitedDu
     },
     setup(){
       const store = useStore()
@@ -41,11 +45,12 @@ export default {
       // 初始化当前页码
       const currentPage = ref(1);
 
-
+      const visitTotalData = computed(()=>store.getters['system/totalData'])
       // const category = 'pyh'
       onMounted(async()=>{
           try{
             // 获取指定分类的文章数据
+            await store.dispatch('system/getVisitInfo')
             await store.dispatch('articles/loadFilteredArticlesByTag', '体育')
           }
           catch(error){
@@ -68,6 +73,7 @@ export default {
         // 重新加载文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE_BY_TAG', newPage);
         store.dispatch('articles/loadFilteredArticlesByTag','体育');
+        store.dispatch('system/getVisitInfo')
       },
       {
         immediate:true
@@ -95,7 +101,8 @@ export default {
         showRightAside,
         totalArticlesByTag,
         pageSize,
-        handlePageChange
+        handlePageChange,
+        visitTotalData
       }
     }
 }
