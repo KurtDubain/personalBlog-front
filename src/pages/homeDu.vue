@@ -65,6 +65,7 @@ export default {
       const currentPage = ref(1);
       const perPage = 3;
 
+      // 获取数据之后,显示访客数据
       const visitTotalData = computed(()=>store.getters['system/totalData'])
 
       // 获取数据之后，通过计算属性显示排序之后的文章数据
@@ -83,7 +84,7 @@ export default {
 
       onMounted(async () => {
         try {
-          // 初始化加载文章和留言数据
+          // 初始化加载访问和文章和留言数据
           await store.dispatch('system/getVisitInfo')
           await store.dispatch('articles/loadArticles');
           await store.dispatch('chats/loadChats');
@@ -113,7 +114,7 @@ export default {
 
       // 监视页码变化,用于更新文章数据
       watch(currentPage, (newPage) => {
-        // 重新加载文章和留言数据
+        // 重新加载访问和文章和留言数据
         store.commit('articles/SET_CURRENT_PAGE', newPage);
         store.dispatch('articles/loadArticles');
         store.dispatch('system/getVisitInfo')

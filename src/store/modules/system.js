@@ -1,7 +1,7 @@
 // 对公告栏数据的处理
 import axios from "axios";
 
-
+// 初始化数据
 const state = {
   todayNum:0,
   allNum:0,
@@ -21,6 +21,7 @@ const mutations = {
 }
 
 const actions ={
+    // 用于获取用户访问数据的请求
     async getVisitInfo({commit}){
         try{
             const date = new Date().toISOString().split('T')[0]
@@ -32,7 +33,7 @@ const actions ={
             console.error('访客信息获取失败',error);
         }
     },
-
+    // 用于发送访问数据
     trackVisitor(){
         const currentDate = new Date().toISOString().split('T')[0]
         axios.post(`http://localhost:3000/system/visited`,{
@@ -47,6 +48,7 @@ const actions ={
     }
 }   
 const getters = {
+    // 返回所需数据（全部访问数据）
     totalData:(state)=>{
         return {
             todayNum:state.todayNum,

@@ -41,22 +41,25 @@ export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    // 初始化动画类
     const animatedClass = ref('');
-
+    // 初始化公告、样式数据
     const showAnnouncement = computed(() => store.state.announce.visible);
     const isLight = computed(() => store.state.theme.isLight);
     const themeClass = computed(() => (isLight.value ? 'light-theme' : 'dark-theme'));
 
+    // 滑动切换的路由
     const swipeableRoutes = ['about', 'home', 'chatMaker', 'weather'];
 
     onMounted(async ()=>{
       try{
+        // 发送访问数据
         await store.dispatch('system/trackVisitor')
       }catch(error){
         console.error(error)
       }
     })
-
+    // 处理左滑
     const handleLeftSwipe = () => {
       const currentRoute = router.currentRoute.value.name;
       const currentIndex = swipeableRoutes.indexOf(currentRoute);
@@ -72,6 +75,7 @@ export default {
       // 在动画结束后移除类名，以便下次使用
       
     };
+    // 处理右滑
     const handleRightSwipe = () => {
       const currentRoute = router.currentRoute.value.name;
       const currentIndex = swipeableRoutes.indexOf(currentRoute);
