@@ -33,9 +33,9 @@
       <div class="loginBack">
         <div v-if="isMobile" class="loginFormContainer">
           <div class="loginDirect" @click="toggleLoginForm">
-            <el-icon><HomeFilled /></el-icon>
+            <div class="login-button">点我</div>
           </div>
-          <chatOutDu :chats="sortedChats" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatOutDu>
+          <chatOutDu :chats="sortedChats" class="loginForm" :style="{ left: showLoginForm ? '45%' : '100%' }"></chatOutDu>
         </div>
       </div>
       
@@ -218,7 +218,7 @@
   position: absolute;
   color: rgba(139,136,120, 0.886);
     /* rgba(222, 222, 222, 0.8); */
-  top: 50%;
+  top: 45%;
   transform: translateY(600%) translateX(300%);
 }
 .loginForm{
@@ -259,6 +259,15 @@
   padding: 10px; /* 添加内边距 */
   background-color: #f0f0f0;
 }
+.login-button {
+  background-color: rgba(145, 168, 90, 0.635);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
   </style>
   <style lang="scss">
   .el-pager li.is-active{
@@ -267,4 +276,5 @@
   .el-pager li:hover{
     color: #a2bd63;
   }
+  
 </style>

@@ -18,9 +18,9 @@
         <div class="loginBack">
             <div v-if="isMobile" class="loginFormContainer">
             <div class="loginDirect" @click="toggleLoginForm">
-                <el-icon><HomeFilled /></el-icon>
+                <div class="login-button">点我</div>
             </div>
-            <chatCommentFormDu :chatId="chatId" class="loginForm" :style="{ left: showLoginForm ? '40%' : '100%' }"></chatCommentFormDu>
+            <chatCommentFormDu :chatId="chatId" class="loginForm" :style="{ left: showLoginForm ? '45%' : '100%' }"></chatCommentFormDu>
             </div>
         </div>
       </el-container>
@@ -123,7 +123,7 @@ export default {
   position: fixed;
   max-height: 200px;
   max-width: 200px;
-  left: 50%;
+  left: 45%;
 }
 
 .loginFormContainer {
@@ -147,5 +147,14 @@ export default {
   border: 1px solid #ccc; /* 添加一个细边框 */
   padding: 10px; /* 添加内边距 */
   background-color: #f0f0f0;
+}
+.login-button {
+  background-color: rgba(145, 168, 90, 0.635);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
 }
 </style>
