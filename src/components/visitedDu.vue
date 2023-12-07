@@ -10,7 +10,7 @@
             </div>
             <div class="info-item">
                 <div class="info-label">小屋总访客量：</div>
-                <div class="info-value">{{ allNum }}</div>
+                <div class="info-value">{{ allNum + 1980 }}</div>
             </div>
         </div>
         <div class="echarts-container" ref="echartsContainer"></div>
@@ -47,8 +47,8 @@ export default {
             // 使用判断语句，防止加载顺序出现问题
             if(echartsContainer.value){
                 const myChart = echarts.init(echartsContainer.value)
-                const xAxisData = weekData.map(item=>item.day).reverse()
-                const seriesData = weekData.map(item=>item.count).reverse()
+                const xAxisData = weekData.map(item=>item.day)
+                const seriesData = weekData.map(item=>item.count)
                 // console.log(props)
                 const option = {
                     title:{
