@@ -90,7 +90,7 @@ export default {
 
 <style scoped>
 .visitor-card{
-    width: 300px;
+    max-width: 300px;
     border:1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
