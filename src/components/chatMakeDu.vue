@@ -13,14 +13,9 @@
           :on-success="handleUploadSuccess"
           :before-upload="beforeUpload"
         > -->
-        <el-upload
-          class="upload-demo"
-          :action="upLoadUrl"
-          :show-file-list="false"
-          :on-change="fileChange"
-          :before-upload="beforeUpload"
-        >
-          
+        <el-upload class="upload-demo" :action="upLoadUrl" :show-file-list="false" :on-change="fileChange"
+          :before-upload="beforeUpload">
+
           <el-button size="small" type="primary">点击上传</el-button>
           <div class="upload-help">(支持上传图片或视频)</div>
         </el-upload>
@@ -47,7 +42,7 @@ import { computed, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import EventBus from '@/utils/eventBus';
 import DOMPurify from 'dompurify'
-import { throttle} from 'lodash'
+import { throttle } from 'lodash'
 import axios from 'axios';
 // import spark from 'spark-md5';
 import sparkMD5 from 'spark-md5';
@@ -67,7 +62,7 @@ export default {
     // 定义表单是否显示
     const dialogVisible = ref(true);
     // 定义一个块的大小
-    const chunkSize = 2*1024*1024
+    const chunkSize = 2 * 1024 * 1024
     // 定义当前块、总的块数、上传到的序号
     let currentChunk = 0
     let totalChunks = 0
@@ -75,40 +70,40 @@ export default {
     // 处理当前上传的情况（百分比）
     let currentDownLoad = ref(0)
     // 处理当前上传进度
-    let showDownLoad = (currentDownLoad)=>{
-      if(currentDownLoad===0||currentDownLoad===100){
+    let showDownLoad = (currentDownLoad) => {
+      if (currentDownLoad === 0 || currentDownLoad === 100) {
         console.log('cuocuo')
         return false
       }
-      console.log('the value is',currentDownLoad)
+      console.log('the value is', currentDownLoad)
       return true
     }
     // 表单的数据
     const form = ref({
       content: '',
       uploadUrl: null,
-      fileType:'',
-      filename:``,
-      fileExtension:''
+      fileType: '',
+      filename: ``,
+      fileExtension: ''
     });
     const commentForm = ref({});
     // 判断表单是否为空，且是否含有恶意脚本
-    const isFormInvalid = computed(()=>{
+    const isFormInvalid = computed(() => {
       const content = form.value.content.trim()
-      if(content === ''|| !isValidContent(content)){
+      if (content === '' || !isValidContent(content)) {
         return true
       }
       return false
     })
     // 用于检验表单是否存在危险脚本
-    function isValidContent(content){
+    function isValidContent(content) {
       const cleanContent = DOMPurify.sanitize(content)
       return cleanContent === content
     }
 
     // 判断是否上传图片，以及限制上传图片的数量
     const beforeUpload = (file) => {
-      if(form.value.uploadUrl){
+      if (form.value.uploadUrl) {
         ElMessage.error('最多只能上传一张图片')
         return false
       }
@@ -130,7 +125,7 @@ export default {
         ElMessage.error('只能上传图片或视频文件');
         return false
       }
-      
+
       return true;
     };
     // 调用compressorjs库，创建实例来进行文件压缩
@@ -161,13 +156,13 @@ export default {
       currentChunk = 0;
 
       uploadChunks = 0;
-      
+
       // 对文件进行压缩处理
       const compressedFile = await compressorImage(file.raw);
       // 计算压缩后文件的 MD5 值
       const compressedMD5 = await calculateMD5(compressedFile);
       form.value.filename = compressedMD5
-      
+
       // 分块计算块的数量
       totalChunks = Math.ceil(compressedFile.size / chunkSize);
 
@@ -180,7 +175,7 @@ export default {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         const blob = index !== undefined ? file.slice(index * chunkSize, (index + 1) * chunkSize) : file;
-        
+
         reader.onload = () => {
           const spark = new sparkMD5.ArrayBuffer();
           spark.append(reader.result);
@@ -207,42 +202,42 @@ export default {
       formData.append('file', blob);
       formData.append('index', index);
       formData.append('totalChunks', totalChunks);
-      formData.append('filename',form.value.filename)
-      formData.append('fileExtension',form.value.fileExtension)
-      formData.append('fileType',form.value.fileType)
+      formData.append('filename', form.value.filename)
+      formData.append('fileExtension', form.value.fileExtension)
+      formData.append('fileType', form.value.fileType)
 
       // 计算当前分片的 MD5 值
       const chunkMD5 = await calculateMD5(file, index);
       formData.append('fileMD5', chunkMD5);
 
       // 更新进度条
-      currentDownLoad.value = Math.floor(100*((index+1)/totalChunks))
+      currentDownLoad.value = Math.floor(100 * ((index + 1) / totalChunks))
 
       try {
-          if(index === 0){
-            const res = await axios.post('http://localhost:3000/chats/uploadChunk',formData)
-            // 判断是否需要断点续传
-            if(res.data.needUpload){
-              uploadChunks = res.data.uploadedChunks
-              currentChunk = uploadChunks
-              console.log('触发了断点续传')
-            }else if(res.data.message==='成功实现秒传'){
-              form.value.uploadUrl=res.data.url
-              return
-            }
-          }else{
-            const res = await axios.post('http://localhost:3000/chats/uploadChunk',formData)
-            if(res.data.isOk){
-              form.value.uploadUrl=res.data.url
-            }
+        if (index === 0) {
+          const res = await axios.post('https://www.dyp02.vip:443/backend/chats/uploadChunk', formData)
+          // 判断是否需要断点续传
+          if (res.data.needUpload) {
+            uploadChunks = res.data.uploadedChunks
+            currentChunk = uploadChunks
+            console.log('触发了断点续传')
+          } else if (res.data.message === '成功实现秒传') {
+            form.value.uploadUrl = res.data.url
+            return
           }
-          currentChunk++
-          // 持续处理分块数据，直到全部上传完毕为止
-          if(currentChunk<totalChunks){
-            uploadChunk(file,currentChunk)
-          }else{
-            console.log(`当前文件全部上传成功!`)
+        } else {
+          const res = await axios.post('https://www.dyp02.vip:443/backend/chats/uploadChunk', formData)
+          if (res.data.isOk) {
+            form.value.uploadUrl = res.data.url
           }
+        }
+        currentChunk++
+        // 持续处理分块数据，直到全部上传完毕为止
+        if (currentChunk < totalChunks) {
+          uploadChunk(file, currentChunk)
+        } else {
+          console.log(`当前文件全部上传成功!`)
+        }
 
       } catch (error) {
         console.error('Error uploading chunk:', error);
@@ -250,16 +245,16 @@ export default {
     };
 
 
-    
+
 
     // // 当成功处理数据的时候，获取返回的图片URL，用于显示
     // const handleUploadSuccess = (response) => {
     //   form.value.uploadUrl = response.imageUrl;
     //   // console.log(form.value.image)
     // };
-      
-    
-      // 判断是否是图片数据类型
+
+
+    // 判断是否是图片数据类型
     const isImage = (url) => {
       const imageExtensions = ['jpg', 'jpeg', 'png', 'gif'];
       const extension = url.split('.').pop().toLowerCase();
@@ -280,13 +275,13 @@ export default {
           const formData = {
             content: form.value.content,
             image: form.value.uploadUrl,
-            username:props.userInfo.username,
-            account:props.userInfo.account,
-            uid:props.userInfo.id,
+            username: props.userInfo.username,
+            account: props.userInfo.account,
+            uid: props.userInfo.id,
 
           };
           // 处理表单的提交
-          await axios.post('http://localhost:3000/chats/formUpload', formData);
+          await axios.post('https://www.dyp02.vip:443/backend/chats/formUpload', formData);
           // props.chatFormVisible.value=false
           // 刷新评论区
           EventBus.emit('NeedRefreshChats')
@@ -330,7 +325,7 @@ export default {
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss">
 .upload-demo {
   margin-top: 10px;
 }
@@ -354,13 +349,15 @@ export default {
 .el-button {
   margin-right: 10px;
 }
-.el-dialog{
-  --el-dialog-width:60%;
+
+.el-dialog {
+  --el-dialog-width: 60%;
 }
+
 // 媒体查询处理不同设备的表单大小
 @media (max-width:768px) {
-  .el-dialog{
-    --el-dialog-width:90%;
+  .el-dialog {
+    --el-dialog-width: 90%;
   }
 }
 </style>

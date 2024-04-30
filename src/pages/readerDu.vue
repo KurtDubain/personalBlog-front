@@ -4,27 +4,29 @@
     <el-container>
       <!-- 左侧是评论区 -->
       <el-aside class="mobile-aside" width="20%">
-        
+
         <ComListDu :comments="comments"></ComListDu>
-        
+
       </el-aside>
       <el-main>
-        <mainDu  style="display:flex;flex-direction: column;">
-          <ContentDu :article="articles" >
+        <mainDu style="display:flex;flex-direction: column;">
+          <ContentDu :article="articles">
             <div class="tools_button">
               <likesDu :itemId="articleId" :itemType="'article'"></likesDu>
               <div class="share-button" @click="shareArticle">
-                <el-icon><Promotion /></el-icon>
+                <el-icon>
+                  <Promotion />
+                </el-icon>
               </div>
             </div>
-           
-          
-         </ContentDu>
-         <div style="display:flex;flex-direction: column;align-items: center;">
-          <el-divider border-style="double" />
-          <ComListDu :comments="comments"></ComListDu>
-         </div>
-          
+
+
+          </ContentDu>
+          <div style="display:flex;flex-direction: column;align-items: center;">
+            <el-divider border-style="double" />
+            <ComListDu :comments="comments"></ComListDu>
+          </div>
+
         </mainDu>
       </el-main>
       <!-- 右侧是切换按钮和登陆表 -->
@@ -40,7 +42,8 @@
             <!-- <el-icon><HomeFilled /></el-icon> -->
             <div class="login-button">点我</div>
           </div>
-          <ComShowDu :articleId="articleId" :loadComment="loadComment" class="loginForm" :style="{ left: showLoginForm ? '45%' : '100%' }"></ComShowDu>
+          <ComShowDu :articleId="articleId" :loadComment="loadComment" class="loginForm"
+            :style="{ left: showLoginForm ? '45%' : '100%' }"></ComShowDu>
         </div>
       </div>
     </el-container>
@@ -50,7 +53,7 @@
 
 <script>
 // import articleDu from '@/components/articleDu.vue';
-import {reactive,onMounted, ref,watch,onUnmounted}from 'vue'
+import { reactive, onMounted, ref, watch, onUnmounted } from 'vue'
 // import {marked} from 'marked'
 import mainDu from '@/components/mainDu.vue'
 import ComListDu from '../components/ComListDu.vue'
@@ -62,14 +65,14 @@ import likesDu from '@/components/likesDu.vue'
 import axios from 'axios'
 
 export default {
-  name:"readerDu",
-  props:{
-    articleId:{
-      type:String,
-      required:true
+  name: "readerDu",
+  props: {
+    articleId: {
+      type: String,
+      required: true
     }
   },
-  components:{
+  components: {
     mainDu,
     ContentDu,
     ComListDu,
@@ -78,7 +81,7 @@ export default {
     likesDu
 
   },
-  setup(props){
+  setup(props) {
     // 根据不同类型定义不同的响应式类型
     let articles = reactive({})
     let comments = ref([])
@@ -89,61 +92,61 @@ export default {
     // const parseMarkDown = reactive('')
     // const filterArticle = inject('filterArticle')
     // console.log(filterArticle)
-    onMounted(async()=>{
-      try{
+    onMounted(async () => {
+      try {
         // 在onMounted周期执行多种数据加载内容
         await loadCtrlTitle(props.articleId)
         await loadArticle(props.articleId)
         await loadArticlecontent(props.articleId)
-        
+
         await loadLastId()
         await loadComment(props.articleId)
         // 数据总线时间，用于发表评论之后刷新评论信息
-        EventBus.on('NeedRefresh',()=>{
+        EventBus.on('NeedRefresh', () => {
           loadComment(props.articleId)
         })
         document.addEventListener('click', handleClickOutside);
 
-        
-      }catch(error){
+
+      } catch (error) {
         console.error('文章初始化失败');
       }
-      
+
     })
 
     onUnmounted(() => {
       document.removeEventListener('click', handleClickOutside);
     });
     // 加载对应id文章的除内容之外的信息
-    const loadArticle = async(articleId)=>{
-      try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}`)
-        
+    const loadArticle = async (articleId) => {
+      try {
+        const res = await axios.get(`https://www.dyp02.vip:443/backend/articles/${articleId}`)
+
         articles.title = res.data.title
-        articles.date =res.data.date
+        articles.date = res.data.date
         articles.views = res.data.views
         articles.like = res.data.like
         articles.commentsNum = res.data.commentsNum
         articles.tags = res.data.tags
         // console.log(articles)
         // console.log('文章信息获取成功')
-      }catch(error){
-        console.error('文章信息获取失败',error);
+      } catch (error) {
+        console.error('文章信息获取失败', error);
       }
     }
     // 加载文章内容md文件数据
-    const loadArticlecontent = async(articleId)=>{
-      try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}/content`)
+    const loadArticlecontent = async (articleId) => {
+      try {
+        const res = await axios.get(`https://www.dyp02.vip:443/backend/articles/${articleId}/content`)
         articles.content = res.data
-      }catch(error){
-        console.error('未能正常获取文章内容或者未能正确解析',error);
+      } catch (error) {
+        console.error('未能正常获取文章内容或者未能正确解析', error);
       }
     }
     // 加载文章评论数据
-    const loadComment = async(articleId)=>{
-      try{
-        let res = await axios.get(`http://localhost:3000/comments/${articleId}`)
+    const loadComment = async (articleId) => {
+      try {
+        let res = await axios.get(`https://www.dyp02.vip:443/backend/comments/${articleId}`)
         // console.log(res)
         const commentsData = res.data
         comments.value = commentsData.map((comment) => ({
@@ -153,16 +156,16 @@ export default {
           created_Date: comment.created_Date,
           name: comment.name,
           contact: comment.contact,
-    }));
-    // console.log(comments); 
-      }catch(error){
-        console.error('文章评论信息获取失败',error);
+        }));
+        // console.log(comments); 
+      } catch (error) {
+        console.error('文章评论信息获取失败', error);
       }
     }
     // 加载当前文章前后题目数据
-    const loadCtrlTitle = async(articleId)=>{
-      try{
-        const res = await axios.get(`http://localhost:3000/articles/${articleId}/ctlTitles`)
+    const loadCtrlTitle = async (articleId) => {
+      try {
+        const res = await axios.get(`https://www.dyp02.vip:443/backend/articles/${articleId}/ctlTitles`)
         // 通过判断当前文章是否是第一个文章，来决定数据类型
         if (res.data.length === 1) {
           // 只获取到一个标题，说明当前文章可能是第一个或最后一个
@@ -182,23 +185,23 @@ export default {
           ctrltitle.Tpre = null;
           ctrltitle.Tnext = null;
         }
-        
-        
-      
+
+
+
         // ctrltitle.Ipre = res.data[0].Ipre
         // ctrltitle.Inext = res.data[0].Inext
-      }catch(error){
-        console.error('前后标题获取失败',error);
+      } catch (error) {
+        console.error('前后标题获取失败', error);
       }
     }
     // 加载最后一个文章的id数据
-    const loadLastId = async()=>{
-      try{
-        const res = await axios.get(`http://localhost:3000/articles/lastId/return`)
+    const loadLastId = async () => {
+      try {
+        const res = await axios.get(`https://www.dyp02.vip:443/backend/articles/lastId/return`)
         lastId.id = res.data
         // console.log('成功获取最后一个id')
-      }catch(error){
-        console.error('未能获取最后一个文章的id',error);
+      } catch (error) {
+        console.error('未能获取最后一个文章的id', error);
       }
     }
     // 监听文章id变化，实时改变文章对应数据（主要是解决点击切换按钮没有响应的情况）
@@ -214,21 +217,21 @@ export default {
         })
       }
     )
-    
+
     // const filterArticleComputed = computed(()=>{
     //   return filterArticle.value
     // }) 
-      // 响应式设计部分
-      // 判断是否是移动端窗口
+    // 响应式设计部分
+    // 判断是否是移动端窗口
     const isMobile = ref(window.innerWidth <= 768);
 
     window.addEventListener('resize', () => {
-      isMobile.value = window.innerWidth <= 768;  
+      isMobile.value = window.innerWidth <= 768;
     });
     // 是否展示响应式表单
     const showLoginForm = ref(false);
     // 弹出响应式表单
-    const toggleLoginForm = () => {          
+    const toggleLoginForm = () => {
       showLoginForm.value = !showLoginForm.value;
     };
     // 隐藏响应式表单
@@ -256,7 +259,7 @@ export default {
       }
     };
 
-    return{
+    return {
       articles,
       comments,
       ctrltitle,
@@ -270,26 +273,28 @@ export default {
       // parseMarkDown
     }
   }
-  
+
 }
 </script>
 
 <style lang="scss" scoped>
-
 /* 隐藏左侧和右侧的aside部分，并让el-main占据屏幕的全部宽度 */
 @media (max-width: 768px) {
   .mobile-aside {
     display: none;
   }
+
   el-main {
     width: 100%;
   }
 }
-.loginForm{
+
+.loginForm {
   /* display: block; */
   /* position: relative; */
   left: 100%;
 }
+
 .loginBack {
   /* background-color: black; */
   position: fixed;
@@ -306,14 +311,16 @@ export default {
   font-size: 50px;
   font-weight: bolder;
   position: absolute;
-  color: rgba(139,136,120, 0.886);
-    /* rgba(222, 222, 222, 0.8); */
+  color: rgba(139, 136, 120, 0.886);
+  /* rgba(222, 222, 222, 0.8); */
   top: 50%;
   transform: translateY(600%) translateX(300%);
 }
-.loginForm{
+
+.loginForm {
   transition: left 0.5s ease-in-out;
 }
+
 /* 在适当的位置添加这些样式 */
 .share-button {
   display: flex;
@@ -330,7 +337,8 @@ export default {
   right: 30px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: background-color 0.3s;
-  &:hover{
+
+  &:hover {
     background-color: #0056b3;
   }
 }
@@ -339,16 +347,20 @@ export default {
 //   background-color: 
 // }
 
-.tools_button{
+.tools_button {
   display: flex;
   flex-direction: row;
 }
 
-.left-aside, .right-aside {
-  border: 1px solid #ccc; /* 添加一个细边框 */
-  padding: 10px; /* 添加内边距 */
+.left-aside,
+.right-aside {
+  border: 1px solid #ccc;
+  /* 添加一个细边框 */
+  padding: 10px;
+  /* 添加内边距 */
   background-color: #f0f0f0;
 }
+
 .login-button {
   background-color: rgba(145, 168, 90, 0.635);
   color: white;
